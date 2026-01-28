@@ -508,7 +508,7 @@ cookieconsent.run({
 </ol>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>weather<span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/weather.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2"></a>weather<span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/raw/weather.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
@@ -575,6 +575,59 @@ $ RecordText   &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N
 $ RecordP      &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
 $ CulmPrec     &lt;dbl&gt; 1.42, 0.97, 0.00, 1.18, 0.01, 0.00, 0.02, 5.68, 0.42, 1.5…</code></pre>
 </div>
+</div>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>weather<span class="ot">&lt;-</span>weather<span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2"></a>  <span class="fu">mutate</span>(<span class="at">DateInYear=</span><span class="fu">yday</span>(<span class="fu">mdy</span>(date)))</span>
+<span id="cb8-3"><a href="#cb8-3"></a>weather</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 365 × 19
+   Month   Day   Low  High NormalLow NormalHigh RecordLow LowYr RecordHigh
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;
+ 1    11    20    48    55        48         62        35  1964         69
+ 2     6    16    52    68        53         70        46  1952         90
+ 3     5     9    47    63        50         66        41  1950         88
+ 4    10    26    47    69        52         69        39  1954         89
+ 5     9    27    55    82        55         73        47  1955         96
+ 6     7     6    52    70        54         71        47  1953         86
+ 7    11     3    48    60        51         66        40  1971         84
+ 8     3    26    47    58        47         62        38  1980         79
+ 9    10     4    57    66        55         72        47  1989         95
+10    11    26    49    59        47         60        36  1952         76
+# ℹ 355 more rows
+# ℹ 10 more variables: HiYear &lt;dbl&gt;, Precip &lt;dbl&gt;, RecordPrecip &lt;dbl&gt;,
+#   PrecipYr &lt;dbl&gt;, date &lt;chr&gt;, Record &lt;lgl&gt;, RecordText &lt;chr&gt;, RecordP &lt;lgl&gt;,
+#   CulmPrec &lt;dbl&gt;, DateInYear &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>weather<span class="ot">&lt;-</span>weather <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2"></a>  <span class="fu">mutate</span>(<span class="at">month_name=</span>month.abb[Month])</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a>weather</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 365 × 20
+   Month   Day   Low  High NormalLow NormalHigh RecordLow LowYr RecordHigh
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;
+ 1    11    20    48    55        48         62        35  1964         69
+ 2     6    16    52    68        53         70        46  1952         90
+ 3     5     9    47    63        50         66        41  1950         88
+ 4    10    26    47    69        52         69        39  1954         89
+ 5     9    27    55    82        55         73        47  1955         96
+ 6     7     6    52    70        54         71        47  1953         86
+ 7    11     3    48    60        51         66        40  1971         84
+ 8     3    26    47    58        47         62        38  1980         79
+ 9    10     4    57    66        55         72        47  1989         95
+10    11    26    49    59        47         60        36  1952         76
+# ℹ 355 more rows
+# ℹ 11 more variables: HiYear &lt;dbl&gt;, Precip &lt;dbl&gt;, RecordPrecip &lt;dbl&gt;,
+#   PrecipYr &lt;dbl&gt;, date &lt;chr&gt;, Record &lt;lgl&gt;, RecordText &lt;chr&gt;, RecordP &lt;lgl&gt;,
+#   CulmPrec &lt;dbl&gt;, DateInYear &lt;dbl&gt;, month_name &lt;chr&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">write_csv</span>(weather, <span class="at">file =</span> <span class="st">"data/processed/weather_clean.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 
 
@@ -1059,63 +1112,78 @@ $ CulmPrec     &lt;dbl&gt; 1.42, 0.97, 0.00, 1.18, 0.01, 0.00, 0.02, 5.68, 0.42,
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">---</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="co">---</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a>---</span>
-<span id="cb8-4"><a href="#cb8-4"></a>---</span>
-<span id="cb8-5"><a href="#cb8-5"></a>title: "Cleaning SFO Weather Data"</span>
-<span id="cb8-6"><a href="#cb8-6"></a>---</span>
-<span id="cb8-7"><a href="#cb8-7"></a></span>
-<span id="cb8-8"><a href="#cb8-8"></a>::: {.callout-note title="Helpful Data Wrangling Notes"}</span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="ss">- </span><span class="in">`month.abb`</span> is a built-in object in R with 3-letter month abbreviations</span>
-<span id="cb8-10"><a href="#cb8-10"></a><span class="ss">- </span>You can create your own data frame with the <span class="in">`tibble()`</span> function. Look up the documentation for this function by typing <span class="in">`?tibble::tibble`</span> in the Console.</span>
-<span id="cb8-11"><a href="#cb8-11"></a><span class="ss">- </span>You can create regular sequences in R with <span class="in">`:`</span>, eg, <span class="in">`3:5`</span> generates the sequence <span class="in">`c(3, 4, 5)`</span>.</span>
-<span id="cb8-12"><a href="#cb8-12"></a><span class="ss">- </span>You can create regular sequences in R with <span class="in">`seq()`</span>, eg, <span class="in">`seq(from = 3, to = 5, by = 1)`</span> generates the sequence <span class="in">`c(3, 4, 5)`</span>.  Look up the documentation for this function by typing <span class="in">`?seq`</span> in the Console.</span>
-<span id="cb8-13"><a href="#cb8-13"></a>:::</span>
-<span id="cb8-14"><a href="#cb8-14"></a></span>
-<span id="cb8-15"><a href="#cb8-15"></a>::: {.callout-important title="Practicing Keyboard Shortcuts"}</span>
-<span id="cb8-16"><a href="#cb8-16"></a>Try out the following as you work on this exercise:</span>
-<span id="cb8-17"><a href="#cb8-17"></a></span>
-<span id="cb8-18"><a href="#cb8-18"></a><span class="ss">- </span>Tab completion (Try this out when writing your file paths! Typing out a partial path will pull up a mini file-explorer)</span>
-<span id="cb8-19"><a href="#cb8-19"></a><span class="ss">- </span>Insert a code chunk</span>
-<span id="cb8-20"><a href="#cb8-20"></a><span class="ss">- </span>Run a code chunk</span>
-<span id="cb8-21"><a href="#cb8-21"></a><span class="ss">- </span>Navigating around words and lines (selecting and deleting them)</span>
-<span id="cb8-22"><a href="#cb8-22"></a><span class="ss">- </span>Run selected lines (not a whole code chunk)</span>
-<span id="cb8-23"><a href="#cb8-23"></a><span class="ss">- </span>Insert the assignment operator (<span class="in">`&lt;-`</span>)</span>
-<span id="cb8-24"><a href="#cb8-24"></a><span class="ss">- </span>Insert the pipe operator (<span class="in">`|&gt;`</span>)</span>
-<span id="cb8-25"><a href="#cb8-25"></a>:::</span>
-<span id="cb8-26"><a href="#cb8-26"></a></span>
-<span id="cb8-27"><a href="#cb8-27"></a><span class="fu">## Exercise</span></span>
-<span id="cb8-28"><a href="#cb8-28"></a></span>
-<span id="cb8-29"><a href="#cb8-29"></a>Carryout the following steps to clean and save the San Francisco Weather data.  Make sure to download and add the data file to your portfolio repository as instructed.</span>
-<span id="cb8-30"><a href="#cb8-30"></a></span>
-<span id="cb8-31"><a href="#cb8-31"></a><span class="ss">1. </span>Read in the weather data in this file with the correct relative file path after you move it to the instructed location.</span>
-<span id="cb8-32"><a href="#cb8-32"></a><span class="ss">2. </span>There is a variable that has values that don't make sense in the data context. Figure out which variable this is and clean it up by making those values missing using <span class="in">`na_if()`</span>.</span>
-<span id="cb8-33"><a href="#cb8-33"></a><span class="ss">3. </span>Create a variable called <span class="in">`dateInYear`</span> that indicates the day of the year (1-365) for each case. (Jan 1 should be 1, and Dec 31 should be 365).</span>
-<span id="cb8-34"><a href="#cb8-34"></a><span class="ss">4. </span>Create a variable called <span class="in">`month_name`</span> that shows the 3-letter abbreviation for each case.</span>
-<span id="cb8-35"><a href="#cb8-35"></a><span class="ss">5. </span>Save the wrangled data to the <span class="in">`data/processed/`</span> folder using <span class="in">`write_csv()`</span>. Name this file <span class="in">`weather_clean.csv`</span>. Look up the documentation for this function by typing <span class="in">`?write_csv`</span> in the Console. You'll need to write an appropriate relative path.</span>
-<span id="cb8-36"><a href="#cb8-36"></a></span>
-<span id="cb8-37"><a href="#cb8-37"></a></span>
-<span id="cb8-40"><a href="#cb8-40"></a><span class="in">```{r}</span></span>
-<span id="cb8-41"><a href="#cb8-41"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb8-42"><a href="#cb8-42"></a>weather<span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/weather.csv"</span>)</span>
-<span id="cb8-43"><a href="#cb8-43"></a><span class="in">```</span></span>
-<span id="cb8-46"><a href="#cb8-46"></a><span class="in">```{r}</span></span>
-<span id="cb8-47"><a href="#cb8-47"></a><span class="fu">glimpse</span>(weather)</span>
-<span id="cb8-48"><a href="#cb8-48"></a><span class="in">```</span></span>
-<span id="cb8-51"><a href="#cb8-51"></a><span class="in">```{r}</span></span>
-<span id="cb8-52"><a href="#cb8-52"></a>weatherPrecipYear<span class="ot">&lt;-</span> weather <span class="sc">|&gt;</span> </span>
-<span id="cb8-53"><a href="#cb8-53"></a>  <span class="fu">filter</span>(PrecipYr<span class="sc">&gt;=</span><span class="dv">99999</span>)</span>
-<span id="cb8-54"><a href="#cb8-54"></a></span>
-<span id="cb8-55"><a href="#cb8-55"></a><span class="fu">count</span>(weatherPrecipYear)</span>
-<span id="cb8-56"><a href="#cb8-56"></a><span class="in">```</span></span>
-<span id="cb8-57"><a href="#cb8-57"></a></span>
-<span id="cb8-60"><a href="#cb8-60"></a><span class="in">```{r}</span></span>
-<span id="cb8-61"><a href="#cb8-61"></a>weather<span class="ot">&lt;-</span> weather <span class="sc">|&gt;</span> </span>
-<span id="cb8-62"><a href="#cb8-62"></a>  <span class="fu">mutate</span>(<span class="at">PrecipYr=</span><span class="fu">na_if</span>(PrecipYr,<span class="dv">99999</span>))</span>
-<span id="cb8-63"><a href="#cb8-63"></a></span>
-<span id="cb8-64"><a href="#cb8-64"></a><span class="fu">glimpse</span>(weather)</span>
-<span id="cb8-65"><a href="#cb8-65"></a><span class="in">```</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1"></a><span class="co">---</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="co">---</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>---</span>
+<span id="cb13-4"><a href="#cb13-4"></a>---</span>
+<span id="cb13-5"><a href="#cb13-5"></a>title: "Cleaning SFO Weather Data"</span>
+<span id="cb13-6"><a href="#cb13-6"></a>---</span>
+<span id="cb13-7"><a href="#cb13-7"></a></span>
+<span id="cb13-8"><a href="#cb13-8"></a>::: {.callout-note title="Helpful Data Wrangling Notes"}</span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="ss">- </span><span class="in">`month.abb`</span> is a built-in object in R with 3-letter month abbreviations</span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="ss">- </span>You can create your own data frame with the <span class="in">`tibble()`</span> function. Look up the documentation for this function by typing <span class="in">`?tibble::tibble`</span> in the Console.</span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="ss">- </span>You can create regular sequences in R with <span class="in">`:`</span>, eg, <span class="in">`3:5`</span> generates the sequence <span class="in">`c(3, 4, 5)`</span>.</span>
+<span id="cb13-12"><a href="#cb13-12"></a><span class="ss">- </span>You can create regular sequences in R with <span class="in">`seq()`</span>, eg, <span class="in">`seq(from = 3, to = 5, by = 1)`</span> generates the sequence <span class="in">`c(3, 4, 5)`</span>.  Look up the documentation for this function by typing <span class="in">`?seq`</span> in the Console.</span>
+<span id="cb13-13"><a href="#cb13-13"></a>:::</span>
+<span id="cb13-14"><a href="#cb13-14"></a></span>
+<span id="cb13-15"><a href="#cb13-15"></a>::: {.callout-important title="Practicing Keyboard Shortcuts"}</span>
+<span id="cb13-16"><a href="#cb13-16"></a>Try out the following as you work on this exercise:</span>
+<span id="cb13-17"><a href="#cb13-17"></a></span>
+<span id="cb13-18"><a href="#cb13-18"></a><span class="ss">- </span>Tab completion (Try this out when writing your file paths! Typing out a partial path will pull up a mini file-explorer)</span>
+<span id="cb13-19"><a href="#cb13-19"></a><span class="ss">- </span>Insert a code chunk</span>
+<span id="cb13-20"><a href="#cb13-20"></a><span class="ss">- </span>Run a code chunk</span>
+<span id="cb13-21"><a href="#cb13-21"></a><span class="ss">- </span>Navigating around words and lines (selecting and deleting them)</span>
+<span id="cb13-22"><a href="#cb13-22"></a><span class="ss">- </span>Run selected lines (not a whole code chunk)</span>
+<span id="cb13-23"><a href="#cb13-23"></a><span class="ss">- </span>Insert the assignment operator (<span class="in">`&lt;-`</span>)</span>
+<span id="cb13-24"><a href="#cb13-24"></a><span class="ss">- </span>Insert the pipe operator (<span class="in">`|&gt;`</span>)</span>
+<span id="cb13-25"><a href="#cb13-25"></a>:::</span>
+<span id="cb13-26"><a href="#cb13-26"></a></span>
+<span id="cb13-27"><a href="#cb13-27"></a><span class="fu">## Exercise</span></span>
+<span id="cb13-28"><a href="#cb13-28"></a></span>
+<span id="cb13-29"><a href="#cb13-29"></a>Carryout the following steps to clean and save the San Francisco Weather data.  Make sure to download and add the data file to your portfolio repository as instructed.</span>
+<span id="cb13-30"><a href="#cb13-30"></a></span>
+<span id="cb13-31"><a href="#cb13-31"></a><span class="ss">1. </span>Read in the weather data in this file with the correct relative file path after you move it to the instructed location.</span>
+<span id="cb13-32"><a href="#cb13-32"></a><span class="ss">2. </span>There is a variable that has values that don't make sense in the data context. Figure out which variable this is and clean it up by making those values missing using <span class="in">`na_if()`</span>.</span>
+<span id="cb13-33"><a href="#cb13-33"></a><span class="ss">3. </span>Create a variable called <span class="in">`dateInYear`</span> that indicates the day of the year (1-365) for each case. (Jan 1 should be 1, and Dec 31 should be 365).</span>
+<span id="cb13-34"><a href="#cb13-34"></a><span class="ss">4. </span>Create a variable called <span class="in">`month_name`</span> that shows the 3-letter abbreviation for each case.</span>
+<span id="cb13-35"><a href="#cb13-35"></a><span class="ss">5. </span>Save the wrangled data to the <span class="in">`data/processed/`</span> folder using <span class="in">`write_csv()`</span>. Name this file <span class="in">`weather_clean.csv`</span>. Look up the documentation for this function by typing <span class="in">`?write_csv`</span> in the Console. You'll need to write an appropriate relative path.</span>
+<span id="cb13-36"><a href="#cb13-36"></a></span>
+<span id="cb13-37"><a href="#cb13-37"></a></span>
+<span id="cb13-40"><a href="#cb13-40"></a><span class="in">```{r}</span></span>
+<span id="cb13-41"><a href="#cb13-41"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb13-42"><a href="#cb13-42"></a>weather<span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/raw/weather.csv"</span>)</span>
+<span id="cb13-43"><a href="#cb13-43"></a><span class="in">```</span></span>
+<span id="cb13-46"><a href="#cb13-46"></a><span class="in">```{r}</span></span>
+<span id="cb13-47"><a href="#cb13-47"></a><span class="fu">glimpse</span>(weather)</span>
+<span id="cb13-48"><a href="#cb13-48"></a><span class="in">```</span></span>
+<span id="cb13-51"><a href="#cb13-51"></a><span class="in">```{r}</span></span>
+<span id="cb13-52"><a href="#cb13-52"></a>weatherPrecipYear<span class="ot">&lt;-</span> weather <span class="sc">|&gt;</span> </span>
+<span id="cb13-53"><a href="#cb13-53"></a>  <span class="fu">filter</span>(PrecipYr<span class="sc">&gt;=</span><span class="dv">99999</span>)</span>
+<span id="cb13-54"><a href="#cb13-54"></a></span>
+<span id="cb13-55"><a href="#cb13-55"></a><span class="fu">count</span>(weatherPrecipYear)</span>
+<span id="cb13-56"><a href="#cb13-56"></a><span class="in">```</span></span>
+<span id="cb13-57"><a href="#cb13-57"></a></span>
+<span id="cb13-60"><a href="#cb13-60"></a><span class="in">```{r}</span></span>
+<span id="cb13-61"><a href="#cb13-61"></a>weather<span class="ot">&lt;-</span> weather <span class="sc">|&gt;</span> </span>
+<span id="cb13-62"><a href="#cb13-62"></a>  <span class="fu">mutate</span>(<span class="at">PrecipYr=</span><span class="fu">na_if</span>(PrecipYr,<span class="dv">99999</span>))</span>
+<span id="cb13-63"><a href="#cb13-63"></a></span>
+<span id="cb13-64"><a href="#cb13-64"></a><span class="fu">glimpse</span>(weather)</span>
+<span id="cb13-65"><a href="#cb13-65"></a><span class="in">```</span></span>
+<span id="cb13-68"><a href="#cb13-68"></a><span class="in">```{r}</span></span>
+<span id="cb13-69"><a href="#cb13-69"></a>weather<span class="ot">&lt;-</span>weather<span class="sc">|&gt;</span> </span>
+<span id="cb13-70"><a href="#cb13-70"></a>  <span class="fu">mutate</span>(<span class="at">DateInYear=</span><span class="fu">yday</span>(<span class="fu">mdy</span>(date)))</span>
+<span id="cb13-71"><a href="#cb13-71"></a>weather</span>
+<span id="cb13-72"><a href="#cb13-72"></a><span class="in">```</span></span>
+<span id="cb13-75"><a href="#cb13-75"></a><span class="in">```{r}</span></span>
+<span id="cb13-76"><a href="#cb13-76"></a>weather<span class="ot">&lt;-</span>weather <span class="sc">|&gt;</span> </span>
+<span id="cb13-77"><a href="#cb13-77"></a>  <span class="fu">mutate</span>(<span class="at">month_name=</span>month.abb[Month])</span>
+<span id="cb13-78"><a href="#cb13-78"></a></span>
+<span id="cb13-79"><a href="#cb13-79"></a>weather</span>
+<span id="cb13-80"><a href="#cb13-80"></a><span class="in">```</span></span>
+<span id="cb13-81"><a href="#cb13-81"></a></span>
+<span id="cb13-84"><a href="#cb13-84"></a><span class="in">```{r}</span></span>
+<span id="cb13-85"><a href="#cb13-85"></a><span class="fu">write_csv</span>(weather, <span class="at">file =</span> <span class="st">"data/processed/weather_clean.csv"</span>)</span>
+<span id="cb13-86"><a href="#cb13-86"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
