@@ -286,6 +286,12 @@ cookieconsent.run({
   </ul>
 </li>
   <li><a href="#legal-nature-and-owner-qualifications" id="toc-legal-nature-and-owner-qualifications" class="nav-link" data-scroll-target="#legal-nature-and-owner-qualifications">Legal Nature and Owner Qualifications</a></li>
+  <li>
+<a href="#top-1-analysis" id="toc-top-1-analysis" class="nav-link" data-scroll-target="#top-1-analysis">Top 1% Analysis</a>
+  <ul class="collapse">
+<li><a href="#characteristics-of-top-1-companies" id="toc-characteristics-of-top-1-companies" class="nav-link" data-scroll-target="#characteristics-of-top-1-companies">Characteristics of Top 1% Companies</a></li>
+  </ul>
+</li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -536,11 +542,72 @@ $ company_size        &lt;chr&gt; "small-enterprise", "micro-enterprise", "small
 7 Entrepreneur / Business Owner               15,2… R$179,202M    R$0.30M       </code></pre>
 </div>
 </div>
+</section><section id="top-1-analysis" class="level1"><h1>Top 1% Analysis</h1>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>capital_99th <span class="ot">&lt;-</span> <span class="fu">quantile</span>(companies<span class="sc">$</span>capital_stock, <span class="fl">0.99</span>)</span>
+<span id="cb18-2"><a href="#cb18-2"></a>high_capital <span class="ot">&lt;-</span> companies <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3"></a>  <span class="fu">filter</span>(capital_stock <span class="sc">&gt;=</span> capital_99th)</span>
+<span id="cb18-4"><a href="#cb18-4"></a></span>
+<span id="cb18-5"><a href="#cb18-5"></a><span class="fu">tibble</span>(</span>
+<span id="cb18-6"><a href="#cb18-6"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(<span class="st">"99th percentile threshold"</span>, <span class="st">"Companies in top 1%"</span>, <span class="st">"Total capital in top 1%"</span>),</span>
+<span id="cb18-7"><a href="#cb18-7"></a>  <span class="at">Value =</span> <span class="fu">c</span>(</span>
+<span id="cb18-8"><a href="#cb18-8"></a>    <span class="fu">dollar</span>(capital_99th, <span class="at">prefix =</span> <span class="st">"R$"</span>, <span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>),</span>
+<span id="cb18-9"><a href="#cb18-9"></a>    <span class="fu">comma</span>(<span class="fu">nrow</span>(high_capital)),</span>
+<span id="cb18-10"><a href="#cb18-10"></a>    <span class="fu">dollar</span>(<span class="fu">sum</span>(high_capital<span class="sc">$</span>capital_stock), <span class="at">prefix =</span> <span class="st">"R$"</span>, <span class="at">scale =</span> <span class="fl">1e-9</span>, <span class="at">suffix =</span> <span class="st">"B"</span>)</span>
+<span id="cb18-11"><a href="#cb18-11"></a>  )</span>
+<span id="cb18-12"><a href="#cb18-12"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  Metric                    Value       
+  &lt;chr&gt;                     &lt;chr&gt;       
+1 99th percentile threshold R$207.26M   
+2 Companies in top 1%       1,414       
+3 Total capital in top 1%   R$49,602.53B</code></pre>
+</div>
+</div>
+<section id="characteristics-of-top-1-companies" class="level2"><h2 class="anchored" data-anchor-id="characteristics-of-top-1-companies">Characteristics of Top 1% Companies</h2>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>(high_capital <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>  <span class="fu">count</span>(legal_nature, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> <span class="fu">reorder</span>(legal_nature, n))) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> my_colors[<span class="dv">2</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb20-6"><a href="#cb20-6"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 1%: Legal Nature"</span>,</span>
+<span id="cb20-7"><a href="#cb20-7"></a>       <span class="at">x =</span> <span class="st">"Count"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8"></a>       <span class="at">y =</span> <span class="cn">NULL</span>)) <span class="sc">/</span></span>
+<span id="cb20-9"><a href="#cb20-9"></a></span>
+<span id="cb20-10"><a href="#cb20-10"></a>(high_capital <span class="sc">%&gt;%</span></span>
+<span id="cb20-11"><a href="#cb20-11"></a>  <span class="fu">count</span>(company_size, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-12"><a href="#cb20-12"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> <span class="fu">reorder</span>(company_size, n))) <span class="sc">+</span></span>
+<span id="cb20-13"><a href="#cb20-13"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> my_colors[<span class="dv">1</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb20-14"><a href="#cb20-14"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 1%: Company Size"</span>,</span>
+<span id="cb20-15"><a href="#cb20-15"></a>       <span class="at">x =</span> <span class="st">"Count"</span>,</span>
+<span id="cb20-16"><a href="#cb20-16"></a>       <span class="at">y =</span> <span class="cn">NULL</span>)) <span class="sc">/</span></span>
+<span id="cb20-17"><a href="#cb20-17"></a></span>
+<span id="cb20-18"><a href="#cb20-18"></a>(high_capital <span class="sc">%&gt;%</span></span>
+<span id="cb20-19"><a href="#cb20-19"></a>  <span class="fu">count</span>(owner_qualification, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-20"><a href="#cb20-20"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">8</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-21"><a href="#cb20-21"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> <span class="fu">reorder</span>(owner_qualification, n))) <span class="sc">+</span></span>
+<span id="cb20-22"><a href="#cb20-22"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> my_colors[<span class="dv">3</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb20-23"><a href="#cb20-23"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 1%: Owner Qualification"</span>,</span>
+<span id="cb20-24"><a href="#cb20-24"></a>       <span class="at">x =</span> <span class="st">"Count"</span>,</span>
+<span id="cb20-25"><a href="#cb20-25"></a>       <span class="at">y =</span> <span class="cn">NULL</span>)) <span class="sc">+</span></span>
+<span id="cb20-26"><a href="#cb20-26"></a></span>
+<span id="cb20-27"><a href="#cb20-27"></a><span class="fu">plot_annotation</span>(</span>
+<span id="cb20-28"><a href="#cb20-28"></a>  <span class="at">title =</span> <span class="st">"Characteristics of Highest-Capital Companies"</span></span>
+<span id="cb20-29"><a href="#cb20-29"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="tt-01-27_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 <!-- -->
 
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();
@@ -1006,180 +1073,232 @@ $ company_size        &lt;chr&gt; "small-enterprise", "micro-enterprise", "small
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1"></a><span class="co">---</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="an">title:</span><span class="co"> "Brazilian Companies Capital Stock Analysis"</span></span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="an">author:</span><span class="co"> "William Acosta"</span></span>
-<span id="cb18-4"><a href="#cb18-4"></a><span class="an">date:</span><span class="co"> "2026-01-27"</span></span>
-<span id="cb18-5"><a href="#cb18-5"></a><span class="an">format:</span><span class="co"> </span></span>
-<span id="cb18-6"><a href="#cb18-6"></a><span class="co">  html:</span></span>
-<span id="cb18-7"><a href="#cb18-7"></a><span class="co">    theme: cosmo</span></span>
-<span id="cb18-8"><a href="#cb18-8"></a><span class="co">    code-fold: true</span></span>
-<span id="cb18-9"><a href="#cb18-9"></a><span class="co">---</span></span>
-<span id="cb18-10"><a href="#cb18-10"></a></span>
-<span id="cb18-11"><a href="#cb18-11"></a>This week's TidyTuesday explores Brazilian companies from the CNPJ (Cadastro Nacional da Pessoa Jurídica) registry.</span>
-<span id="cb18-12"><a href="#cb18-12"></a>I investigate how capital stock varies across different company characteristics including legal nature, company size, and owner qualifications.</span>
-<span id="cb18-13"><a href="#cb18-13"></a></span>
-<span id="cb18-14"><a href="#cb18-14"></a><span class="fu"># Setup</span></span>
-<span id="cb18-17"><a href="#cb18-17"></a><span class="in">```{r}</span></span>
-<span id="cb18-18"><a href="#cb18-18"></a><span class="co">#| message: false</span></span>
-<span id="cb18-19"><a href="#cb18-19"></a><span class="co">#| warning: false</span></span>
-<span id="cb18-20"><a href="#cb18-20"></a></span>
-<span id="cb18-21"><a href="#cb18-21"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb18-22"><a href="#cb18-22"></a><span class="fu">library</span>(scales)</span>
-<span id="cb18-23"><a href="#cb18-23"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb18-24"><a href="#cb18-24"></a></span>
-<span id="cb18-25"><a href="#cb18-25"></a>my_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"pink"</span>, <span class="st">"orange"</span>, <span class="st">"green"</span>)</span>
-<span id="cb18-26"><a href="#cb18-26"></a><span class="in">```</span></span>
-<span id="cb18-27"><a href="#cb18-27"></a></span>
-<span id="cb18-28"><a href="#cb18-28"></a><span class="fu"># Load Data</span></span>
-<span id="cb18-31"><a href="#cb18-31"></a><span class="in">```{r}</span></span>
-<span id="cb18-32"><a href="#cb18-32"></a>tuesdata <span class="ot">&lt;-</span> tidytuesdayR<span class="sc">::</span><span class="fu">tt_load</span>(<span class="dv">2026</span>, <span class="at">week =</span> <span class="dv">4</span>)</span>
-<span id="cb18-33"><a href="#cb18-33"></a></span>
-<span id="cb18-34"><a href="#cb18-34"></a>companies <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>companies</span>
-<span id="cb18-35"><a href="#cb18-35"></a>legal_nature <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>legal_nature</span>
-<span id="cb18-36"><a href="#cb18-36"></a>qualifications <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>qualifications</span>
-<span id="cb18-37"><a href="#cb18-37"></a>size <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>size</span>
-<span id="cb18-38"><a href="#cb18-38"></a><span class="in">```</span></span>
-<span id="cb18-39"><a href="#cb18-39"></a></span>
-<span id="cb18-40"><a href="#cb18-40"></a><span class="fu"># Data Exploration</span></span>
-<span id="cb18-43"><a href="#cb18-43"></a><span class="in">```{r}</span></span>
-<span id="cb18-44"><a href="#cb18-44"></a><span class="fu">glimpse</span>(companies)</span>
-<span id="cb18-45"><a href="#cb18-45"></a><span class="fu">summary</span>(companies<span class="sc">$</span>capital_stock)</span>
-<span id="cb18-46"><a href="#cb18-46"></a><span class="in">```</span></span>
-<span id="cb18-49"><a href="#cb18-49"></a><span class="in">```{r}</span></span>
-<span id="cb18-50"><a href="#cb18-50"></a><span class="fu">tibble</span>(</span>
-<span id="cb18-51"><a href="#cb18-51"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(<span class="st">"Number of companies"</span>, </span>
-<span id="cb18-52"><a href="#cb18-52"></a>             <span class="st">"Unique legal natures"</span>, </span>
-<span id="cb18-53"><a href="#cb18-53"></a>             <span class="st">"Unique owner qualifications"</span>, </span>
-<span id="cb18-54"><a href="#cb18-54"></a>             <span class="st">"Size categories"</span>),</span>
-<span id="cb18-55"><a href="#cb18-55"></a>  <span class="at">Count =</span> <span class="fu">comma</span>(<span class="fu">c</span>(<span class="fu">nrow</span>(companies),</span>
-<span id="cb18-56"><a href="#cb18-56"></a>            <span class="fu">n_distinct</span>(companies<span class="sc">$</span>legal_nature),</span>
-<span id="cb18-57"><a href="#cb18-57"></a>            <span class="fu">n_distinct</span>(companies<span class="sc">$</span>owner_qualification),</span>
-<span id="cb18-58"><a href="#cb18-58"></a>            <span class="fu">n_distinct</span>(companies<span class="sc">$</span>company_size)))</span>
-<span id="cb18-59"><a href="#cb18-59"></a>)</span>
-<span id="cb18-60"><a href="#cb18-60"></a><span class="in">```</span></span>
-<span id="cb18-61"><a href="#cb18-61"></a></span>
-<span id="cb18-62"><a href="#cb18-62"></a><span class="fu"># Distribution Analysis</span></span>
-<span id="cb18-63"><a href="#cb18-63"></a></span>
-<span id="cb18-64"><a href="#cb18-64"></a><span class="fu">## Capital Stock Distribution</span></span>
-<span id="cb18-67"><a href="#cb18-67"></a><span class="in">```{r}</span></span>
-<span id="cb18-68"><a href="#cb18-68"></a><span class="co">#| fig-width: 12</span></span>
-<span id="cb18-69"><a href="#cb18-69"></a><span class="co">#| fig-height: 5</span></span>
-<span id="cb18-70"><a href="#cb18-70"></a></span>
-<span id="cb18-71"><a href="#cb18-71"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> companies, <span class="fu">aes</span>(<span class="at">x =</span> capital_stock)) <span class="sc">+</span></span>
-<span id="cb18-72"><a href="#cb18-72"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">fill =</span> my_colors[<span class="dv">1</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb18-73"><a href="#cb18-73"></a>  <span class="fu">scale_x_log10</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
-<span id="cb18-74"><a href="#cb18-74"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Capital Stock"</span>,</span>
-<span id="cb18-75"><a href="#cb18-75"></a>       <span class="at">x =</span> <span class="st">"Capital Stock (log scale)"</span>,</span>
-<span id="cb18-76"><a href="#cb18-76"></a>       <span class="at">y =</span> <span class="st">"Count"</span>)) <span class="sc">+</span></span>
-<span id="cb18-77"><a href="#cb18-77"></a></span>
-<span id="cb18-78"><a href="#cb18-78"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> companies, <span class="fu">aes</span>(<span class="at">x =</span> capital_stock)) <span class="sc">+</span></span>
-<span id="cb18-79"><a href="#cb18-79"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> my_colors[<span class="dv">2</span>], <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb18-80"><a href="#cb18-80"></a>  <span class="fu">scale_x_log10</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
-<span id="cb18-81"><a href="#cb18-81"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Density Distribution"</span>,</span>
-<span id="cb18-82"><a href="#cb18-82"></a>       <span class="at">x =</span> <span class="st">"Capital Stock (log scale)"</span>,</span>
-<span id="cb18-83"><a href="#cb18-83"></a>       <span class="at">y =</span> <span class="st">"Density"</span>)) <span class="sc">+</span></span>
-<span id="cb18-84"><a href="#cb18-84"></a></span>
-<span id="cb18-85"><a href="#cb18-85"></a><span class="fu">plot_annotation</span>(</span>
-<span id="cb18-86"><a href="#cb18-86"></a>  <span class="at">title =</span> <span class="st">"Distribution of Company Capital Stock"</span></span>
-<span id="cb18-87"><a href="#cb18-87"></a>)</span>
-<span id="cb18-88"><a href="#cb18-88"></a><span class="in">```</span></span>
-<span id="cb18-89"><a href="#cb18-89"></a></span>
-<span id="cb18-90"><a href="#cb18-90"></a>The distribution is highly right-skewed, with most companies having modest capital stock and a long tail of high-capital firms.</span>
-<span id="cb18-91"><a href="#cb18-91"></a></span>
-<span id="cb18-92"><a href="#cb18-92"></a><span class="fu">## Capital Stock by Company Size</span></span>
-<span id="cb18-95"><a href="#cb18-95"></a><span class="in">```{r}</span></span>
-<span id="cb18-96"><a href="#cb18-96"></a><span class="co">#| fig-width: 12</span></span>
-<span id="cb18-97"><a href="#cb18-97"></a><span class="co">#| fig-height: 5</span></span>
-<span id="cb18-98"><a href="#cb18-98"></a></span>
-<span id="cb18-99"><a href="#cb18-99"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> companies <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(company_size)), </span>
-<span id="cb18-100"><a href="#cb18-100"></a>        <span class="fu">aes</span>(<span class="at">x =</span> company_size, <span class="at">y =</span> capital_stock, <span class="at">fill =</span> company_size)) <span class="sc">+</span></span>
-<span id="cb18-101"><a href="#cb18-101"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">outlier.alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb18-102"><a href="#cb18-102"></a>  <span class="fu">scale_y_log10</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
-<span id="cb18-103"><a href="#cb18-103"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> my_colors) <span class="sc">+</span></span>
-<span id="cb18-104"><a href="#cb18-104"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplot by Company Size"</span>,</span>
-<span id="cb18-105"><a href="#cb18-105"></a>       <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb18-106"><a href="#cb18-106"></a>       <span class="at">y =</span> <span class="st">"Capital Stock (log scale)"</span>) <span class="sc">+</span></span>
-<span id="cb18-107"><a href="#cb18-107"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)) <span class="sc">+</span></span>
-<span id="cb18-108"><a href="#cb18-108"></a></span>
-<span id="cb18-109"><a href="#cb18-109"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> companies <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(company_size)), </span>
-<span id="cb18-110"><a href="#cb18-110"></a>        <span class="fu">aes</span>(<span class="at">x =</span> company_size, <span class="at">y =</span> capital_stock, <span class="at">fill =</span> company_size)) <span class="sc">+</span></span>
-<span id="cb18-111"><a href="#cb18-111"></a>  <span class="fu">geom_violin</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb18-112"><a href="#cb18-112"></a>  <span class="fu">scale_y_log10</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
-<span id="cb18-113"><a href="#cb18-113"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> my_colors) <span class="sc">+</span></span>
-<span id="cb18-114"><a href="#cb18-114"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Violin Plot by Company Size"</span>,</span>
-<span id="cb18-115"><a href="#cb18-115"></a>       <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb18-116"><a href="#cb18-116"></a>       <span class="at">y =</span> <span class="st">"Capital Stock (log scale)"</span>) <span class="sc">+</span></span>
-<span id="cb18-117"><a href="#cb18-117"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)) <span class="sc">+</span></span>
-<span id="cb18-118"><a href="#cb18-118"></a></span>
-<span id="cb18-119"><a href="#cb18-119"></a><span class="fu">plot_annotation</span>(</span>
-<span id="cb18-120"><a href="#cb18-120"></a>  <span class="at">title =</span> <span class="st">"Capital Stock Distribution by Company Size"</span></span>
-<span id="cb18-121"><a href="#cb18-121"></a>)</span>
-<span id="cb18-122"><a href="#cb18-122"></a><span class="in">```</span></span>
-<span id="cb18-125"><a href="#cb18-125"></a><span class="in">```{r}</span></span>
-<span id="cb18-126"><a href="#cb18-126"></a>companies <span class="sc">%&gt;%</span></span>
-<span id="cb18-127"><a href="#cb18-127"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(company_size)) <span class="sc">%&gt;%</span></span>
-<span id="cb18-128"><a href="#cb18-128"></a>  <span class="fu">group_by</span>(company_size) <span class="sc">%&gt;%</span></span>
-<span id="cb18-129"><a href="#cb18-129"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb18-130"><a href="#cb18-130"></a>    <span class="at">count =</span> <span class="fu">comma</span>(<span class="fu">n</span>()),</span>
-<span id="cb18-131"><a href="#cb18-131"></a>    <span class="at">median_capital =</span> <span class="fu">dollar</span>(<span class="fu">median</span>(capital_stock), <span class="at">prefix =</span> <span class="st">"R$"</span>),</span>
-<span id="cb18-132"><a href="#cb18-132"></a>    <span class="at">mean_capital =</span> <span class="fu">dollar</span>(<span class="fu">mean</span>(capital_stock), <span class="at">prefix =</span> <span class="st">"R$"</span>),</span>
-<span id="cb18-133"><a href="#cb18-133"></a>    <span class="at">total_capital =</span> <span class="fu">dollar</span>(<span class="fu">sum</span>(capital_stock), <span class="at">prefix =</span> <span class="st">"R$"</span>, <span class="at">scale =</span> <span class="fl">1e-9</span>, <span class="at">suffix =</span> <span class="st">"B"</span>)</span>
-<span id="cb18-134"><a href="#cb18-134"></a>  )</span>
-<span id="cb18-135"><a href="#cb18-135"></a><span class="in">```</span></span>
-<span id="cb18-136"><a href="#cb18-136"></a></span>
-<span id="cb18-137"><a href="#cb18-137"></a><span class="fu"># Legal Nature and Owner Qualifications</span></span>
-<span id="cb18-140"><a href="#cb18-140"></a><span class="in">```{r}</span></span>
-<span id="cb18-141"><a href="#cb18-141"></a><span class="co">#| fig-width: 12</span></span>
-<span id="cb18-142"><a href="#cb18-142"></a><span class="co">#| fig-height: 10</span></span>
-<span id="cb18-143"><a href="#cb18-143"></a></span>
-<span id="cb18-144"><a href="#cb18-144"></a>top_legal <span class="ot">&lt;-</span> companies <span class="sc">%&gt;%</span></span>
-<span id="cb18-145"><a href="#cb18-145"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(legal_nature)) <span class="sc">%&gt;%</span></span>
-<span id="cb18-146"><a href="#cb18-146"></a>  <span class="fu">group_by</span>(legal_nature) <span class="sc">%&gt;%</span></span>
-<span id="cb18-147"><a href="#cb18-147"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb18-148"><a href="#cb18-148"></a>    <span class="at">count =</span> <span class="fu">n</span>(),</span>
-<span id="cb18-149"><a href="#cb18-149"></a>    <span class="at">total_capital =</span> <span class="fu">sum</span>(capital_stock),</span>
-<span id="cb18-150"><a href="#cb18-150"></a>    <span class="at">median_capital =</span> <span class="fu">median</span>(capital_stock)</span>
-<span id="cb18-151"><a href="#cb18-151"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb18-152"><a href="#cb18-152"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total_capital)) <span class="sc">%&gt;%</span></span>
-<span id="cb18-153"><a href="#cb18-153"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span>
-<span id="cb18-154"><a href="#cb18-154"></a></span>
-<span id="cb18-155"><a href="#cb18-155"></a>top_qualifications <span class="ot">&lt;-</span> companies <span class="sc">%&gt;%</span></span>
-<span id="cb18-156"><a href="#cb18-156"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(owner_qualification)) <span class="sc">%&gt;%</span></span>
-<span id="cb18-157"><a href="#cb18-157"></a>  <span class="fu">group_by</span>(owner_qualification) <span class="sc">%&gt;%</span></span>
-<span id="cb18-158"><a href="#cb18-158"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb18-159"><a href="#cb18-159"></a>    <span class="at">count =</span> <span class="fu">n</span>(),</span>
-<span id="cb18-160"><a href="#cb18-160"></a>    <span class="at">total_capital =</span> <span class="fu">sum</span>(capital_stock),</span>
-<span id="cb18-161"><a href="#cb18-161"></a>    <span class="at">median_capital =</span> <span class="fu">median</span>(capital_stock)</span>
-<span id="cb18-162"><a href="#cb18-162"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb18-163"><a href="#cb18-163"></a>  <span class="fu">filter</span>(count <span class="sc">&gt;=</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb18-164"><a href="#cb18-164"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(median_capital)) <span class="sc">%&gt;%</span></span>
-<span id="cb18-165"><a href="#cb18-165"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span>
-<span id="cb18-166"><a href="#cb18-166"></a></span>
-<span id="cb18-167"><a href="#cb18-167"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> top_legal, <span class="fu">aes</span>(<span class="at">x =</span> total_capital, <span class="at">y =</span> <span class="fu">reorder</span>(legal_nature, total_capital))) <span class="sc">+</span></span>
-<span id="cb18-168"><a href="#cb18-168"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> my_colors[<span class="dv">2</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb18-169"><a href="#cb18-169"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-9</span>, <span class="at">suffix =</span> <span class="st">"B"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
-<span id="cb18-170"><a href="#cb18-170"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Legal Natures by Total Capital"</span>,</span>
-<span id="cb18-171"><a href="#cb18-171"></a>       <span class="at">x =</span> <span class="st">"Total Capital Stock"</span>,</span>
-<span id="cb18-172"><a href="#cb18-172"></a>       <span class="at">y =</span> <span class="cn">NULL</span>)) <span class="sc">/</span></span>
-<span id="cb18-173"><a href="#cb18-173"></a></span>
-<span id="cb18-174"><a href="#cb18-174"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> top_qualifications, <span class="fu">aes</span>(<span class="at">x =</span> median_capital, <span class="at">y =</span> <span class="fu">reorder</span>(owner_qualification, median_capital))) <span class="sc">+</span></span>
-<span id="cb18-175"><a href="#cb18-175"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> my_colors[<span class="dv">3</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb18-176"><a href="#cb18-176"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
-<span id="cb18-177"><a href="#cb18-177"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Owner Qualifications by Median Capital"</span>,</span>
-<span id="cb18-178"><a href="#cb18-178"></a>       <span class="at">x =</span> <span class="st">"Median Capital Stock"</span>,</span>
-<span id="cb18-179"><a href="#cb18-179"></a>       <span class="at">y =</span> <span class="cn">NULL</span>))</span>
-<span id="cb18-180"><a href="#cb18-180"></a><span class="in">```</span></span>
-<span id="cb18-183"><a href="#cb18-183"></a><span class="in">```{r}</span></span>
-<span id="cb18-184"><a href="#cb18-184"></a><span class="co"># Tables</span></span>
-<span id="cb18-185"><a href="#cb18-185"></a>top_legal <span class="sc">%&gt;%</span></span>
-<span id="cb18-186"><a href="#cb18-186"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(total_capital, median_capital), <span class="sc">~</span><span class="fu">dollar</span>(.x, <span class="at">prefix =</span> <span class="st">"R$"</span>, <span class="at">scale =</span> <span class="fl">1e-9</span>, <span class="at">suffix =</span> <span class="st">"B"</span>)),</span>
-<span id="cb18-187"><a href="#cb18-187"></a>         <span class="at">count =</span> <span class="fu">comma</span>(count))</span>
-<span id="cb18-188"><a href="#cb18-188"></a></span>
-<span id="cb18-189"><a href="#cb18-189"></a>top_qualifications <span class="sc">%&gt;%</span></span>
-<span id="cb18-190"><a href="#cb18-190"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(total_capital, median_capital), <span class="sc">~</span><span class="fu">dollar</span>(.x, <span class="at">prefix =</span> <span class="st">"R$"</span>, <span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>)),</span>
-<span id="cb18-191"><a href="#cb18-191"></a>         <span class="at">count =</span> <span class="fu">comma</span>(count))</span>
-<span id="cb18-192"><a href="#cb18-192"></a><span class="in">```</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1"></a><span class="co">---</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="an">title:</span><span class="co"> "Brazilian Companies Capital Stock Analysis"</span></span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="an">author:</span><span class="co"> "William Acosta"</span></span>
+<span id="cb21-4"><a href="#cb21-4"></a><span class="an">date:</span><span class="co"> "2026-01-27"</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb21-6"><a href="#cb21-6"></a><span class="co">  html:</span></span>
+<span id="cb21-7"><a href="#cb21-7"></a><span class="co">    theme: cosmo</span></span>
+<span id="cb21-8"><a href="#cb21-8"></a><span class="co">    code-fold: true</span></span>
+<span id="cb21-9"><a href="#cb21-9"></a><span class="co">---</span></span>
+<span id="cb21-10"><a href="#cb21-10"></a></span>
+<span id="cb21-11"><a href="#cb21-11"></a>This week's TidyTuesday explores Brazilian companies from the CNPJ (Cadastro Nacional da Pessoa Jurídica) registry.</span>
+<span id="cb21-12"><a href="#cb21-12"></a>I investigate how capital stock varies across different company characteristics including legal nature, company size, and owner qualifications.</span>
+<span id="cb21-13"><a href="#cb21-13"></a></span>
+<span id="cb21-14"><a href="#cb21-14"></a><span class="fu"># Setup</span></span>
+<span id="cb21-17"><a href="#cb21-17"></a><span class="in">```{r}</span></span>
+<span id="cb21-18"><a href="#cb21-18"></a><span class="co">#| message: false</span></span>
+<span id="cb21-19"><a href="#cb21-19"></a><span class="co">#| warning: false</span></span>
+<span id="cb21-20"><a href="#cb21-20"></a></span>
+<span id="cb21-21"><a href="#cb21-21"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb21-22"><a href="#cb21-22"></a><span class="fu">library</span>(scales)</span>
+<span id="cb21-23"><a href="#cb21-23"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb21-24"><a href="#cb21-24"></a></span>
+<span id="cb21-25"><a href="#cb21-25"></a>my_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"pink"</span>, <span class="st">"orange"</span>, <span class="st">"green"</span>)</span>
+<span id="cb21-26"><a href="#cb21-26"></a><span class="in">```</span></span>
+<span id="cb21-27"><a href="#cb21-27"></a></span>
+<span id="cb21-28"><a href="#cb21-28"></a><span class="fu"># Load Data</span></span>
+<span id="cb21-31"><a href="#cb21-31"></a><span class="in">```{r}</span></span>
+<span id="cb21-32"><a href="#cb21-32"></a>tuesdata <span class="ot">&lt;-</span> tidytuesdayR<span class="sc">::</span><span class="fu">tt_load</span>(<span class="dv">2026</span>, <span class="at">week =</span> <span class="dv">4</span>)</span>
+<span id="cb21-33"><a href="#cb21-33"></a></span>
+<span id="cb21-34"><a href="#cb21-34"></a>companies <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>companies</span>
+<span id="cb21-35"><a href="#cb21-35"></a>legal_nature <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>legal_nature</span>
+<span id="cb21-36"><a href="#cb21-36"></a>qualifications <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>qualifications</span>
+<span id="cb21-37"><a href="#cb21-37"></a>size <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>size</span>
+<span id="cb21-38"><a href="#cb21-38"></a><span class="in">```</span></span>
+<span id="cb21-39"><a href="#cb21-39"></a></span>
+<span id="cb21-40"><a href="#cb21-40"></a><span class="fu"># Data Exploration</span></span>
+<span id="cb21-43"><a href="#cb21-43"></a><span class="in">```{r}</span></span>
+<span id="cb21-44"><a href="#cb21-44"></a><span class="fu">glimpse</span>(companies)</span>
+<span id="cb21-45"><a href="#cb21-45"></a><span class="fu">summary</span>(companies<span class="sc">$</span>capital_stock)</span>
+<span id="cb21-46"><a href="#cb21-46"></a><span class="in">```</span></span>
+<span id="cb21-49"><a href="#cb21-49"></a><span class="in">```{r}</span></span>
+<span id="cb21-50"><a href="#cb21-50"></a><span class="fu">tibble</span>(</span>
+<span id="cb21-51"><a href="#cb21-51"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(<span class="st">"Number of companies"</span>, </span>
+<span id="cb21-52"><a href="#cb21-52"></a>             <span class="st">"Unique legal natures"</span>, </span>
+<span id="cb21-53"><a href="#cb21-53"></a>             <span class="st">"Unique owner qualifications"</span>, </span>
+<span id="cb21-54"><a href="#cb21-54"></a>             <span class="st">"Size categories"</span>),</span>
+<span id="cb21-55"><a href="#cb21-55"></a>  <span class="at">Count =</span> <span class="fu">comma</span>(<span class="fu">c</span>(<span class="fu">nrow</span>(companies),</span>
+<span id="cb21-56"><a href="#cb21-56"></a>            <span class="fu">n_distinct</span>(companies<span class="sc">$</span>legal_nature),</span>
+<span id="cb21-57"><a href="#cb21-57"></a>            <span class="fu">n_distinct</span>(companies<span class="sc">$</span>owner_qualification),</span>
+<span id="cb21-58"><a href="#cb21-58"></a>            <span class="fu">n_distinct</span>(companies<span class="sc">$</span>company_size)))</span>
+<span id="cb21-59"><a href="#cb21-59"></a>)</span>
+<span id="cb21-60"><a href="#cb21-60"></a><span class="in">```</span></span>
+<span id="cb21-61"><a href="#cb21-61"></a></span>
+<span id="cb21-62"><a href="#cb21-62"></a><span class="fu"># Distribution Analysis</span></span>
+<span id="cb21-63"><a href="#cb21-63"></a></span>
+<span id="cb21-64"><a href="#cb21-64"></a><span class="fu">## Capital Stock Distribution</span></span>
+<span id="cb21-67"><a href="#cb21-67"></a><span class="in">```{r}</span></span>
+<span id="cb21-68"><a href="#cb21-68"></a><span class="co">#| fig-width: 12</span></span>
+<span id="cb21-69"><a href="#cb21-69"></a><span class="co">#| fig-height: 5</span></span>
+<span id="cb21-70"><a href="#cb21-70"></a></span>
+<span id="cb21-71"><a href="#cb21-71"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> companies, <span class="fu">aes</span>(<span class="at">x =</span> capital_stock)) <span class="sc">+</span></span>
+<span id="cb21-72"><a href="#cb21-72"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">fill =</span> my_colors[<span class="dv">1</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb21-73"><a href="#cb21-73"></a>  <span class="fu">scale_x_log10</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
+<span id="cb21-74"><a href="#cb21-74"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Capital Stock"</span>,</span>
+<span id="cb21-75"><a href="#cb21-75"></a>       <span class="at">x =</span> <span class="st">"Capital Stock (log scale)"</span>,</span>
+<span id="cb21-76"><a href="#cb21-76"></a>       <span class="at">y =</span> <span class="st">"Count"</span>)) <span class="sc">+</span></span>
+<span id="cb21-77"><a href="#cb21-77"></a></span>
+<span id="cb21-78"><a href="#cb21-78"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> companies, <span class="fu">aes</span>(<span class="at">x =</span> capital_stock)) <span class="sc">+</span></span>
+<span id="cb21-79"><a href="#cb21-79"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> my_colors[<span class="dv">2</span>], <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb21-80"><a href="#cb21-80"></a>  <span class="fu">scale_x_log10</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
+<span id="cb21-81"><a href="#cb21-81"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Density Distribution"</span>,</span>
+<span id="cb21-82"><a href="#cb21-82"></a>       <span class="at">x =</span> <span class="st">"Capital Stock (log scale)"</span>,</span>
+<span id="cb21-83"><a href="#cb21-83"></a>       <span class="at">y =</span> <span class="st">"Density"</span>)) <span class="sc">+</span></span>
+<span id="cb21-84"><a href="#cb21-84"></a></span>
+<span id="cb21-85"><a href="#cb21-85"></a><span class="fu">plot_annotation</span>(</span>
+<span id="cb21-86"><a href="#cb21-86"></a>  <span class="at">title =</span> <span class="st">"Distribution of Company Capital Stock"</span></span>
+<span id="cb21-87"><a href="#cb21-87"></a>)</span>
+<span id="cb21-88"><a href="#cb21-88"></a><span class="in">```</span></span>
+<span id="cb21-89"><a href="#cb21-89"></a></span>
+<span id="cb21-90"><a href="#cb21-90"></a>The distribution is highly right-skewed, with most companies having modest capital stock and a long tail of high-capital firms.</span>
+<span id="cb21-91"><a href="#cb21-91"></a></span>
+<span id="cb21-92"><a href="#cb21-92"></a><span class="fu">## Capital Stock by Company Size</span></span>
+<span id="cb21-95"><a href="#cb21-95"></a><span class="in">```{r}</span></span>
+<span id="cb21-96"><a href="#cb21-96"></a><span class="co">#| fig-width: 12</span></span>
+<span id="cb21-97"><a href="#cb21-97"></a><span class="co">#| fig-height: 5</span></span>
+<span id="cb21-98"><a href="#cb21-98"></a></span>
+<span id="cb21-99"><a href="#cb21-99"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> companies <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(company_size)), </span>
+<span id="cb21-100"><a href="#cb21-100"></a>        <span class="fu">aes</span>(<span class="at">x =</span> company_size, <span class="at">y =</span> capital_stock, <span class="at">fill =</span> company_size)) <span class="sc">+</span></span>
+<span id="cb21-101"><a href="#cb21-101"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">outlier.alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb21-102"><a href="#cb21-102"></a>  <span class="fu">scale_y_log10</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
+<span id="cb21-103"><a href="#cb21-103"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> my_colors) <span class="sc">+</span></span>
+<span id="cb21-104"><a href="#cb21-104"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplot by Company Size"</span>,</span>
+<span id="cb21-105"><a href="#cb21-105"></a>       <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb21-106"><a href="#cb21-106"></a>       <span class="at">y =</span> <span class="st">"Capital Stock (log scale)"</span>) <span class="sc">+</span></span>
+<span id="cb21-107"><a href="#cb21-107"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)) <span class="sc">+</span></span>
+<span id="cb21-108"><a href="#cb21-108"></a></span>
+<span id="cb21-109"><a href="#cb21-109"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> companies <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(company_size)), </span>
+<span id="cb21-110"><a href="#cb21-110"></a>        <span class="fu">aes</span>(<span class="at">x =</span> company_size, <span class="at">y =</span> capital_stock, <span class="at">fill =</span> company_size)) <span class="sc">+</span></span>
+<span id="cb21-111"><a href="#cb21-111"></a>  <span class="fu">geom_violin</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb21-112"><a href="#cb21-112"></a>  <span class="fu">scale_y_log10</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
+<span id="cb21-113"><a href="#cb21-113"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> my_colors) <span class="sc">+</span></span>
+<span id="cb21-114"><a href="#cb21-114"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Violin Plot by Company Size"</span>,</span>
+<span id="cb21-115"><a href="#cb21-115"></a>       <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb21-116"><a href="#cb21-116"></a>       <span class="at">y =</span> <span class="st">"Capital Stock (log scale)"</span>) <span class="sc">+</span></span>
+<span id="cb21-117"><a href="#cb21-117"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)) <span class="sc">+</span></span>
+<span id="cb21-118"><a href="#cb21-118"></a></span>
+<span id="cb21-119"><a href="#cb21-119"></a><span class="fu">plot_annotation</span>(</span>
+<span id="cb21-120"><a href="#cb21-120"></a>  <span class="at">title =</span> <span class="st">"Capital Stock Distribution by Company Size"</span></span>
+<span id="cb21-121"><a href="#cb21-121"></a>)</span>
+<span id="cb21-122"><a href="#cb21-122"></a><span class="in">```</span></span>
+<span id="cb21-125"><a href="#cb21-125"></a><span class="in">```{r}</span></span>
+<span id="cb21-126"><a href="#cb21-126"></a>companies <span class="sc">%&gt;%</span></span>
+<span id="cb21-127"><a href="#cb21-127"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(company_size)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-128"><a href="#cb21-128"></a>  <span class="fu">group_by</span>(company_size) <span class="sc">%&gt;%</span></span>
+<span id="cb21-129"><a href="#cb21-129"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb21-130"><a href="#cb21-130"></a>    <span class="at">count =</span> <span class="fu">comma</span>(<span class="fu">n</span>()),</span>
+<span id="cb21-131"><a href="#cb21-131"></a>    <span class="at">median_capital =</span> <span class="fu">dollar</span>(<span class="fu">median</span>(capital_stock), <span class="at">prefix =</span> <span class="st">"R$"</span>),</span>
+<span id="cb21-132"><a href="#cb21-132"></a>    <span class="at">mean_capital =</span> <span class="fu">dollar</span>(<span class="fu">mean</span>(capital_stock), <span class="at">prefix =</span> <span class="st">"R$"</span>),</span>
+<span id="cb21-133"><a href="#cb21-133"></a>    <span class="at">total_capital =</span> <span class="fu">dollar</span>(<span class="fu">sum</span>(capital_stock), <span class="at">prefix =</span> <span class="st">"R$"</span>, <span class="at">scale =</span> <span class="fl">1e-9</span>, <span class="at">suffix =</span> <span class="st">"B"</span>)</span>
+<span id="cb21-134"><a href="#cb21-134"></a>  )</span>
+<span id="cb21-135"><a href="#cb21-135"></a><span class="in">```</span></span>
+<span id="cb21-136"><a href="#cb21-136"></a></span>
+<span id="cb21-137"><a href="#cb21-137"></a><span class="fu"># Legal Nature and Owner Qualifications</span></span>
+<span id="cb21-140"><a href="#cb21-140"></a><span class="in">```{r}</span></span>
+<span id="cb21-141"><a href="#cb21-141"></a><span class="co">#| fig-width: 12</span></span>
+<span id="cb21-142"><a href="#cb21-142"></a><span class="co">#| fig-height: 10</span></span>
+<span id="cb21-143"><a href="#cb21-143"></a></span>
+<span id="cb21-144"><a href="#cb21-144"></a>top_legal <span class="ot">&lt;-</span> companies <span class="sc">%&gt;%</span></span>
+<span id="cb21-145"><a href="#cb21-145"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(legal_nature)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-146"><a href="#cb21-146"></a>  <span class="fu">group_by</span>(legal_nature) <span class="sc">%&gt;%</span></span>
+<span id="cb21-147"><a href="#cb21-147"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb21-148"><a href="#cb21-148"></a>    <span class="at">count =</span> <span class="fu">n</span>(),</span>
+<span id="cb21-149"><a href="#cb21-149"></a>    <span class="at">total_capital =</span> <span class="fu">sum</span>(capital_stock),</span>
+<span id="cb21-150"><a href="#cb21-150"></a>    <span class="at">median_capital =</span> <span class="fu">median</span>(capital_stock)</span>
+<span id="cb21-151"><a href="#cb21-151"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb21-152"><a href="#cb21-152"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total_capital)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-153"><a href="#cb21-153"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb21-154"><a href="#cb21-154"></a></span>
+<span id="cb21-155"><a href="#cb21-155"></a>top_qualifications <span class="ot">&lt;-</span> companies <span class="sc">%&gt;%</span></span>
+<span id="cb21-156"><a href="#cb21-156"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(owner_qualification)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-157"><a href="#cb21-157"></a>  <span class="fu">group_by</span>(owner_qualification) <span class="sc">%&gt;%</span></span>
+<span id="cb21-158"><a href="#cb21-158"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb21-159"><a href="#cb21-159"></a>    <span class="at">count =</span> <span class="fu">n</span>(),</span>
+<span id="cb21-160"><a href="#cb21-160"></a>    <span class="at">total_capital =</span> <span class="fu">sum</span>(capital_stock),</span>
+<span id="cb21-161"><a href="#cb21-161"></a>    <span class="at">median_capital =</span> <span class="fu">median</span>(capital_stock)</span>
+<span id="cb21-162"><a href="#cb21-162"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb21-163"><a href="#cb21-163"></a>  <span class="fu">filter</span>(count <span class="sc">&gt;=</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-164"><a href="#cb21-164"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(median_capital)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-165"><a href="#cb21-165"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb21-166"><a href="#cb21-166"></a></span>
+<span id="cb21-167"><a href="#cb21-167"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> top_legal, <span class="fu">aes</span>(<span class="at">x =</span> total_capital, <span class="at">y =</span> <span class="fu">reorder</span>(legal_nature, total_capital))) <span class="sc">+</span></span>
+<span id="cb21-168"><a href="#cb21-168"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> my_colors[<span class="dv">2</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb21-169"><a href="#cb21-169"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-9</span>, <span class="at">suffix =</span> <span class="st">"B"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
+<span id="cb21-170"><a href="#cb21-170"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Legal Natures by Total Capital"</span>,</span>
+<span id="cb21-171"><a href="#cb21-171"></a>       <span class="at">x =</span> <span class="st">"Total Capital Stock"</span>,</span>
+<span id="cb21-172"><a href="#cb21-172"></a>       <span class="at">y =</span> <span class="cn">NULL</span>)) <span class="sc">/</span></span>
+<span id="cb21-173"><a href="#cb21-173"></a></span>
+<span id="cb21-174"><a href="#cb21-174"></a>(<span class="fu">ggplot</span>(<span class="at">data =</span> top_qualifications, <span class="fu">aes</span>(<span class="at">x =</span> median_capital, <span class="at">y =</span> <span class="fu">reorder</span>(owner_qualification, median_capital))) <span class="sc">+</span></span>
+<span id="cb21-175"><a href="#cb21-175"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> my_colors[<span class="dv">3</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb21-176"><a href="#cb21-176"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>, <span class="at">prefix =</span> <span class="st">"R$"</span>)) <span class="sc">+</span></span>
+<span id="cb21-177"><a href="#cb21-177"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Owner Qualifications by Median Capital"</span>,</span>
+<span id="cb21-178"><a href="#cb21-178"></a>       <span class="at">x =</span> <span class="st">"Median Capital Stock"</span>,</span>
+<span id="cb21-179"><a href="#cb21-179"></a>       <span class="at">y =</span> <span class="cn">NULL</span>))</span>
+<span id="cb21-180"><a href="#cb21-180"></a><span class="in">```</span></span>
+<span id="cb21-183"><a href="#cb21-183"></a><span class="in">```{r}</span></span>
+<span id="cb21-184"><a href="#cb21-184"></a><span class="co"># Tables</span></span>
+<span id="cb21-185"><a href="#cb21-185"></a>top_legal <span class="sc">%&gt;%</span></span>
+<span id="cb21-186"><a href="#cb21-186"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(total_capital, median_capital), <span class="sc">~</span><span class="fu">dollar</span>(.x, <span class="at">prefix =</span> <span class="st">"R$"</span>, <span class="at">scale =</span> <span class="fl">1e-9</span>, <span class="at">suffix =</span> <span class="st">"B"</span>)),</span>
+<span id="cb21-187"><a href="#cb21-187"></a>         <span class="at">count =</span> <span class="fu">comma</span>(count))</span>
+<span id="cb21-188"><a href="#cb21-188"></a></span>
+<span id="cb21-189"><a href="#cb21-189"></a>top_qualifications <span class="sc">%&gt;%</span></span>
+<span id="cb21-190"><a href="#cb21-190"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(total_capital, median_capital), <span class="sc">~</span><span class="fu">dollar</span>(.x, <span class="at">prefix =</span> <span class="st">"R$"</span>, <span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>)),</span>
+<span id="cb21-191"><a href="#cb21-191"></a>         <span class="at">count =</span> <span class="fu">comma</span>(count))</span>
+<span id="cb21-192"><a href="#cb21-192"></a><span class="in">```</span></span>
+<span id="cb21-193"><a href="#cb21-193"></a></span>
+<span id="cb21-194"><a href="#cb21-194"></a><span class="fu"># Top 1% Analysis</span></span>
+<span id="cb21-197"><a href="#cb21-197"></a><span class="in">```{r}</span></span>
+<span id="cb21-198"><a href="#cb21-198"></a>capital_99th <span class="ot">&lt;-</span> <span class="fu">quantile</span>(companies<span class="sc">$</span>capital_stock, <span class="fl">0.99</span>)</span>
+<span id="cb21-199"><a href="#cb21-199"></a>high_capital <span class="ot">&lt;-</span> companies <span class="sc">%&gt;%</span></span>
+<span id="cb21-200"><a href="#cb21-200"></a>  <span class="fu">filter</span>(capital_stock <span class="sc">&gt;=</span> capital_99th)</span>
+<span id="cb21-201"><a href="#cb21-201"></a></span>
+<span id="cb21-202"><a href="#cb21-202"></a><span class="fu">tibble</span>(</span>
+<span id="cb21-203"><a href="#cb21-203"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(<span class="st">"99th percentile threshold"</span>, <span class="st">"Companies in top 1%"</span>, <span class="st">"Total capital in top 1%"</span>),</span>
+<span id="cb21-204"><a href="#cb21-204"></a>  <span class="at">Value =</span> <span class="fu">c</span>(</span>
+<span id="cb21-205"><a href="#cb21-205"></a>    <span class="fu">dollar</span>(capital_99th, <span class="at">prefix =</span> <span class="st">"R$"</span>, <span class="at">scale =</span> <span class="fl">1e-6</span>, <span class="at">suffix =</span> <span class="st">"M"</span>),</span>
+<span id="cb21-206"><a href="#cb21-206"></a>    <span class="fu">comma</span>(<span class="fu">nrow</span>(high_capital)),</span>
+<span id="cb21-207"><a href="#cb21-207"></a>    <span class="fu">dollar</span>(<span class="fu">sum</span>(high_capital<span class="sc">$</span>capital_stock), <span class="at">prefix =</span> <span class="st">"R$"</span>, <span class="at">scale =</span> <span class="fl">1e-9</span>, <span class="at">suffix =</span> <span class="st">"B"</span>)</span>
+<span id="cb21-208"><a href="#cb21-208"></a>  )</span>
+<span id="cb21-209"><a href="#cb21-209"></a>)</span>
+<span id="cb21-210"><a href="#cb21-210"></a><span class="in">```</span></span>
+<span id="cb21-211"><a href="#cb21-211"></a></span>
+<span id="cb21-212"><a href="#cb21-212"></a><span class="fu">## Characteristics of Top 1% Companies</span></span>
+<span id="cb21-215"><a href="#cb21-215"></a><span class="in">```{r}</span></span>
+<span id="cb21-216"><a href="#cb21-216"></a><span class="co">#| fig-width: 12</span></span>
+<span id="cb21-217"><a href="#cb21-217"></a><span class="co">#| fig-height: 12</span></span>
+<span id="cb21-218"><a href="#cb21-218"></a></span>
+<span id="cb21-219"><a href="#cb21-219"></a>(high_capital <span class="sc">%&gt;%</span></span>
+<span id="cb21-220"><a href="#cb21-220"></a>  <span class="fu">count</span>(legal_nature, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-221"><a href="#cb21-221"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-222"><a href="#cb21-222"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> <span class="fu">reorder</span>(legal_nature, n))) <span class="sc">+</span></span>
+<span id="cb21-223"><a href="#cb21-223"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> my_colors[<span class="dv">2</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb21-224"><a href="#cb21-224"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 1%: Legal Nature"</span>,</span>
+<span id="cb21-225"><a href="#cb21-225"></a>       <span class="at">x =</span> <span class="st">"Count"</span>,</span>
+<span id="cb21-226"><a href="#cb21-226"></a>       <span class="at">y =</span> <span class="cn">NULL</span>)) <span class="sc">/</span></span>
+<span id="cb21-227"><a href="#cb21-227"></a></span>
+<span id="cb21-228"><a href="#cb21-228"></a>(high_capital <span class="sc">%&gt;%</span></span>
+<span id="cb21-229"><a href="#cb21-229"></a>  <span class="fu">count</span>(company_size, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-230"><a href="#cb21-230"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> <span class="fu">reorder</span>(company_size, n))) <span class="sc">+</span></span>
+<span id="cb21-231"><a href="#cb21-231"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> my_colors[<span class="dv">1</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb21-232"><a href="#cb21-232"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 1%: Company Size"</span>,</span>
+<span id="cb21-233"><a href="#cb21-233"></a>       <span class="at">x =</span> <span class="st">"Count"</span>,</span>
+<span id="cb21-234"><a href="#cb21-234"></a>       <span class="at">y =</span> <span class="cn">NULL</span>)) <span class="sc">/</span></span>
+<span id="cb21-235"><a href="#cb21-235"></a></span>
+<span id="cb21-236"><a href="#cb21-236"></a>(high_capital <span class="sc">%&gt;%</span></span>
+<span id="cb21-237"><a href="#cb21-237"></a>  <span class="fu">count</span>(owner_qualification, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-238"><a href="#cb21-238"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">8</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-239"><a href="#cb21-239"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> <span class="fu">reorder</span>(owner_qualification, n))) <span class="sc">+</span></span>
+<span id="cb21-240"><a href="#cb21-240"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> my_colors[<span class="dv">3</span>], <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb21-241"><a href="#cb21-241"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 1%: Owner Qualification"</span>,</span>
+<span id="cb21-242"><a href="#cb21-242"></a>       <span class="at">x =</span> <span class="st">"Count"</span>,</span>
+<span id="cb21-243"><a href="#cb21-243"></a>       <span class="at">y =</span> <span class="cn">NULL</span>)) <span class="sc">+</span></span>
+<span id="cb21-244"><a href="#cb21-244"></a></span>
+<span id="cb21-245"><a href="#cb21-245"></a><span class="fu">plot_annotation</span>(</span>
+<span id="cb21-246"><a href="#cb21-246"></a>  <span class="at">title =</span> <span class="st">"Characteristics of Highest-Capital Companies"</span></span>
+<span id="cb21-247"><a href="#cb21-247"></a>)</span>
+<span id="cb21-248"><a href="#cb21-248"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
