@@ -173,3 +173,54 @@ top_qualifications %>%
          count = comma(count))
 ```
 
+# Top 1% Analysis
+```{r}
+capital_99th <- quantile(companies$capital_stock, 0.99)
+high_capital <- companies %>%
+  filter(capital_stock >= capital_99th)
+
+tibble(
+  Metric = c("99th percentile threshold", "Companies in top 1%", "Total capital in top 1%"),
+  Value = c(
+    dollar(capital_99th, prefix = "R$", scale = 1e-6, suffix = "M"),
+    comma(nrow(high_capital)),
+    dollar(sum(high_capital$capital_stock), prefix = "R$", scale = 1e-9, suffix = "B")
+  )
+)
+```
+
+## Characteristics of Top 1% Companies
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+(high_capital %>%
+  count(legal_nature, sort = TRUE) %>%
+  slice_head(n = 10) %>%
+  ggplot(aes(x = n, y = reorder(legal_nature, n))) +
+  geom_col(fill = my_colors[2], alpha = 0.8) +
+  labs(title = "Top 1%: Legal Nature",
+       x = "Count",
+       y = NULL)) /
+
+(high_capital %>%
+  count(company_size, sort = TRUE) %>%
+  ggplot(aes(x = n, y = reorder(company_size, n))) +
+  geom_col(fill = my_colors[1], alpha = 0.8) +
+  labs(title = "Top 1%: Company Size",
+       x = "Count",
+       y = NULL)) /
+
+(high_capital %>%
+  count(owner_qualification, sort = TRUE) %>%
+  slice_head(n = 8) %>%
+  ggplot(aes(x = n, y = reorder(owner_qualification, n))) +
+  geom_col(fill = my_colors[3], alpha = 0.8) +
+  labs(title = "Top 1%: Owner Qualification",
+       x = "Count",
+       y = NULL)) +
+
+plot_annotation(
+  title = "Characteristics of Highest-Capital Companies"
+)
+```
