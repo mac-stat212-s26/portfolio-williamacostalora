@@ -1,0 +1,175 @@
+---
+title: "Brazilian Companies Capital Stock Analysis"
+author: "William Acosta"
+date: "2026-01-27"
+format: 
+  html:
+    theme: cosmo
+    code-fold: true
+---
+
+This week's TidyTuesday explores Brazilian companies from the CNPJ (Cadastro Nacional da Pessoa Jurídica) registry.
+I investigate how capital stock varies across different company characteristics including legal nature, company size, and owner qualifications.
+
+# Setup
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(scales)
+library(patchwork)
+
+my_colors <- c("blue", "pink", "orange", "green")
+```
+
+# Load Data
+```{r}
+tuesdata <- tidytuesdayR::tt_load(2026, week = 4)
+
+companies <- tuesdata$companies
+legal_nature <- tuesdata$legal_nature
+qualifications <- tuesdata$qualifications
+size <- tuesdata$size
+```
+
+# Data Exploration
+```{r}
+glimpse(companies)
+summary(companies$capital_stock)
+```
+```{r}
+tibble(
+  Metric = c("Number of companies", 
+             "Unique legal natures", 
+             "Unique owner qualifications", 
+             "Size categories"),
+  Count = comma(c(nrow(companies),
+            n_distinct(companies$legal_nature),
+            n_distinct(companies$owner_qualification),
+            n_distinct(companies$company_size)))
+)
+```
+
+# Distribution Analysis
+
+## Capital Stock Distribution
+```{r}
+#| fig-width: 12
+#| fig-height: 5
+
+(ggplot(data = companies, aes(x = capital_stock)) +
+  geom_histogram(bins = 50, fill = my_colors[1], alpha = 0.8, color = "white") +
+  scale_x_log10(labels = label_number(scale = 1e-6, suffix = "M", prefix = "R$")) +
+  labs(title = "Histogram of Capital Stock",
+       x = "Capital Stock (log scale)",
+       y = "Count")) +
+
+(ggplot(data = companies, aes(x = capital_stock)) +
+  geom_density(fill = my_colors[2], alpha = 0.6) +
+  scale_x_log10(labels = label_number(scale = 1e-6, suffix = "M", prefix = "R$")) +
+  labs(title = "Density Distribution",
+       x = "Capital Stock (log scale)",
+       y = "Density")) +
+
+plot_annotation(
+  title = "Distribution of Company Capital Stock"
+)
+```
+
+The distribution is highly right-skewed, with most companies having modest capital stock and a long tail of high-capital firms.
+
+## Capital Stock by Company Size
+```{r}
+#| fig-width: 12
+#| fig-height: 5
+
+(ggplot(data = companies %>% filter(!is.na(company_size)), 
+        aes(x = company_size, y = capital_stock, fill = company_size)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.2) +
+  scale_y_log10(labels = label_number(scale = 1e-6, suffix = "M", prefix = "R$")) +
+  scale_fill_manual(values = my_colors) +
+  labs(title = "Boxplot by Company Size",
+       x = NULL,
+       y = "Capital Stock (log scale)") +
+  theme(legend.position = "none")) +
+
+(ggplot(data = companies %>% filter(!is.na(company_size)), 
+        aes(x = company_size, y = capital_stock, fill = company_size)) +
+  geom_violin(alpha = 0.7) +
+  scale_y_log10(labels = label_number(scale = 1e-6, suffix = "M", prefix = "R$")) +
+  scale_fill_manual(values = my_colors) +
+  labs(title = "Violin Plot by Company Size",
+       x = NULL,
+       y = "Capital Stock (log scale)") +
+  theme(legend.position = "none")) +
+
+plot_annotation(
+  title = "Capital Stock Distribution by Company Size"
+)
+```
+```{r}
+companies %>%
+  filter(!is.na(company_size)) %>%
+  group_by(company_size) %>%
+  summarise(
+    count = comma(n()),
+    median_capital = dollar(median(capital_stock), prefix = "R$"),
+    mean_capital = dollar(mean(capital_stock), prefix = "R$"),
+    total_capital = dollar(sum(capital_stock), prefix = "R$", scale = 1e-9, suffix = "B")
+  )
+```
+
+# Legal Nature and Owner Qualifications
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+
+top_legal <- companies %>%
+  filter(!is.na(legal_nature)) %>%
+  group_by(legal_nature) %>%
+  summarise(
+    count = n(),
+    total_capital = sum(capital_stock),
+    median_capital = median(capital_stock)
+  ) %>%
+  arrange(desc(total_capital)) %>%
+  slice_head(n = 10)
+
+top_qualifications <- companies %>%
+  filter(!is.na(owner_qualification)) %>%
+  group_by(owner_qualification) %>%
+  summarise(
+    count = n(),
+    total_capital = sum(capital_stock),
+    median_capital = median(capital_stock)
+  ) %>%
+  filter(count >= 100) %>%
+  arrange(desc(median_capital)) %>%
+  slice_head(n = 10)
+
+(ggplot(data = top_legal, aes(x = total_capital, y = reorder(legal_nature, total_capital))) +
+  geom_col(fill = my_colors[2], alpha = 0.8) +
+  scale_x_continuous(labels = label_number(scale = 1e-9, suffix = "B", prefix = "R$")) +
+  labs(title = "Top 10 Legal Natures by Total Capital",
+       x = "Total Capital Stock",
+       y = NULL)) /
+
+(ggplot(data = top_qualifications, aes(x = median_capital, y = reorder(owner_qualification, median_capital))) +
+  geom_col(fill = my_colors[3], alpha = 0.8) +
+  scale_x_continuous(labels = label_number(scale = 1e-6, suffix = "M", prefix = "R$")) +
+  labs(title = "Top 10 Owner Qualifications by Median Capital",
+       x = "Median Capital Stock",
+       y = NULL))
+```
+```{r}
+# Tables
+top_legal %>%
+  mutate(across(c(total_capital, median_capital), ~dollar(.x, prefix = "R$", scale = 1e-9, suffix = "B")),
+         count = comma(count))
+
+top_qualifications %>%
+  mutate(across(c(total_capital, median_capital), ~dollar(.x, prefix = "R$", scale = 1e-6, suffix = "M")),
+         count = comma(count))
+```
+
