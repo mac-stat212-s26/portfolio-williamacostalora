@@ -681,7 +681,6 @@ $ company_size        &lt;chr&gt; "small-enterprise", "micro-enterprise", "small
 <li><p>This extreme inequality means the bottom 99% of companies share less than 1% of total capital</p></li>
 <li><p>The “other” (large) size category dominates the highest capital levels</p></li>
 <li><p>Publicly Traded Corporations have the highest concentration in the top 1%, especially in the “Other” size category</p></li>
-<li><p>Owner qualifications did not seem to have too much correlation on company capital.</p></li>
 </ul></section></section><section id="references" class="level1"><h1>References</h1>
 <section id="combining-plots-with-patchwork" class="level3"><h3 class="anchored" data-anchor-id="combining-plots-with-patchwork">1. Combining Plots with Patchwork</h3>
 <ul>
@@ -1505,28 +1504,26 @@ $ company_size        &lt;chr&gt; "small-enterprise", "micro-enterprise", "small
 <span id="cb21-367"><a href="#cb21-367"></a></span>
 <span id="cb21-368"><a href="#cb21-368"></a><span class="ss">-   </span>Publicly Traded Corporations have the highest concentration in the top 1%, especially in the "Other" size category</span>
 <span id="cb21-369"><a href="#cb21-369"></a></span>
-<span id="cb21-370"><a href="#cb21-370"></a><span class="ss">-   </span>Owner qualifications did not seem to have too much correlation on company capital.</span>
+<span id="cb21-370"><a href="#cb21-370"></a><span class="fu"># References</span></span>
 <span id="cb21-371"><a href="#cb21-371"></a></span>
-<span id="cb21-372"><a href="#cb21-372"></a><span class="fu"># References</span></span>
+<span id="cb21-372"><a href="#cb21-372"></a><span class="fu">### 1. Combining Plots with Patchwork</span></span>
 <span id="cb21-373"><a href="#cb21-373"></a></span>
-<span id="cb21-374"><a href="#cb21-374"></a><span class="fu">### 1. Combining Plots with Patchwork</span></span>
-<span id="cb21-375"><a href="#cb21-375"></a></span>
-<span id="cb21-376"><a href="#cb21-376"></a><span class="ss">-   </span>Tutorial: https://patchwork.data-imaginist.com/articles/guides/assembly.html</span>
-<span id="cb21-377"><a href="#cb21-377"></a><span class="ss">-   </span>Used for: Combining plots with + (side by side) and / (stacked vertically)</span>
+<span id="cb21-374"><a href="#cb21-374"></a><span class="ss">-   </span>Tutorial: https://patchwork.data-imaginist.com/articles/guides/assembly.html</span>
+<span id="cb21-375"><a href="#cb21-375"></a><span class="ss">-   </span>Used for: Combining plots with + (side by side) and / (stacked vertically)</span>
+<span id="cb21-376"><a href="#cb21-376"></a></span>
+<span id="cb21-377"><a href="#cb21-377"></a><span class="fu">### 2. Data Wrangling with dplyr</span></span>
 <span id="cb21-378"><a href="#cb21-378"></a></span>
-<span id="cb21-379"><a href="#cb21-379"></a><span class="fu">### 2. Data Wrangling with dplyr</span></span>
-<span id="cb21-380"><a href="#cb21-380"></a></span>
-<span id="cb21-381"><a href="#cb21-381"></a><span class="ss">-  </span>I looked into this book for understanding: all common verbs and count(sort = TRUE) which I did not know prior : https://r4ds.hadley.nz/data-transform</span>
-<span id="cb21-382"><a href="#cb21-382"></a><span class="ss">-  </span>Stack Overflow helped me understand reordering factors: https://stackoverflow.com/questions/5208679/order-bars-in-ggplot2-bar-graph</span>
-<span id="cb21-383"><a href="#cb21-383"></a><span class="ss">-  </span>Used all these for sorting data, selecting top N rows, and reordering bars with reorder()</span>
+<span id="cb21-379"><a href="#cb21-379"></a><span class="ss">-  </span>I looked into this book for understanding: all common verbs and count(sort = TRUE) which I did not know prior : https://r4ds.hadley.nz/data-transform</span>
+<span id="cb21-380"><a href="#cb21-380"></a><span class="ss">-  </span>Stack Overflow helped me understand reordering factors: https://stackoverflow.com/questions/5208679/order-bars-in-ggplot2-bar-graph</span>
+<span id="cb21-381"><a href="#cb21-381"></a><span class="ss">-  </span>Used all these for sorting data, selecting top N rows, and reordering bars with reorder()</span>
+<span id="cb21-382"><a href="#cb21-382"></a></span>
+<span id="cb21-383"><a href="#cb21-383"></a><span class="fu">### 3. ggplot2 Scales and Aesthetics</span></span>
 <span id="cb21-384"><a href="#cb21-384"></a></span>
-<span id="cb21-385"><a href="#cb21-385"></a><span class="fu">### 3. ggplot2 Scales and Aesthetics</span></span>
-<span id="cb21-386"><a href="#cb21-386"></a></span>
-<span id="cb21-387"><a href="#cb21-387"></a><span class="ss">-   </span>Scale functions: https://ggplot2.tidyverse.org/reference/scale_continuous.html</span>
-<span id="cb21-388"><a href="#cb21-388"></a><span class="ss">-   </span>Manual scales: https://ggplot2.tidyverse.org/reference/scale_manual.html</span>
-<span id="cb21-389"><a href="#cb21-389"></a><span class="ss">-   </span>Labels for prefixes since we are using Brazilian currency and logs: https://scales.r-lib.org/reference/label_number.html</span>
-<span id="cb21-390"><a href="#cb21-390"></a><span class="ss">-   </span>Stack Overflow helped me look at different ways to use log transformations just for reference but I ended up using the scale_x_log10:      https://stackoverflow.com/questions/14255533/how-to-put-a-ggplot2-plot-on-log-scale.</span>
-<span id="cb21-391"><a href="#cb21-391"></a><span class="ss">-  </span>Used for dealing with colors to differentiate plots easier for viewers, dealing with money visualizations since many businesses capitals do not have linear relationships I used a log transformation to better visualize trends. Also used for scale_x_log10(), scale_fill_manual(values = my_colors), custom colors</span>
+<span id="cb21-385"><a href="#cb21-385"></a><span class="ss">-   </span>Scale functions: https://ggplot2.tidyverse.org/reference/scale_continuous.html</span>
+<span id="cb21-386"><a href="#cb21-386"></a><span class="ss">-   </span>Manual scales: https://ggplot2.tidyverse.org/reference/scale_manual.html</span>
+<span id="cb21-387"><a href="#cb21-387"></a><span class="ss">-   </span>Labels for prefixes since we are using Brazilian currency and logs: https://scales.r-lib.org/reference/label_number.html</span>
+<span id="cb21-388"><a href="#cb21-388"></a><span class="ss">-   </span>Stack Overflow helped me look at different ways to use log transformations just for reference but I ended up using the scale_x_log10:      https://stackoverflow.com/questions/14255533/how-to-put-a-ggplot2-plot-on-log-scale.</span>
+<span id="cb21-389"><a href="#cb21-389"></a><span class="ss">-  </span>Used for dealing with colors to differentiate plots easier for viewers, dealing with money visualizations since many businesses capitals do not have linear relationships I used a log transformation to better visualize trends. Also used for scale_x_log10(), scale_fill_manual(values = my_colors), custom colors</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
