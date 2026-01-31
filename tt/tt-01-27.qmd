@@ -333,6 +333,8 @@ ggplot(data = legal_size_summary, aes(y = median_capital, x = company_size, fill
 
 -   Publicly Traded Corporations have the highest concentration in the top 1%, especially in the "Other" size category
 
+-   Owner qualifications did not seem to have too much correlation on company capital.
+
 # References
 
 ### 1. Combining Plots with Patchwork
