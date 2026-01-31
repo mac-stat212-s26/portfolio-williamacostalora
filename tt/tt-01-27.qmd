@@ -8,11 +8,11 @@ format:
     code-fold: true
 ---
 
-This week's TidyTuesday explores Brazilian companies from the CNPJ (Cadastro Nacional da Pessoa Jurídica) registry.
-I investigate how capital stock varies across different company characteristics including legal nature, company size, and owner qualifications.
+This week's TidyTuesday explores Brazilian companies from the CNPJ (Cadastro Nacional da Pessoa Jurídica) registry. I investigate how capital stock varies across different company characteristics including legal nature, company size, and owner qualifications for the bottom 99% of companies and the top 1%. 
+
+[Click here to jump to Main Findings](#main-findings) with the key visualizations for this TidyTuesday.
 
 # Setup
-
 ```{r}
 #| message: false
 #| warning: false
@@ -25,7 +25,6 @@ my_colors <- c("blue", "pink", "orange", "green")
 ```
 
 # Load Data
-
 ```{r}
 tuesdata <- tidytuesdayR::tt_load(2026, week = 4)
 
@@ -36,7 +35,6 @@ size <- tuesdata$size
 ```
 
 # Data Exploration
-
 ```{r}
 glimpse(companies)
 summary(companies$capital_stock)
@@ -51,7 +49,6 @@ companies_filtered <- companies %>%
 # Distribution Analysis
 
 ## Capital Stock Distribution
-
 ```{r}
 #| fig-width: 12
 #| fig-height: 5
@@ -78,7 +75,6 @@ plot_annotation(
 The distribution is highly right-skewed, with most companies having modest capital stock and a long tail of high-capital firms.
 
 ## Capital Stock by Company Size
-
 ```{r}
 #| fig-width: 12
 #| fig-height: 5
@@ -103,7 +99,6 @@ plot_annotation(
 ```
 
 # Legal Nature and Owner Qualifications
-
 ```{r}
 # Data Wrangling 
 top_legal <- companies_filtered %>%
@@ -128,15 +123,15 @@ top_qualifications <- companies_filtered %>%
   filter(count >= 100) %>%
   arrange(desc(median_capital)) %>%
   slice_head(n = 10)
-
 ```
 
 ```{r}
 #| fig-width: 12
 #| fig-height: 10
+
 (ggplot(data = top_legal, aes(x = total_capital, y = reorder(legal_nature, total_capital))) +
   geom_col(fill = my_colors[1], alpha = 0.8) +
-  scale_x_continuous(labels = label_number(scale = 1e-9, , prefix = "R$")) +
+  scale_x_continuous(labels = label_number(scale = 1e-9, prefix = "R$")) +
   labs(title = "Top 10 Legal Natures by Total Capital",
        x = "Total Capital Stock in Billions",
        y = NULL)) /
@@ -150,7 +145,6 @@ top_qualifications <- companies_filtered %>%
 ```
 
 # Top 1% Analysis
-
 ```{r}
 capital_99th <- quantile(companies_filtered$capital_stock, 0.99)
 high_capital <- companies_filtered %>%
@@ -158,7 +152,6 @@ high_capital <- companies_filtered %>%
 ```
 
 ## Characteristics of Top 1% Companies
-
 ```{r}
 # Data Wrangling
 top1_legal <- high_capital %>%
@@ -176,6 +169,7 @@ top1_qual <- high_capital %>%
 ```{r}
 #| fig-width: 12
 #| fig-height: 12
+
 (ggplot(data = top1_legal, aes(x = n, y = reorder(legal_nature, n))) +
   geom_col(fill = my_colors[2], alpha = 0.8) +
   labs(title = "Top 1%: Legal Nature",
@@ -198,95 +192,146 @@ plot_annotation(
   title = "Characteristics of Highest-Capital Companies"
 )
 ```
-
-# Comparative Analysis
-
 ```{r}
-#| fig-width: 10
+# Calculate key statistics for annotation
+median_micro <- median(companies_filtered$capital_stock[companies_filtered$company_size == "micro-enterprise"])
+median_other <- median(companies_filtered$capital_stock[companies_filtered$company_size == "other"])
+
+pct_micro_below_1M <- mean(companies_filtered$capital_stock[companies_filtered$company_size == "micro-enterprise"] < 1e6) * 100
+pct_other_above_10M <- mean(companies_filtered$capital_stock[companies_filtered$company_size == "other"] > 10e6) * 100
+```
+
+# Main Findings
+
+## Comparative Analysis: Capital Gap by Company Size
+```{r}
+#| fig-width: 12
 #| fig-height: 6
-  ggplot(data=companies_filtered, aes(x = capital_stock, fill = company_size)) +
-  geom_density(alpha = 0.5) +
+
+ggplot(data = companies_filtered, aes(x = capital_stock, fill = company_size)) +
+  geom_density(alpha = 0.6) +
+  geom_vline(xintercept = capital_99th, linetype = "dashed", color = "red", linewidth = 1) +
+  annotate("text", x = capital_99th * 1.5, y = 3.5, 
+           label = paste0("99th percentile\n(Top 1% threshold)\nR$", round(capital_99th/1e6, 1), "M"), 
+           color = "red", size = 3.5, hjust = 0) +
   scale_x_log10(labels = label_number(scale = 1e-6, prefix = "R$")) +
-  scale_fill_manual(values = my_colors) +
-  labs(title = "Capital Stock Density by Company Size",
-       x = "Capital Stock in Millions (log scale)",
-       y = "Density",
-       fill = "Company Size") 
+  scale_fill_viridis_d(
+    option = "mako",
+    name = "Company Size",
+    labels = c("Micro Enterprise", "Other (Large)", "Small Enterprise"),
+    begin = 0.2,
+    end = 0.8
+  ) +
+  labs(
+    title = "Size Determines Access to Capital: Micro Enterprises Locked Out of Elite Tier",
+    subtitle = paste0(round(pct_micro_below_1M, 0), "% of micro enterprises have capital under R$1M, while ", 
+                     round(pct_other_above_10M, 0), "% of 'Other' companies exceed R$10M The separation between company size categories reveals \nstructural inequality in Brazilian business. Micro enterprises have the lowest capital levels with no representation above the 99th percentile line. In contrast, \nlarger companies dominate the high-capital space.") ,
+    x = "Capital Stock in Millions (log scale)",
+    y = "Density",
+    caption = "    Companies with capital stock > R$150,000
+    Source: CNPJ Open Data (Brazilian Ministry of Finance) | Analysis: William Acosta | TidyTuesday 2026-01-27"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "gray30", margin = margin(b = 10)),
+    plot.caption = element_text(hjust = 0, size = 8, color = "gray50", margin = margin(t = 10), lineheight = 1.3),
+    legend.position = "bottom"
+  )
 ```
 
-# Key Insights
-
-```{r}
-total_capital <- sum(companies_filtered$capital_stock)
-top1_capital <- sum(high_capital$capital_stock)
-top1_percentage <- (top1_capital / total_capital) * 100
-top1_percentage
-
-```
-
-# Top 1% VS Median Companies
-
-## Density Comparison
-
+## Extreme Wealth Concentration: Top 1% vs Bottom 99%
 ```{r}
 # Data Wrangling
 companies_comparison <- companies_filtered %>%
   mutate(top1_status = if_else(capital_stock >= capital_99th, "Top 1%", "Bottom 99%"))
+
+total_capital <- sum(companies_filtered$capital_stock)
+top1_capital <- sum(high_capital$capital_stock)
+top1_percentage <- (top1_capital / total_capital) * 100
 ```
 
 ```{r}
 #| fig-width: 10
 #| fig-height: 6
 
-# Density comparison
 ggplot(data = companies_comparison, aes(x = capital_stock, fill = top1_status)) +
   geom_density(alpha = 0.6) +
   scale_x_log10(labels = label_number(scale = 1e-6, prefix = "R$")) +
   scale_fill_manual(values = c("Bottom 99%" = "gray60", "Top 1%" = "red")) +
-  labs(title = "Capital Stock Distribution: Top 1% vs Bottom 99%",
-       x = "Capital Stock in Millions (log scale)",
-       y = "Density",
-       fill = "Group")
+  labs(
+    title = "Brazilian Companies: Extreme Capital Concentration in Top 1%",
+    subtitle = paste0("The top 1% holds ", round(top1_percentage, 2), "% of total capital, showing minimal overlap with bottom 99%"),
+    x = "Capital Stock in Millions (log scale)",
+    y = "Density",
+    fill = "Company Group",
+    caption = "Source: CNPJ Open Data (Brazilian Ministry of Finance) | Analysis: William Acosta | TidyTuesday 2026-01-27"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "gray30", margin = margin(b = 10)),
+    plot.caption = element_text(hjust = 0, size = 8, color = "gray50", margin = margin(t = 10), lineheight = 1.3),
+    legend.position = "bottom"
+  )
 ```
 
-# Top 1% VS Median Companies' Capital by Legal Nature and Size
-
+## Legal Structure and Size: Who Reaches the Top 1%?
 ```{r}
-#| fig-width: 12
-#| fig-height: 15
 top_legal_names <- top_legal$legal_nature[1:5]
 
 legal_size_summary <- companies_comparison %>%
   filter(legal_nature %in% top_legal_names) %>%
+  mutate(legal_nature = fct_recode(legal_nature,
+                                 "LLC" = "Limited Liability Business Company (LLC)",
+                                 "PTC" = "Publicly Traded Corporation",
+                                 "PHC" = "Privately Held Corporation",
+                                 "SIP" = "Simple Innovation Company",
+                                 "SP" = "Sole Propriertorship")) %>%
+  mutate(company_size = fct_recode(company_size,
+                                 "Micro" = "micro-enterprise",
+                                 "Small" = "small-enterprise",
+                                 "Other" = "other")) %>%
   group_by(legal_nature, company_size) %>%
   summarise(
     median_capital = median(capital_stock),
-    pct_top1 = mean(top1_status == "Top 1%") * 100
+    pct_top1 = mean(top1_status == "Top 1%") * 100,
+    .groups = "drop"
   )
+```
+```{r}
+#| fig-width: 14
+#| fig-height: 6
 
-ggplot(data = legal_size_summary, aes(x = company_size, y = median_capital, fill = pct_top1)) +
-  geom_col(alpha = 0.8) +
-  facet_wrap(~ legal_nature, ncol = 1) +
+ggplot(data = legal_size_summary, aes(y = median_capital, x = company_size, fill = pct_top1)) +
+  geom_col(alpha = 0.9) +
+  facet_grid(~ legal_nature) +
   scale_y_log10(labels = label_number(scale = 1e-6, prefix = "R$")) +
-  scale_fill_gradient(low = "lightblue", high = "darkred") +
-  labs(title = "Median Capital by Legal Nature and Size (colored by % in Top 1%)",
-       x = "Company Size",
-       y = "Median Capital in Millions (log scale)",
-       fill = "% in Top 1%") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+  scale_fill_viridis_c(option = "cividis", name = "% in Top 1%", direction = -1) +
+  labs(
+    title = "Publicly Traded Corporations Dominate the Top 1% of Brazilian Companies",
+    subtitle = "Median capital stock by legal structure and company size, colored by top 1% concentration. \nColor shows % of companies in the top 1% by capital. The top 1% holds 99.23% of total capital, concentrated heavily in 'Other'-sized PTCs where over 50%\nof companies are in the elite tier. Micro and small enterprises across all structures remain almost entirely in the bottom 99%, revealing extreme wealth inequality.",
+    x = "Company Size",
+    y = "Median Capital in Millions (log scale)",
+    caption ="    LLC: Limited Liability Company | PHC: Privately Held Corporation | PTC: Publicly Traded Corporation | SIP: Simple Innovation Company | SP: Sole Proprietorship
+    Source: CNPJ Open Data (Brazilian Ministry of Finance) | Analysis: William Acosta | TidyTuesday 2026-01-27"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "gray30", margin = margin(b = 10)),
+    axis.text.x = element_text(hjust = 1, vjust = 1),
+    plot.caption = element_text(hjust = 0, size = 8, color = "gray30", margin = margin(t = 10), lineheight = 1.3),
+    legend.position = "right"
+  )
 ```
 
-**Summary:**
+## Summary
 
 -   The top 1% of companies hold 99.23% of total capital
 
 -   This extreme inequality means the bottom 99% of companies share less than 1% of total capital
 
--   The "other" size category have mostly highest capital levels
+-   The "other" (large) size category dominates the highest capital levels
 
--   Limited Liability Business Companies dominate both by count and capital
-
--   Director/Officer qualifications tend to have higher median capital stock
+-   Publicly Traded Corporations have the highest concentration in the top 1%, especially in the "Other" size category
 
 # References
 
@@ -297,14 +342,14 @@ ggplot(data = legal_size_summary, aes(x = company_size, y = median_capital, fill
 
 ### 2. Data Wrangling with dplyr
 
--   I looked into this book for understanding: all common verbs and count(sort = TRUE) which I did not know prior : https://r4ds.hadley.nz/data-transform
--   Stack Overflow helped me understand reordering factors: https://stackoverflow.com/questions/5208679/order-bars-in-ggplot2-bar-graph
--   Used all these for sorting data, selecting top N rows, and reordering bars with reorder()
+-  I looked into this book for understanding: all common verbs and count(sort = TRUE) which I did not know prior : https://r4ds.hadley.nz/data-transform
+-  Stack Overflow helped me understand reordering factors: https://stackoverflow.com/questions/5208679/order-bars-in-ggplot2-bar-graph
+-  Used all these for sorting data, selecting top N rows, and reordering bars with reorder()
 
 ### 3. ggplot2 Scales and Aesthetics
 
 -   Scale functions: https://ggplot2.tidyverse.org/reference/scale_continuous.html
 -   Manual scales: https://ggplot2.tidyverse.org/reference/scale_manual.html
 -   Labels for prefixes since we are using Brazilian currency and logs: https://scales.r-lib.org/reference/label_number.html
--   Stack Overflow helped me look at different ways to use log transformations just for reference but I ended up using the scale_x_log10: https://stackoverflow.com/questions/14255533/how-to-put-a-ggplot2-plot-on-log-scale.
--   Used for dealing with colors to differentiate plots easier for viewers, dealing with money visualizations since many businesses capitals do not have linear relationships I used a log transformation to better visualize trends. Also used for scale_x_log10(), scale_fill_manual(values = my_colors), custom colors
+-   Stack Overflow helped me look at different ways to use log transformations just for reference but I ended up using the scale_x_log10:      https://stackoverflow.com/questions/14255533/how-to-put-a-ggplot2-plot-on-log-scale.
+-  Used for dealing with colors to differentiate plots easier for viewers, dealing with money visualizations since many businesses capitals do not have linear relationships I used a log transformation to better visualize trends. Also used for scale_x_log10(), scale_fill_manual(values = my_colors), custom colors
