@@ -73,6 +73,9 @@ book:
     - part: "Pre-Class Learnings"
       chapters:
       - pcl/pcl.qmd
+      - pcl/pcl02-04.qmd
+      - pcl/pcl02-09.qmd
+
 
     - part: "In-Class Activities"
       chapters:
