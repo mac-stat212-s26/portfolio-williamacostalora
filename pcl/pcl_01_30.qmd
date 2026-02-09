@@ -1,0 +1,50 @@
+---
+title: "ggplot2 Visual Guide"
+format: html
+---
+```{r}
+#| echo: false
+#| message: false
+# install.packages("DiagrammeR")
+library(DiagrammeR)
+
+grViz("
+digraph ggplot2 {
+  graph [rankdir = LR]
+  
+  A[label='ggplot2\nVisual Guide']
+  B[label='Grammar of\nGraphics']
+  C[label='Basic\nStructure']
+  D[label='Components']
+  E[label='Faceting']
+  F[label='Aesthetics']
+  
+  A -> B
+  A -> C
+  A -> D
+  A -> E
+  A -> F
+  
+  B -> label='position'
+  B -> B2[label='color']
+  B -> B3[label='size']
+  B -> B4[label='shape']
+  
+  C -> C1[label='ggplot(data, aes())']
+  C -> C2[label='geom_*()']
+  C -> C3[label='layers (+)']
+  
+  D -> D1[label='Data']
+  D -> D2[label='Aesthetics']
+  D -> D3[label='Geoms']
+  
+  E -> E1[label='facet_wrap()']
+  E -> E2[label='facet_grid()']
+  
+  F -> F1[label='x, y']
+  F -> F2[label='color, fill']
+  F -> F3[label='shape, size']
+  F -> F4[label='alpha']
+}
+")
+```
