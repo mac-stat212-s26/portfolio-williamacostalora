@@ -244,22 +244,26 @@ monthly_totals <- weather %>%
     max_cum = max(CulmPrec)
   )
 
-ggplot(weather) +
+precip_plot <- ggplot(weather) +
+  geom_text(data = monthly_totals, 
+            aes(x = mid_date, y = max_cum, vjust=-0.5, hjust=0, 
+                label = round(total_precip, 2))) +
   geom_area(aes(x = dateInYear, y = CulmPrec), 
             fill = "#ebeae2") +
   geom_line(aes(x = dateInYear, y = CulmPrec), 
             color = "#32a3d8") +
-  geom_point(data = weather %>% filter(RecordP == TRUE), 
-             aes(x = dateInYear, y = CulmPrec),
-             shape = 25, fill = "black", size = 2) +
-  geom_text(data = monthly_totals,
-            aes(x = mid_date, y = max_cum, label = round(total_precip, 2)),
-            vjust = -0.5, hjust = 0.5, size = 3) +
   geom_vline(data = monthBegins, 
              aes(xintercept = dateInYear), 
              color = "gray", linetype = "dashed") +
-  labs(x = "dateInYear", y = "CumPrec") +
+  geom_point(data = weather %>% filter(RecordP == TRUE), 
+             aes(x = dateInYear, y = CulmPrec),
+             shape = 25, fill = "black", size = 1.5, vjust=0.5) +
+  
+  scale_x_continuous(breaks = monthly_totals$mid_date, labels = month.abb) +
+  labs(title = "Precipitation", x = NULL, y = NULL) +
   theme_classic()
+
+precip_plot
 ```
 ## Done!
 
