@@ -85,7 +85,7 @@ Or you can create one based on available data using
 ```{r create_vec_examples}
 c("Fair", "Good", "Very Good", "Premium", "Ideal")
 
-diamonds |> pull(cut) |> unique()
+diamonds |> pull(cut) |> unique() 
 ```
 
 
@@ -114,6 +114,7 @@ x > 9
 x >= 9
 x == 12
 x != 12
+cat(x)
 ```
 
 
@@ -231,15 +232,38 @@ Using `tidyverse` functions, complete the following:
 
 
 ```{r}
-#1
+#1 Less than a thousand dollar subset
+diamonds |> 
+  filter(price<400|price>1000)
 
-#2
+#2 Between 500 and 600
+diamonds |> 
+  filter(price>=500, price>=600)
 
 #3
-
+diamonds |> 
+    mutate(is_fpi = cut %in% c("Fair", "Premium", "Ideal")) |> 
+    summarize(num_fpi = sum(is_fpi), frac_fpi = mean(is_fpi))
 #4
+diamonds |> 
+  filter(cut=="Fair") |> 
+  summarize(all_high= all(price>3000))
+
+diamonds |> 
+    filter(cut == "Ideal") |> 
+    summarize(all_high = all(price > 2000))
 
 #5
+
+diamonds |> 
+    mutate(
+        price_cat1 = if_else(price < 500, "low", "high"),
+        price_cat2 = case_when(
+            price < 500 ~ "low",
+            price >= 500 & price <= 1000 ~ "medium",
+            price > 1000 ~ "high"
+        )
+    )
 
 ```
 
@@ -522,6 +546,10 @@ gss_cat |>
 ratings <- c("High", "Medium", "Low")
 ```
 
+```{r}
+ratings_factors <- fct(ratings, levels = c("Low", "Medium", "High"))
+ratings_factors
+```
 
 More exercises will be on HW4. 
 
