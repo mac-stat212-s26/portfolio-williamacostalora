@@ -1,0 +1,287 @@
+---
+title: "Advanced Wrangling 2"
+format: html
+---
+```{r}
+#| echo: false
+#| message: false
+library(DiagrammeR)
+
+grViz("
+digraph AdvWrangling2 {
+  graph [rankdir = LR]
+  
+  A[label='Advanced\\nWrangling 2']
+  
+  B[label='Strings']
+  C[label='Regular\\nExpressions']
+  D[label='Joins']
+  
+  B1[label='Creating\\nStrings']
+  B2[label='Combining\\nStrings']
+  B3[label='Extracting\\nData']
+  B4[label='Letters']
+  B5[label='Encoding']
+  
+  B1a[label='Quotes: single\\nor double']
+  B1b[label='Escapes: backslash']
+  B1c[label='Raw strings']
+  B1d[label='Special chars']
+  
+  B2a[label='str_c()']
+  B2b[label='str_glue()']
+  B2c[label='str_flatten()']
+  
+  B2a1[label='Concat strings']
+  B2a2[label='Works with\\nmutate()']
+  
+  B2b1[label='Use braces for\\nvariables']
+  B2b2[label='Easier than\\nstr_c()']
+  
+  B2c1[label='Combine vector\\nto single string']
+  B2c2[label='Works with\\nsummarize()']
+  
+  B3a[label='separate_longer_delim()']
+  B3b[label='separate_longer_position()']
+  B3c[label='separate_wider_delim()']
+  B3d[label='separate_wider_position()']
+  
+  B4a[label='str_length()']
+  B4b[label='str_sub()']
+  B4c[label='str_to_lower()']
+  B4d[label='str_to_upper()']
+  
+  B5a[label='UTF-8 standard']
+  B5b[label='charToRaw()']
+  B5c[label='locale issues']
+  
+  C1[label='Pattern\\nBasics']
+  C2[label='Key\\nFunctions']
+  C3[label='Pattern\\nDetails']
+  C4[label='Quantifiers']
+  
+  C1a[label='Literal chars']
+  C1b[label='Metacharacters']
+  C1c[label='Character classes']
+  C1d[label='Alternation: pipe']
+  
+  C2a[label='str_detect()']
+  C2b[label='str_count()']
+  C2c[label='str_replace()']
+  C2d[label='str_extract()']
+  
+  C2a1[label='Returns TRUE/FALSE']
+  C2a2[label='Use with filter()']
+  
+  C2b1[label='Count matches']
+  C2b2[label='Non-overlapping']
+  
+  C2c1[label='str_replace():\\nfirst match']
+  C2c2[label='str_replace_all():\\nall matches']
+  
+  C3a[label='Escaping']
+  C3b[label='Anchors: ^ and $']
+  C3c[label='Shortcuts: d s w']
+  C3d[label='Grouping: parens']
+  
+  C4a[label='?: 0 or 1']
+  C4b[label='+: 1 or more']
+  C4c[label='*: 0 or more']
+  C4d[label='{n}: exactly n']
+  C4e[label='{n,m}: n to m']
+  
+  D1[label='Keys']
+  D2[label='Mutating\\nJoins']
+  D3[label='Filtering\\nJoins']
+  D4[label='Non-equi\\nJoins']
+  
+  D1a[label='Primary key']
+  D1b[label='Foreign key']
+  D1c[label='Compound key']
+  D1d[label='Surrogate key']
+  
+  D1a1[label='Uniquely identifies\\nobservation']
+  D1a2[label='Check with\\ncount()']
+  
+  D1b1[label='References primary\\nkey in another table']
+  
+  D1c1[label='Multiple variables\\nas key']
+  
+  D1d1[label='row_number()']
+  D1d2[label='Simple numeric ID']
+  
+  D2a[label='left_join()']
+  D2b[label='inner_join()']
+  D2c[label='right_join()']
+  D2d[label='full_join()']
+  D2e[label='join_by()']
+  
+  D2a1[label='Keeps all rows\\nfrom x']
+  D2a2[label='Most common']
+  
+  D2e1[label='Specify join keys']
+  D2e2[label='join_by(x equals y)']
+  
+  D3a[label='semi_join()']
+  D3b[label='anti_join()']
+  
+  D3a1[label='Keeps rows in x\\nwith match in y']
+  D3a2[label='Never duplicates']
+  
+  D3b1[label='Keeps rows in x\\nwithout match in y']
+  D3b2[label='Find missing\\nvalues']
+  
+  D4a[label='Cross joins']
+  D4b[label='Inequality joins']
+  D4c[label='Rolling joins']
+  D4d[label='Overlap joins']
+  
+  D4a1[label='Every row with\\nevery row']
+  D4a2[label='Cartesian product']
+  
+  D4b1[label='Uses: < <= > >=']
+  
+  D4c1[label='closest()']
+  D4c2[label='Find nearest match']
+  
+  D4d1[label='between()']
+  D4d2[label='overlaps()']
+  D4d3[label='within()']
+  
+  A -> B
+  A -> C
+  A -> D
+  
+  B -> B1
+  B -> B2
+  B -> B3
+  B -> B4
+  B -> B5
+  
+  B1 -> B1a
+  B1 -> B1b
+  B1 -> B1c
+  B1 -> B1d
+  
+  B2 -> B2a
+  B2 -> B2b
+  B2 -> B2c
+  
+  B2a -> B2a1
+  B2a -> B2a2
+  
+  B2b -> B2b1
+  B2b -> B2b2
+  
+  B2c -> B2c1
+  B2c -> B2c2
+  
+  B3 -> B3a
+  B3 -> B3b
+  B3 -> B3c
+  B3 -> B3d
+  
+  B4 -> B4a
+  B4 -> B4b
+  B4 -> B4c
+  B4 -> B4d
+  
+  B5 -> B5a
+  B5 -> B5b
+  B5 -> B5c
+  
+  C -> C1
+  C -> C2
+  C -> C3
+  C -> C4
+  
+  C1 -> C1a
+  C1 -> C1b
+  C1 -> C1c
+  C1 -> C1d
+  
+  C2 -> C2a
+  C2 -> C2b
+  C2 -> C2c
+  C2 -> C2d
+  
+  C2a -> C2a1
+  C2a -> C2a2
+  
+  C2b -> C2b1
+  C2b -> C2b2
+  
+  C2c -> C2c1
+  C2c -> C2c2
+  
+  C3 -> C3a
+  C3 -> C3b
+  C3 -> C3c
+  C3 -> C3d
+  
+  C4 -> C4a
+  C4 -> C4b
+  C4 -> C4c
+  C4 -> C4d
+  C4 -> C4e
+  
+  D -> D1
+  D -> D2
+  D -> D3
+  D -> D4
+  
+  D1 -> D1a
+  D1 -> D1b
+  D1 -> D1c
+  D1 -> D1d
+  
+  D1a -> D1a1
+  D1a -> D1a2
+  
+  D1b -> D1b1
+  
+  D1c -> D1c1
+  
+  D1d -> D1d1
+  D1d -> D1d2
+  
+  D2 -> D2a
+  D2 -> D2b
+  D2 -> D2c
+  D2 -> D2d
+  D2 -> D2e
+  
+  D2a -> D2a1
+  D2a -> D2a2
+  
+  D2e -> D2e1
+  D2e -> D2e2
+  
+  D3 -> D3a
+  D3 -> D3b
+  
+  D3a -> D3a1
+  D3a -> D3a2
+  
+  D3b -> D3b1
+  D3b -> D3b2
+  
+  D4 -> D4a
+  D4 -> D4b
+  D4 -> D4c
+  D4 -> D4d
+  
+  D4a -> D4a1
+  D4a -> D4a2
+  
+  D4b -> D4b1
+  
+  D4c -> D4c1
+  D4c -> D4c2
+  
+  D4d -> D4d1
+  D4d -> D4d2
+  D4d -> D4d3
+}
+")
+```
