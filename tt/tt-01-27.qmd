@@ -310,7 +310,7 @@ ggplot(data = legal_size_summary, aes(y = median_capital, x = company_size, fill
     title = "Publicly Traded Corporations Dominate the Top 1% of Brazilian Companies",
     subtitle = "Median capital stock by legal structure and company size, colored by top 1% concentration. \nColor shows % of companies in the top 1% by capital. The top 1% holds 99.23% of total capital, concentrated heavily in 'Other'-sized PTCs where over 50%\nof companies are in the elite tier. Micro and small enterprises across all structures remain almost entirely in the bottom 99%, revealing extreme wealth inequality.",
     x = "Company Size",
-    y = "Median Capital in Millions (log scale)",
+    y = "Median Capital in Millions ( log10 scale)",
     caption ="    LLC: Limited Liability Company | PHC: Privately Held Corporation | PTC: Publicly Traded Corporation | SIP: Simple Innovation Company | SP: Sole Proprietorship
     Source: CNPJ Open Data (Brazilian Ministry of Finance) | Analysis: William Acosta | TidyTuesday 2026-01-27"
   ) +
