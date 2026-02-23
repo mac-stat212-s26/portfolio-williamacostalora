@@ -115,9 +115,7 @@ In this code:
 
 We use clean_names() to standardize column names. rename() is used to make the column names more descriptive and easier to work with. filter() ensures that rows with missing ZIP codes are excluded. We also pad the ZIP_Code column to ensure all ZIP codes are 5 digits.
 
-# Load spatial data for ZIP codes (assumes GeoJSON for MN ZIP codes is available)
-
-To create an interactive map, we need the spatial boundaries for Minnesota's ZIP codes. This is typically provided as a GeoJSON file. In this section, we load the spatial data corresponding to ZIP codes in Minnesota.
+# Load spatial data for ZIP codes 
 
 ```{r}
 zip_sf <- st_read("data/raw/mn_minnesota_zip_codes_geo.min.json")
