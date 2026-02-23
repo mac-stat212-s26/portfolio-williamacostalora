@@ -60,7 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../ica/ica-sample1.html" rel="next">
+<link href="../pcl/pcl02-23.html" rel="next">
 <link href="../pcl/pcl-wrangling2.html" rel="prev">
 <script src="../site_libs/cookie-consent/cookie-consent.js"></script>
 <link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
@@ -405,6 +405,11 @@ cookieconsent.run({
   <a href="../pcl/pcl-missing_data.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Missing Data</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pcl/pcl02-23.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Functions</span></a>
+  </div>
+</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -495,7 +500,7 @@ cookieconsent.run({
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../exam/code/report1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">report1</span></a>
+  <a href="../exam/code/report1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Report 1</span></a>
   </div>
 </li>
       </ul>
@@ -525,8 +530,8 @@ cookieconsent.run({
 
 </header><div class="cell">
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-3b2c9d089b51b198df8b" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-3b2c9d089b51b198df8b">{"x":{"diagram":"\ndigraph MissingData {\n  graph [rankdir = LR]\n  \n  # Main node\n  A[label=\"Missing\nData\"]\n  \n  # Major branches\n  B[label=\"Explicit\nMissing\"]\n  C[label=\"Implicit\nMissing\"]\n  D[label=\"Factors &\nEmpty Groups\"]\n  \n  # Explicit Missing children\n  B1[label=\"Last Observation\nCarried Forward\"]\n  B2[label=\"Fixed\nValues\"]\n  B3[label=\"NaN\"]\n  \n  B1a[label=\"fill()\"]\n  B1b[label=\"Fills down\nby default\"]\n  B1c[label=\".direction\nargument\"]\n  \n  B2a[label=\"coalesce()\"]\n  B2b[label=\"Replace NA\nwith value\"]\n  B2c[label=\"na_if()\"]\n  B2d[label=\"Convert value\nto NA\"]\n  \n  B3a[label=\"Not a Number\"]\n  B3b[label=\"0 / 0\"]\n  B3c[label=\"Inf - Inf\"]\n  B3d[label=\"is.nan()\"]\n  \n  # Implicit Missing children\n  C1[label=\"Definition\"]\n  C2[label=\"Making\nExplicit\"]\n  C3[label=\"Joins\"]\n  \n  C1a[label=\"Presence of\nabsence = explicit\"]\n  C1b[label=\"Absence of\npresence = implicit\"]\n  C1c[label=\"Entire row\nmissing\"]\n  \n  C2a[label=\"pivot_wider()\"]\n  C2b[label=\"complete()\"]\n  C2c[label=\"full_seq()\"]\n  \n  C2a1[label=\"Makes implicit\nexplicit\"]\n  C2a2[label=\"All combinations\nmust have value\"]\n  \n  C2b1[label=\"Generate all\ncombinations\"]\n  C2b2[label=\"complete(year, qtr)\"]\n  \n  C2c1[label=\"Generate sequence\nfrom min to max\"]\n  \n  C3a[label=\"anti_join()\"]\n  C3b[label=\"Reveals missing\nobservations\"]\n  C3c[label=\"Compare datasets\"]\n  \n  # Factors & Empty Groups children\n  D1[label=\"Empty\nGroups\"]\n  D2[label=\"Solutions\"]\n  D3[label=\"Summary\nBehavior\"]\n  \n  D1a[label=\"Factor levels\nwith no data\"]\n  D1b[label=\"count() drops\nby default\"]\n  D1c[label=\"ggplot2 drops\nlevels\"]\n  \n  D2a[label=\".drop = FALSE\"]\n  D2b[label=\"count(.drop = FALSE)\"]\n  D2c[label=\"group_by(.drop = FALSE)\"]\n  D2d[label=\"scale_x_discrete(\ndrop = FALSE)\"]\n  \n  D3a[label=\"Zero-length\nvectors\"]\n  D3b[label=\"mean() = NaN\"]\n  D3c[label=\"min() = Inf\"]\n  D3d[label=\"max() = -Inf\"]\n  D3e[label=\"Alternative:\ncomplete()\"]\n  \n  # Create main edges\n  A -> B\n  A -> C\n  A -> D\n  \n  # Explicit Missing edges\n  B -> B1\n  B -> B2\n  B -> B3\n  \n  B1 -> B1a\n  B1 -> B1b\n  B1 -> B1c\n  \n  B2 -> B2a\n  B2 -> B2b\n  B2 -> B2c\n  B2 -> B2d\n  \n  B3 -> B3a\n  B3 -> B3b\n  B3 -> B3c\n  B3 -> B3d\n  \n  # Implicit Missing edges\n  C -> C1\n  C -> C2\n  C -> C3\n  \n  C1 -> C1a\n  C1 -> C1b\n  C1 -> C1c\n  \n  C2 -> C2a\n  C2 -> C2b\n  C2 -> C2c\n  \n  C2a -> C2a1\n  C2a -> C2a2\n  \n  C2b -> C2b1\n  C2b -> C2b2\n  \n  C2c -> C2c1\n  \n  C3 -> C3a\n  C3 -> C3b\n  C3 -> C3c\n  \n  # Factors edges\n  D -> D1\n  D -> D2\n  D -> D3\n  \n  D1 -> D1a\n  D1 -> D1b\n  D1 -> D1c\n  \n  D2 -> D2a\n  D2 -> D2b\n  D2 -> D2c\n  D2 -> D2d\n  \n  D3 -> D3a\n  D3 -> D3b\n  D3 -> D3c\n  D3 -> D3d\n  D3 -> D3e\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-05b842d4d086048fa830" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-05b842d4d086048fa830">{"x":{"diagram":"\ndigraph MissingData {\n  graph [rankdir = LR]\n  \n  # Main node\n  A[label=\"Missing\nData\"]\n  \n  # Major branches\n  B[label=\"Explicit\nMissing\"]\n  C[label=\"Implicit\nMissing\"]\n  D[label=\"Factors &\nEmpty Groups\"]\n  \n  # Explicit Missing children\n  B1[label=\"Last Observation\nCarried Forward\"]\n  B2[label=\"Fixed\nValues\"]\n  B3[label=\"NaN\"]\n  \n  B1a[label=\"fill()\"]\n  B1b[label=\"Fills down\nby default\"]\n  B1c[label=\".direction\nargument\"]\n  \n  B2a[label=\"coalesce()\"]\n  B2b[label=\"Replace NA\nwith value\"]\n  B2c[label=\"na_if()\"]\n  B2d[label=\"Convert value\nto NA\"]\n  \n  B3a[label=\"Not a Number\"]\n  B3b[label=\"0 / 0\"]\n  B3c[label=\"Inf - Inf\"]\n  B3d[label=\"is.nan()\"]\n  \n  # Implicit Missing children\n  C1[label=\"Definition\"]\n  C2[label=\"Making\nExplicit\"]\n  C3[label=\"Joins\"]\n  \n  C1a[label=\"Presence of\nabsence = explicit\"]\n  C1b[label=\"Absence of\npresence = implicit\"]\n  C1c[label=\"Entire row\nmissing\"]\n  \n  C2a[label=\"pivot_wider()\"]\n  C2b[label=\"complete()\"]\n  C2c[label=\"full_seq()\"]\n  \n  C2a1[label=\"Makes implicit\nexplicit\"]\n  C2a2[label=\"All combinations\nmust have value\"]\n  \n  C2b1[label=\"Generate all\ncombinations\"]\n  C2b2[label=\"complete(year, qtr)\"]\n  \n  C2c1[label=\"Generate sequence\nfrom min to max\"]\n  \n  C3a[label=\"anti_join()\"]\n  C3b[label=\"Reveals missing\nobservations\"]\n  C3c[label=\"Compare datasets\"]\n  \n  # Factors & Empty Groups children\n  D1[label=\"Empty\nGroups\"]\n  D2[label=\"Solutions\"]\n  D3[label=\"Summary\nBehavior\"]\n  \n  D1a[label=\"Factor levels\nwith no data\"]\n  D1b[label=\"count() drops\nby default\"]\n  D1c[label=\"ggplot2 drops\nlevels\"]\n  \n  D2a[label=\".drop = FALSE\"]\n  D2b[label=\"count(.drop = FALSE)\"]\n  D2c[label=\"group_by(.drop = FALSE)\"]\n  D2d[label=\"scale_x_discrete(\ndrop = FALSE)\"]\n  \n  D3a[label=\"Zero-length\nvectors\"]\n  D3b[label=\"mean() = NaN\"]\n  D3c[label=\"min() = Inf\"]\n  D3d[label=\"max() = -Inf\"]\n  D3e[label=\"Alternative:\ncomplete()\"]\n  \n  # Create main edges\n  A -> B\n  A -> C\n  A -> D\n  \n  # Explicit Missing edges\n  B -> B1\n  B -> B2\n  B -> B3\n  \n  B1 -> B1a\n  B1 -> B1b\n  B1 -> B1c\n  \n  B2 -> B2a\n  B2 -> B2b\n  B2 -> B2c\n  B2 -> B2d\n  \n  B3 -> B3a\n  B3 -> B3b\n  B3 -> B3c\n  B3 -> B3d\n  \n  # Implicit Missing edges\n  C -> C1\n  C -> C2\n  C -> C3\n  \n  C1 -> C1a\n  C1 -> C1b\n  C1 -> C1c\n  \n  C2 -> C2a\n  C2 -> C2b\n  C2 -> C2c\n  \n  C2a -> C2a1\n  C2a -> C2a2\n  \n  C2b -> C2b1\n  C2b -> C2b2\n  \n  C2c -> C2c1\n  \n  C3 -> C3a\n  C3 -> C3b\n  C3 -> C3c\n  \n  # Factors edges\n  D -> D1\n  D -> D2\n  D -> D3\n  \n  D1 -> D1a\n  D1 -> D1b\n  D1 -> D1c\n  \n  D2 -> D2a\n  D2 -> D2b\n  D2 -> D2c\n  D2 -> D2d\n  \n  D3 -> D3a\n  D3 -> D3b\n  D3 -> D3c\n  D3 -> D3d\n  D3 -> D3e\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 
@@ -1008,8 +1013,8 @@ cookieconsent.run({
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../ica/ica-sample1.html" class="pagination-link" aria-label="ICA Sample 1">
-        <span class="nav-page-text"><span class="chapter-title">ICA Sample 1</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../pcl/pcl02-23.html" class="pagination-link" aria-label="Functions">
+        <span class="nav-page-text"><span class="chapter-title">Functions</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
