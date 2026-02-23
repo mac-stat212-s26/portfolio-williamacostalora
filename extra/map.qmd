@@ -1,0 +1,242 @@
+---
+title: "Uninsurance Rates in the Twin Cities --Interactive Map "
+format: 
+  html:
+    author: "William Acosta"
+    embed-resources: true
+    toc: true
+---
+
+# Introduction
+
+This analysis visualizes the adjusted uninsured rates by ZIP code in Minnesota. It combines spatial data with a dataset containing demographic information to create an interactive map and a bar chart. The goal is to help visualize the patterns of uninsured rates across different cities and ZIP codes. Special thanks to Portico Healthnet and the Bonner Scholar Foundation for the collection of this data and connecting me with this non-profit.
+
+# Load required libraries
+
+In this section, we load the necessary R libraries. These packages will allow us to work with spatial data, manipulate the dataset, and create interactive visualizations.
+
+```{r}
+library(sf)
+library(leaflet)
+library(plotly)
+library(dplyr)
+library(readr)
+library(tidyr)
+library(stringr)
+library(janitor)
+
+```
+
+# Load the dataset
+
+Next, we load the dataset containing information on uninsured rates by ZIP code. The dataset includes columns for city, population, and the uninsured rate.
+
+# Clean and preprocess data
+
+Before analyzing the data, we clean and preprocess it. This includes renaming columns to more user-friendly names and ensuring that ZIP codes are properly formatted as 5-digit strings.
+
+
+
+```{r}
+file_path <- "data/raw/Final Shadac Uninsured Rates by Zip Codes - 2023.csv"
+greater_mpls_path      <- "data/raw/Greater Minneapolis Final Shadac Uninsured Rates by Zip Codes - 2023.csv"
+non_citizen_path       <- "data/raw/Non-Citizen Greater Minneapolis Final Shadac Uninsured Rates by Zip Codes - 2023.csv"
+non_citizen_market_path <- "data/raw/Non-Citizen Market Greater Minneapolis Final Shadac Uninsured Rates by Zip Codes - 2023.csv"
+
+data               <- read_csv(file_path)
+greater_mpls       <- read_csv(greater_mpls_path)
+non_citizen        <- read_csv(non_citizen_path)
+non_citizen_market <- read_csv(non_citizen_market_path)
+```
+
+```{r}
+data_cleaned <- data %>%
+  clean_names() %>%
+  rename(
+    ZIP_Code             = zip_code,
+    City                 = city,
+    Population           = population,
+    Uninsured            = uninsured,
+    Uninsured_Raw_Pct    = uninsured_percentages_raw,
+    Adjusted_Percent     = adjusted_percentages,
+    Social_Vulnerability = level_of_social_vulnerability
+  ) %>%
+  filter(!is.na(ZIP_Code)) %>%          # <-- now ZIP_Code exists, so this works
+  mutate(ZIP_Code = str_pad(as.character(ZIP_Code), 5, pad = "0")) %>%
+  select(ZIP_Code, City, Population, Uninsured, Uninsured_Raw_Pct,
+         Adjusted_Percent, Social_Vulnerability)
+
+greater_mpls_cleaned <- greater_mpls %>%
+  clean_names() %>%
+  rename(
+    ZIP_Code              = zip_code,
+    GM_Uninsured_Raw_Pct  = uninsured_percentages_raw,   # renamed to avoid clash
+    GM_Social_Vulnerability = level_of_social_vulnerability
+  ) %>%
+  mutate(ZIP_Code = str_pad(as.character(ZIP_Code), 5, pad = "0")) %>%
+  select(ZIP_Code, GM_Uninsured_Raw_Pct, GM_Social_Vulnerability)
+
+non_citizen_cleaned <- non_citizen %>%
+  clean_names() %>%
+  rename(ZIP_Code = zip_code) %>%
+  mutate(
+    ZIP_Code = str_pad(as.character(ZIP_Code), 5, pad = "0"),
+    Non_Citizen_Percent          = as.numeric(str_remove(percentage_of_population_non_citizen, "%")) / 100,
+    Non_Citizen_Uninsured_Percent = as.numeric(str_remove(non_citizen_uninsured_percentage, "%")) / 100,
+    Non_Citizen_Uninsured_Num    = non_citizen_uninsured_number
+  ) %>%
+  select(ZIP_Code, Non_Citizen_Percent, Non_Citizen_Uninsured_Percent, Non_Citizen_Uninsured_Num)
+
+non_citizen_market_cleaned <- non_citizen_market %>%
+  clean_names() %>%
+  rename(ZIP_Code = zip_code) %>%
+  filter(!is.na(ZIP_Code)) %>%
+  mutate(
+    ZIP_Code = str_pad(as.character(ZIP_Code), 5, pad = "0"),
+    Market_Non_Citizen_Percent           = as.numeric(str_remove(percentage_of_population_non_citizen, "%")) / 100,
+    Market_Non_Citizen_Uninsured_Percent = as.numeric(str_remove(non_citizen_uninsured_percentage, "%")) / 100,
+    Market_Non_Citizen_Uninsured_Num     = non_citizen_uninsured_number
+  ) %>%
+  select(ZIP_Code, Market_Non_Citizen_Percent,
+         Market_Non_Citizen_Uninsured_Percent, Market_Non_Citizen_Uninsured_Num)
+
+```
+
+```{r}
+merged_data <- data_cleaned %>%
+  left_join(greater_mpls_cleaned,       by = "ZIP_Code") %>%
+  left_join(non_citizen_cleaned,        by = "ZIP_Code") %>%
+  left_join(non_citizen_market_cleaned, by = "ZIP_Code")
+
+write_csv(merged_data, "Greater_Minneapolis_Merged_Data.csv")
+```
+
+In this code:
+
+We use clean_names() to standardize column names. rename() is used to make the column names more descriptive and easier to work with. filter() ensures that rows with missing ZIP codes are excluded. We also pad the ZIP_Code column to ensure all ZIP codes are 5 digits.
+
+# Load spatial data for ZIP codes (assumes GeoJSON for MN ZIP codes is available)
+
+To create an interactive map, we need the spatial boundaries for Minnesota's ZIP codes. This is typically provided as a GeoJSON file. In this section, we load the spatial data corresponding to ZIP codes in Minnesota.
+
+```{r}
+zip_sf <- st_read("data/raw/mn_minnesota_zip_codes_geo.min.json")
+
+```
+
+# Join spatial data with the dataset
+
+Now, we merge the spatial data (from the GeoJSON file) with our dataset on the ZIP code. This allows us to link the demographic information (e.g., uninsured rate, population) to the geographic boundaries of each ZIP code.
+
+```{r}
+# ── Join spatial + tabular ─────────────────────────────────────────────────────
+map_data <- zip_sf %>%
+  rename(ZIP_Code = ZCTA5CE10) %>%
+  mutate(ZIP_Code = str_pad(as.character(ZIP_Code), 5, pad = "0")) %>%
+  left_join(merged_data, by = "ZIP_Code")
+
+# ── Filter for rows that have the data we need ─────────────────────────────────
+# NOW Social_Vulnerability exists cleanly (no .x / .y suffix)
+map_data_clean <- map_data %>%
+  filter(!is.na(Adjusted_Percent), !is.na(Social_Vulnerability))
+
+# Log dropped rows
+map_data %>%
+  filter(is.na(Adjusted_Percent) | is.na(Social_Vulnerability)) %>%
+  st_drop_geometry() %>%
+  write_csv("missing_data_log.csv")
+
+
+```
+
+
+
+# Create the Leaflet interactive map
+
+Here, we create the main visualization: an interactive map of Minnesota ZIP codes. The map uses Leaflet to display the boundaries of ZIP codes, and the fill color of each ZIP code polygon is based on the adjusted uninsured percentage. Users can interact with the map to view detailed information about each ZIP code.
+
+```{r}
+# ── Leaflet map ────────────────────────────────────────────────────────────────
+pal <- colorQuantile("YlOrRd", map_data_clean$Adjusted_Percent, n = 5)
+
+leaflet_map <- leaflet(map_data_clean) %>%
+  addTiles() %>%
+  addPolygons(
+    fillColor   = ~pal(Adjusted_Percent),
+    weight      = 1,
+    opacity     = 1,
+    color       = "black",
+    dashArray   = "3",
+    fillOpacity = 0.7,
+    popup = ~paste0(
+      "<strong>ZIP Code:</strong> ", ZIP_Code, "<br>",
+      "<strong>City:</strong> ", City, "<br>",
+      "<strong>Population:</strong> ", Population, "<br>",
+      "<strong>Uninsured Rate:</strong> ", Adjusted_Percent, "%<br>",
+      "<strong>Social Vulnerability:</strong> ", Social_Vulnerability
+    )
+  ) %>%
+  addLegend(
+    pal      = pal,
+    values   = map_data_clean$Adjusted_Percent,
+    title    = "Adjusted Uninsured %",
+    position = "topleft"
+  ) %>%
+  addControl(
+    html = "<div style='background:white; padding:8px 12px; border-radius:4px;
+                        font-size:16px; font-weight:bold; box-shadow:0 1px 4px rgba(0,0,0,0.3);'>
+              Adjusted Uninsured Rates by ZIP Code — Greater Minneapolis–St. Paul Region (2023)
+            </div>",
+    position = "topright"
+  ) %>%
+  addControl(
+    html = "<div style='background:rgba(255,255,255,0.85); padding:5px 10px;
+                        font-size:11px; color:#555; border-radius:3px;'>
+              <em>Source: SHADAC 2023 Uninsured Rates Dataset. Adjusted rates account for
+              small-area estimation corrections. Click any ZIP code polygon for details.</em>
+            </div>",
+    position = "bottomleft"
+  )
+
+leaflet_map
+
+```
+
+```{r}
+bar_chart <- plot_ly(
+  data   = data_cleaned,
+  x      = ~City,
+  y      = ~Adjusted_Percent,
+  type   = "bar",
+  text   = ~paste("Uninsured Rate:", Adjusted_Percent, "%"),
+  marker = list(
+    color = "rgba(55, 128, 191, 0.6)",
+    line  = list(color = "rgba(55, 128, 191, 1.0)", width = 1.5)
+  )
+) %>%
+  layout(
+    title = list(
+      text = "Adjusted Uninsured Rates by City ZIP Code — Greater Minneapolis–St. Paul (2023)",
+      font = list(size = 15)
+    ),
+    xaxis  = list(title = "City"),
+    yaxis  = list(title = "Adjusted Percent (%)"),
+    annotations = list(
+      list(
+        text      = "Source: SHADAC 2023. Each bar segment represents an individual ZIP code within the city. Heights reflect adjusted uninsured rate estimates.",
+        showarrow = FALSE,
+        xref      = "paper", yref = "paper",
+        x = 0.5, y = -0.22,
+        xanchor   = "center",
+        font      = list(size = 10, color = "gray50")
+      )
+    ),
+    margin = list(b = 100)   # extra bottom margin so caption doesn't clip
+  )
+
+bar_chart
+```
+
+# Key Findings
+
+Analysis of the 2023 SHADAC adjusted uninsured rate estimates across Greater Minneapolis–St. Paul reveals a clear geographic concentration of uninsured populations in the urban core. The interactive map shows that the highest-burden ZIP codes — those falling in the 80th–100th percentile of adjusted uninsured rates — cluster predominantly within Minneapolis and St. Paul proper, with notable pockets extending north toward Brooklyn Park and Coon Rapids and south toward Bloomington. The bar chart reinforces this pattern: Minneapolis and St. Paul together account for the majority of ZIP codes in the dataset and drive the widest spread of uninsured rates, with individual ZIP codes in both cities reaching adjusted rates above 5%. Cities on the outer suburban ring, such as Eden Prairie, Burnsville, and West St. Paul, consistently show lower and more uniform uninsured rates across their ZIP codes. These spatial disparities align with known patterns of social vulnerability — ZIP codes flagged as high vulnerability on the social vulnerability index overlap substantially with the darkest-shaded areas on the map — suggesting that targeted outreach and enrollment support in Minneapolis and St. Paul's highest-burden ZIP codes could have the greatest impact on reducing the regional uninsured gap.
