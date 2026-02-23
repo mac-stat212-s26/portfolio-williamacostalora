@@ -77,6 +77,7 @@ book:
       - pcl/pcl02-09.qmd
       - pcl/pcl-wrangling2.qmd
       - pcl/pcl-missing_data.qmd
+      - pcl/pcl02-23.qmd
 
 
     - part: "In-Class Activities"
@@ -95,6 +96,11 @@ book:
       chapters:
       - extra/extra-sample1.qmd
       - extra/extra-sample2.qmd
+      - extra/map.qmd
+
+    - part: "Exam Reports"
+      chapters:
+      - exam/code/report1.qmd
 
 
 
