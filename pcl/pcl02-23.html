@@ -60,7 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../ica/ica-sample1.html" rel="next">
+<link href="../pcl/base_r_pcl.html" rel="next">
 <link href="../pcl/pcl-missing_data.html" rel="prev">
 <script src="../site_libs/cookie-consent/cookie-consent.js"></script>
 <link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
@@ -410,6 +410,11 @@ cookieconsent.run({
   <a href="../pcl/pcl02-23.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Functions</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pcl/base_r_pcl.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Base R Essentials</span></a>
+  </div>
+</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -459,6 +464,26 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ica/08-missing-data-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">8 Missing Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/09-functions-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">9 Functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/10-base-r-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">10 Base R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/11-iteration-1-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">11 Loops+Iter I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/12-iteration-2-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">12 Loops+Iter II</span></a>
   </div>
 </li>
       </ul>
@@ -530,8 +555,8 @@ cookieconsent.run({
 
 </header><div class="cell">
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-63935198a913f0e747bd" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-63935198a913f0e747bd">{"x":{"diagram":"\ndigraph Functions {\n  graph [rankdir = TB]\n  \n  A[label=\"Functions\"]\n  \n  B[label=\"Why Write\\nFunctions\"]\n  C[label=\"Vector\\nFunctions\"]\n  D[label=\"Data Frame\\nFunctions\"]\n  E[label=\"Plot\\nFunctions\"]\n  F[label=\"Style\"]\n  \n  # Why Write Functions\n  B1[label=\"Evocative\\nnames\"]\n  B2[label=\"Update in\\none place\"]\n  B3[label=\"Avoid\\nmistakes\"]\n  B4[label=\"Reuse\\ncode\"]\n  B5[label=\"Rule of thumb:\\n3+ copies\"]\n  \n  # Vector Functions\n  C1[label=\"Function\\nStructure\"]\n  C2[label=\"Mutate\\nFunctions\"]\n  C3[label=\"Summary\\nFunctions\"]\n  \n  # Function Structure\n  C1a[label=\"Name\"]\n  C1b[label=\"Arguments\"]\n  C1c[label=\"Body\"]\n  C1d[label=\"Template:\\nname <- function(args)\\n{body}\"]\n  \n  # Mutate Functions\n  C2a[label=\"rescale01()\"]\n  C2b[label=\"z_score()\"]\n  C2c[label=\"clamp()\"]\n  C2d[label=\"first_upper()\"]\n  C2e[label=\"clean_number()\"]\n  \n  C2a1[label=\"Rescale to\\n0-1 range\"]\n  C2b1[label=\"Mean 0,\\nSD 1\"]\n  C2c1[label=\"Min/max\\nbounds\"]\n  \n  # Summary Functions\n  C3a[label=\"Return single\\nvalue\"]\n  C3b[label=\"Use with\\nsummarize()\"]\n  C3c[label=\"commas()\"]\n  C3d[label=\"cv()\"]\n  C3e[label=\"n_missing()\"]\n  C3f[label=\"mape()\"]\n  \n  # Data Frame Functions\n  D1[label=\"Indirection\\nProblem\"]\n  D2[label=\"Embracing\"]\n  D3[label=\"When to\\nEmbrace\"]\n  D4[label=\"Common\\nUse Cases\"]\n  D5[label=\"Data-masking\\nvs Tidy-selection\"]\n  \n  # Indirection Problem\n  D1a[label=\"Tidy evaluation\"]\n  D1b[label=\"Variables not\\nfound\"]\n  D1c[label=\"Need to look\\ninside arguments\"]\n  \n  # Embracing\n  D2a[label=\"{{ }} syntax\"]\n  D2b[label=\"Wrap arguments\"]\n  D2c[label=\"Look down\\nthe tunnel\"]\n  D2d[label=\"Makes dplyr\\nlook inside\"]\n  \n  # When to Embrace\n  D3a[label=\"Data-masking\"]\n  D3b[label=\"Tidy-selection\"]\n  \n  D3a1[label=\"arrange()\"]\n  D3a2[label=\"filter()\"]\n  D3a3[label=\"summarize()\"]\n  \n  D3b1[label=\"select()\"]\n  D3b2[label=\"relocate()\"]\n  D3b3[label=\"rename()\"]\n  \n  # Common Use Cases\n  D4a[label=\"summary6()\"]\n  D4b[label=\"count_prop()\"]\n  D4c[label=\"unique_where()\"]\n  D4d[label=\"count_missing()\"]\n  \n  # Data-masking vs Tidy-selection\n  D5a[label=\"pick()\"]\n  D5b[label=\"Use tidy-selection\\ninside data-masking\"]\n  D5c[label=\"count_wide()\"]\n  \n  # Plot Functions\n  E1[label=\"aes() is\\nData-masking\"]\n  E2[label=\"Embrace\\nVariables\"]\n  E3[label=\"Examples\"]\n  E4[label=\"Labeling\"]\n  \n  # Examples\n  E3a[label=\"histogram()\"]\n  E3b[label=\"linearity_check()\"]\n  E3c[label=\"hex_plot()\"]\n  E3d[label=\"sorted_bars()\"]\n  E3e[label=\"conditional_bars()\"]\n  \n  # Labeling\n  E4a[label=\"rlang::englue()\"]\n  E4b[label=\"Like str_glue()\"]\n  E4c[label=\"Understands {{ }}\"]\n  E4d[label=\"Auto-insert\\nvariable names\"]\n  \n  # Style\n  F1[label=\"Naming\"]\n  F2[label=\"White Space\"]\n  F3[label=\"Best\\nPractices\"]\n  \n  # Naming\n  F1a[label=\"Verbs for\\nfunctions\"]\n  F1b[label=\"Nouns for\\narguments\"]\n  F1c[label=\"Clear over\\nshort\"]\n  F1d[label=\"Use autocomplete\"]\n  \n  # White Space\n  F2a[label=\"function() followed\\nby {}\"]\n  F2b[label=\"Indent contents\\n2 spaces\"]\n  F2c[label=\"Extra spaces\\ninside {{ }}\"]\n  \n  # Best Practices\n  F3a[label=\"F2 to find\\ndefinition\"]\n  F3b[label=\"Ctrl+. for\\nfuzzy finder\"]\n  F3c[label=\"Test with\\nsimple inputs\"]\n  \n  # Main edges\n  A -> B\n  A -> C\n  A -> D\n  A -> E\n  A -> F\n  \n  # Why Write Functions edges\n  B -> B1\n  B -> B2\n  B -> B3\n  B -> B4\n  B -> B5\n  \n  # Vector Functions edges\n  C -> C1\n  C -> C2\n  C -> C3\n  \n  C1 -> C1a\n  C1 -> C1b\n  C1 -> C1c\n  C1 -> C1d\n  \n  C2 -> C2a\n  C2 -> C2b\n  C2 -> C2c\n  C2 -> C2d\n  C2 -> C2e\n  \n  C2a -> C2a1\n  C2b -> C2b1\n  C2c -> C2c1\n  \n  C3 -> C3a\n  C3 -> C3b\n  C3 -> C3c\n  C3 -> C3d\n  C3 -> C3e\n  C3 -> C3f\n  \n  # Data Frame Functions edges\n  D -> D1\n  D -> D2\n  D -> D3\n  D -> D4\n  D -> D5\n  \n  D1 -> D1a\n  D1 -> D1b\n  D1 -> D1c\n  \n  D2 -> D2a\n  D2 -> D2b\n  D2 -> D2c\n  D2 -> D2d\n  \n  D3 -> D3a\n  D3 -> D3b\n  \n  D3a -> D3a1\n  D3a -> D3a2\n  D3a -> D3a3\n  \n  D3b -> D3b1\n  D3b -> D3b2\n  D3b -> D3b3\n  \n  D4 -> D4a\n  D4 -> D4b\n  D4 -> D4c\n  D4 -> D4d\n  \n  D5 -> D5a\n  D5 -> D5b\n  D5 -> D5c\n  \n  # Plot Functions edges\n  E -> E1\n  E -> E2\n  E -> E3\n  E -> E4\n  \n  E3 -> E3a\n  E3 -> E3b\n  E3 -> E3c\n  E3 -> E3d\n  E3 -> E3e\n  \n  E4 -> E4a\n  E4 -> E4b\n  E4 -> E4c\n  E4 -> E4d\n  \n  # Style edges\n  F -> F1\n  F -> F2\n  F -> F3\n  \n  F1 -> F1a\n  F1 -> F1b\n  F1 -> F1c\n  F1 -> F1d\n  \n  F2 -> F2a\n  F2 -> F2b\n  F2 -> F2c\n  \n  F3 -> F3a\n  F3 -> F3b\n  F3 -> F3c\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-3e68efc9459c1650cdea" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-3e68efc9459c1650cdea">{"x":{"diagram":"\ndigraph Functions {\n  graph [rankdir = TB]\n  \n  A[label=\"Functions\"]\n  \n  B[label=\"Why Write\\nFunctions\"]\n  C[label=\"Vector\\nFunctions\"]\n  D[label=\"Data Frame\\nFunctions\"]\n  E[label=\"Plot\\nFunctions\"]\n  F[label=\"Style\"]\n  \n  # Why Write Functions\n  B1[label=\"Evocative\\nnames\"]\n  B2[label=\"Update in\\none place\"]\n  B3[label=\"Avoid\\nmistakes\"]\n  B4[label=\"Reuse\\ncode\"]\n  B5[label=\"Rule of thumb:\\n3+ copies\"]\n  \n  # Vector Functions\n  C1[label=\"Function\\nStructure\"]\n  C2[label=\"Mutate\\nFunctions\"]\n  C3[label=\"Summary\\nFunctions\"]\n  \n  # Function Structure\n  C1a[label=\"Name\"]\n  C1b[label=\"Arguments\"]\n  C1c[label=\"Body\"]\n  C1d[label=\"Template:\\nname <- function(args)\\n{body}\"]\n  \n  # Mutate Functions\n  C2a[label=\"rescale01()\"]\n  C2b[label=\"z_score()\"]\n  C2c[label=\"clamp()\"]\n  C2d[label=\"first_upper()\"]\n  C2e[label=\"clean_number()\"]\n  \n  C2a1[label=\"Rescale to\\n0-1 range\"]\n  C2b1[label=\"Mean 0,\\nSD 1\"]\n  C2c1[label=\"Min/max\\nbounds\"]\n  \n  # Summary Functions\n  C3a[label=\"Return single\\nvalue\"]\n  C3b[label=\"Use with\\nsummarize()\"]\n  C3c[label=\"commas()\"]\n  C3d[label=\"cv()\"]\n  C3e[label=\"n_missing()\"]\n  C3f[label=\"mape()\"]\n  \n  # Data Frame Functions\n  D1[label=\"Indirection\\nProblem\"]\n  D2[label=\"Embracing\"]\n  D3[label=\"When to\\nEmbrace\"]\n  D4[label=\"Common\\nUse Cases\"]\n  D5[label=\"Data-masking\\nvs Tidy-selection\"]\n  \n  # Indirection Problem\n  D1a[label=\"Tidy evaluation\"]\n  D1b[label=\"Variables not\\nfound\"]\n  D1c[label=\"Need to look\\ninside arguments\"]\n  \n  # Embracing\n  D2a[label=\"{{ }} syntax\"]\n  D2b[label=\"Wrap arguments\"]\n  D2c[label=\"Look down\\nthe tunnel\"]\n  D2d[label=\"Makes dplyr\\nlook inside\"]\n  \n  # When to Embrace\n  D3a[label=\"Data-masking\"]\n  D3b[label=\"Tidy-selection\"]\n  \n  D3a1[label=\"arrange()\"]\n  D3a2[label=\"filter()\"]\n  D3a3[label=\"summarize()\"]\n  \n  D3b1[label=\"select()\"]\n  D3b2[label=\"relocate()\"]\n  D3b3[label=\"rename()\"]\n  \n  # Common Use Cases\n  D4a[label=\"summary6()\"]\n  D4b[label=\"count_prop()\"]\n  D4c[label=\"unique_where()\"]\n  D4d[label=\"count_missing()\"]\n  \n  # Data-masking vs Tidy-selection\n  D5a[label=\"pick()\"]\n  D5b[label=\"Use tidy-selection\\ninside data-masking\"]\n  D5c[label=\"count_wide()\"]\n  \n  # Plot Functions\n  E1[label=\"aes() is\\nData-masking\"]\n  E2[label=\"Embrace\\nVariables\"]\n  E3[label=\"Examples\"]\n  E4[label=\"Labeling\"]\n  \n  # Examples\n  E3a[label=\"histogram()\"]\n  E3b[label=\"linearity_check()\"]\n  E3c[label=\"hex_plot()\"]\n  E3d[label=\"sorted_bars()\"]\n  E3e[label=\"conditional_bars()\"]\n  \n  # Labeling\n  E4a[label=\"rlang::englue()\"]\n  E4b[label=\"Like str_glue()\"]\n  E4c[label=\"Understands {{ }}\"]\n  E4d[label=\"Auto-insert\\nvariable names\"]\n  \n  # Style\n  F1[label=\"Naming\"]\n  F2[label=\"White Space\"]\n  F3[label=\"Best\\nPractices\"]\n  \n  # Naming\n  F1a[label=\"Verbs for\\nfunctions\"]\n  F1b[label=\"Nouns for\\narguments\"]\n  F1c[label=\"Clear over\\nshort\"]\n  F1d[label=\"Use autocomplete\"]\n  \n  # White Space\n  F2a[label=\"function() followed\\nby {}\"]\n  F2b[label=\"Indent contents\\n2 spaces\"]\n  F2c[label=\"Extra spaces\\ninside {{ }}\"]\n  \n  # Best Practices\n  F3a[label=\"F2 to find\\ndefinition\"]\n  F3b[label=\"Ctrl+. for\\nfuzzy finder\"]\n  F3c[label=\"Test with\\nsimple inputs\"]\n  \n  # Main edges\n  A -> B\n  A -> C\n  A -> D\n  A -> E\n  A -> F\n  \n  # Why Write Functions edges\n  B -> B1\n  B -> B2\n  B -> B3\n  B -> B4\n  B -> B5\n  \n  # Vector Functions edges\n  C -> C1\n  C -> C2\n  C -> C3\n  \n  C1 -> C1a\n  C1 -> C1b\n  C1 -> C1c\n  C1 -> C1d\n  \n  C2 -> C2a\n  C2 -> C2b\n  C2 -> C2c\n  C2 -> C2d\n  C2 -> C2e\n  \n  C2a -> C2a1\n  C2b -> C2b1\n  C2c -> C2c1\n  \n  C3 -> C3a\n  C3 -> C3b\n  C3 -> C3c\n  C3 -> C3d\n  C3 -> C3e\n  C3 -> C3f\n  \n  # Data Frame Functions edges\n  D -> D1\n  D -> D2\n  D -> D3\n  D -> D4\n  D -> D5\n  \n  D1 -> D1a\n  D1 -> D1b\n  D1 -> D1c\n  \n  D2 -> D2a\n  D2 -> D2b\n  D2 -> D2c\n  D2 -> D2d\n  \n  D3 -> D3a\n  D3 -> D3b\n  \n  D3a -> D3a1\n  D3a -> D3a2\n  D3a -> D3a3\n  \n  D3b -> D3b1\n  D3b -> D3b2\n  D3b -> D3b3\n  \n  D4 -> D4a\n  D4 -> D4b\n  D4 -> D4c\n  D4 -> D4d\n  \n  D5 -> D5a\n  D5 -> D5b\n  D5 -> D5c\n  \n  # Plot Functions edges\n  E -> E1\n  E -> E2\n  E -> E3\n  E -> E4\n  \n  E3 -> E3a\n  E3 -> E3b\n  E3 -> E3c\n  E3 -> E3d\n  E3 -> E3e\n  \n  E4 -> E4a\n  E4 -> E4b\n  E4 -> E4c\n  E4 -> E4d\n  \n  # Style edges\n  F -> F1\n  F -> F2\n  F -> F3\n  \n  F1 -> F1a\n  F1 -> F1b\n  F1 -> F1c\n  F1 -> F1d\n  \n  F2 -> F2a\n  F2 -> F2b\n  F2 -> F2c\n  \n  F3 -> F3a\n  F3 -> F3b\n  F3 -> F3c\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 
@@ -1013,8 +1038,8 @@ cookieconsent.run({
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../ica/ica-sample1.html" class="pagination-link" aria-label="ICA Sample 1">
-        <span class="nav-page-text"><span class="chapter-title">ICA Sample 1</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../pcl/base_r_pcl.html" class="pagination-link" aria-label="Base R Essentials">
+        <span class="nav-page-text"><span class="chapter-title">Base R Essentials</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
