@@ -30,7 +30,7 @@ Recall that:
 - Then translate each step to code.
 
 ```{r}
-
+library(tidyverse)
 ```
 
 ## Iteration with `purrr` 

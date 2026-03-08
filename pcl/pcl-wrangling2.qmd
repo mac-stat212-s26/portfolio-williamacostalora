@@ -9,7 +9,7 @@ library(DiagrammeR)
 
 grViz("
 digraph AdvWrangling2 {
-  graph [rankdir = LR]
+  graph [rankdir = TB]
   
   A[label='Advanced\\nWrangling 2']
   

@@ -46,6 +46,12 @@ Let's talk about iteration in R.
 - We don't need to worry about storage in R.
 - We could use `walk()` for this...
 
+```{r}
+library(tidyverse)
+library(stringr)
+library(dplyr)
+library(tibble)
+```
 
 
 
@@ -422,9 +428,9 @@ remove_outliers <- function(data, what_var, sd_thresh) {
 
 3. Write a function called `fit_model` that implements the different settings for our `diamonds` analysis.
 
-```{r eval=FALSE}
-fit_model <- function(data, mod_formula, remove_outliers) {
-    if (remove_outliers) {
+```{r}
+fit_model <- function(data, mod_formula, remove_outliers_flag) {
+    if (remove_outliers_flag) {
         data_clean <- remove_outliers(data, what_var = carat, sd_thresh = 3)
     } else {
         data_clean <- data
@@ -454,12 +460,12 @@ Note that in `df_arg_combos`:
 lin_mod_res_for <- vector(mode = "list", length = nrow(df_arg_combos))
 
 for (i in seq_along(lin_mod_res_for)) {
-    this_formula <- df_arg_combos$mod_formula[[i]] # Double [[ for the **list** of formulas
-    this_remove_outliers <- df_arg_combos$remove_outliers[i] # Single [ for the **atomic vector** of logicals
+    this_formula <- df_arg_combos$mod_formula[[i]]
+    this_remove_outliers <- df_arg_combos$remove_outliers[i]
     lin_mod_res_for[[i]] <- fit_model(
         data = diamonds,
         mod_formula = this_formula,
-        remove_outliers = this_remove_outliers
+        remove_outliers_flag = this_remove_outliers
     )
 }
 ```

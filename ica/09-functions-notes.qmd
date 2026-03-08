@@ -3,8 +3,9 @@ title: "9 Functions"
 ---
 
 
-```{r doc_setup_09, echo=FALSE, message=FALSE}
+```{r}
 library(tidyverse)
+library(dplyr)
 ```
 
 ## 🧩 Learning Goals
