@@ -14,7 +14,7 @@ execute:
 
 ## Introduction
 
-This project uses NYC Airbnb data to demonstrate four key concepts from Intermediate Data Science:
+This project uses NYC Airbnb data to demonstrate four key concepts we have learned these past couple of weeks in class:
 
 1. **Missing Data**: Finding and handling explicit/implicit missing values
 2. **Custom Functions**: Writing reusable functions with tidy evaluation
@@ -236,6 +236,8 @@ airbnb_clean |>
 ```
 
 ### Using crossing() for Multiple Scenarios
+
+```{r}
 # Create multiple analysis scenarios
 scenarios <- crossing(
   borough = c("Manhattan", "Brooklyn"),
@@ -275,6 +277,7 @@ for (i in seq_len(nrow(scenarios))) {
 bind_cols(scenarios, bind_rows(results)) |> 
   kable(digits = 2, caption = "Results for All Scenarios")
 ```
+
 
 ---
 
