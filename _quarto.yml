@@ -103,6 +103,7 @@ book:
       - extra/extra-sample1.qmd
       - extra/extra-sample2.qmd
       - extra/map.qmd
+      - extra/airbnb-analysis.qmd
 
     - part: "Exam Reports"
       chapters:
