@@ -78,6 +78,7 @@ book:
       - pcl/pcl-wrangling2.qmd
       - pcl/pcl-missing_data.qmd
       - pcl/pcl02-23.qmd
+      - pcl/base_r_pcl.qmd
 
 
     - part: "In-Class Activities"
