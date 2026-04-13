@@ -154,7 +154,7 @@ execute:
   warning: false
   error: false
   cache: false
-#   freeze: auto # remove when using GitHub action to execute code
+  freeze: auto # remove when using GitHub action to execute code
 
 
 
