@@ -118,8 +118,8 @@ Save the two files, [diverse_data_by_dist.rds](https://mac-stat.github.io/data/d
 
 ```{r reading}
 #| eval: false
-data_by_dist <- read_rds("relative path to diverse_data_by_dist.rds")
-data_by_year <- read_csv("relative path to diverse_data_by_year.csv")
+data_by_dist <- read_rds("data/diverse_data_by_dist.rds")
+data_by_year <- read_csv("data/diverse_data_by_year.csv")
 ```
 
 **Getting acquainted with the app and underlying code:** Take a few minutes to explore the code:
@@ -263,6 +263,8 @@ Run the app with the output. Notice that nothing really changes. Think of the ou
 In general, the server section of code will look something like this:
 
 ```{r shiny_server_example, eval=FALSE}
+#| eval: false
+
 # Suppose the following are somewhere in the UI part
 numericInput(inputId = "min_year")
 numericInput(inputId = "max_year")
@@ -304,7 +306,8 @@ library(plotly)
 
 A wonderful feature of `plotly` is that an interactive graphic can be constructed by taking a regular `ggplot` graph and putting it inside the `ggplotly()` function:
 
-```{r plotly_static_example}
+```{r plotly_static_example, eval=FALSE}
+#| eval: false
 data(babynames, package = "babynames")
 bnames <- babynames |> filter(name %in% c("Brianna", "Briana", "Breanna"))
 
@@ -321,7 +324,7 @@ The `plotly` package can also create animations by incorporating `frame` and `id
 - `frame = year`: This makes the frame of the animation correspond to year--so the animation shows changes across time (years).
 - `ids = country`: This ensures smooth transitions between objects with the same `id` (which helps facilitate object constancy throughout the animation). Here, each point is a country, so this makes the animation transition smoothly from year to year for a given country. (For more information, see [here](https://plotly-r.com/animating-views).)
 
-```{r plotly_animation_example}
+```{r plotly_animation_example, eval=FALSE}
 data(gapminder, package = "gapminder")
 p <- ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent, size = pop)) +
     geom_point(aes(frame = year, ids = country)) +
@@ -363,6 +366,17 @@ You will be able to share your app with any individual with internet access unle
 The instructions are set out in more detail [here](https://shiny.rstudio.com/articles/shinyapps.html).
 
 
+# My Shiny App
+
+## Neighborhood Diversity Shiny App
+
+Explore neighborhood diversity across U.S. cities interactively. Use the dropdown to select a city and the slider to adjust the smoothing span of the diversity-vs-distance curve.
+
+<iframe src="https://1wrn0x-liam-acosta0lora.shinyapps.io/shinyICA/" 
+        width="100%" 
+        height="800px" 
+        frameborder="0">
+</iframe>
 
 ## Resources
 
