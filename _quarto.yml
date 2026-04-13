@@ -108,6 +108,7 @@ book:
       - extra/extra-sample2.qmd
       - extra/map.qmd
       - extra/airbnb-analysis.qmd
+      - extra/DataFest_EDA_Spatial_Machine_Learning_Shiny.qmd
 
     - part: "Exam Reports"
       chapters:
