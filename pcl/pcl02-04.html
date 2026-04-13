@@ -458,7 +458,7 @@ cookieconsent.run({
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../ica/07-wrangling-2-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">7 Adv Data wrangling II</span></a>
+  <a href="../ica/07-wrangling-2-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">16 Databases and SQL</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -484,6 +484,26 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ica/12-iteration-2-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">12 Loops+Iter II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/14-apis-2-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">14 APIs II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/15-scraping-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">15 Web scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/16-databases-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">16 Databases and SQL</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/18-interactive-viz-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">18 Interactive Viz</span></a>
   </div>
 </li>
       </ul>
@@ -560,8 +580,8 @@ cookieconsent.run({
 
 </header><div class="cell">
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-4ebcad9c0439de878a2f" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-4ebcad9c0439de878a2f">{"x":{"diagram":"\ndigraph CRS {\n  graph [rankdir = LR]\n  \n  # Main node\n  A[label=\"Coordinate\nReference\nSystems\"]\n  \n  # Major branches\n  B[label=\"Shape of\nEarth\"]\n  C[label=\"CRS\nComponents\"]\n  D[label=\"Common\nSystems\"]\n  E[label=\"EPSG\nCodes\"]\n  F[label=\"Why CRS\nMatters\"]\n  G[label=\"Spatial\nData Types\"]\n  \n  # Shape of Earth children\n  B1[label=\"Sphere\n(not quite)\"]\n  B2[label=\"Ellipsoid\n(squished sphere)\"]\n  B3[label=\"Potato\n(real Earth)\"]\n  B4[label=\"Mathematical\nmodel needed\"]\n  \n  # CRS Components children\n  C1[label=\"Ellipsoid\n(shape)\"]\n  C2[label=\"Datum\n(position)\"]\n  C3[label=\"Projection\n(3D to 2D)\"]\n  C4[label=\"Units\n(degrees/meters)\"]\n  \n  # Ellipsoid details\n  C1a[label=\"WGS84\"]\n  C1b[label=\"GRS80\"]\n  \n  # Datum details\n  C2a[label=\"Where ellipsoid\ngoes in Earth\"]\n  C2b[label=\"Different fit\nfor regions\"]\n  \n  # Projection details\n  C3a[label=\"Mercator\"]\n  C3b[label=\"Lambert\"]\n  C3c[label=\"Albers\"]\n  C3d[label=\"Loss: angle,\narea, or distance\"]\n  \n  # Common Systems children\n  D1[label=\"WGS84\n(GPS, global)\"]\n  D2[label=\"NAD83\n(North America)\"]\n  D3[label=\"GDA94\n(Australia)\"]\n  D4[label=\"State Plane\n(US local)\"]\n  \n  # EPSG children\n  E1[label=\"European Petroleum\nSurvey Group\"]\n  E2[label=\"Secret codes\nfor each CRS\"]\n  E3[label=\"WGS84 = 4326\"]\n  E4[label=\"NAD83 = 4269\"]\n  E5[label=\"Continental US\nAlbers = 5070\"]\n  E6[label=\"Common mistake:\nESPG instead\"]\n  \n  # Why CRS Matters children\n  F1[label=\"Multiple datasets\nmust match\"]\n  F2[label=\"Same units\nrequired\"]\n  F3[label=\"Convert between\nsystems\"]\n  F4[label=\"GeoPandas handles\nconversion\"]\n  F5[label=\"3-4 feet difference\nWGS84 vs NAD83\"]\n  \n  # Spatial Data Types children\n  G1[label=\"Vector Data\"]\n  G2[label=\"Raster Data\"]\n  \n  # Vector details\n  G1a[label=\"Points\n(cities)\"]\n  G1b[label=\"Lines\n(roads, rivers)\"]\n  G1c[label=\"Polygons\n(boundaries)\"]\n  G1d[label=\"Formats: .shp,\n.geojson, .kml, .csv\"]\n  \n  # Raster details\n  G2a[label=\"Grid of cells\"]\n  G2b[label=\"Continuous values\n(elevation)\"]\n  G2c[label=\"Categorical values\n(land cover)\"]\n  G2d[label=\"Formats: .tif,\n.nc, .hdf\"]\n  G2e[label=\"High resolution =\nslow computation\"]\n  \n  # Create main edges\n  A -> B\n  A -> C\n  A -> D\n  A -> E\n  A -> F\n  A -> G\n  \n  # Shape of Earth edges\n  B -> B1\n  B -> B2\n  B -> B3\n  B -> B4\n  \n  # CRS Components edges\n  C -> C1\n  C -> C2\n  C -> C3\n  C -> C4\n  \n  C1 -> C1a\n  C1 -> C1b\n  \n  C2 -> C2a\n  C2 -> C2b\n  \n  C3 -> C3a\n  C3 -> C3b\n  C3 -> C3c\n  C3 -> C3d\n  \n  # Common Systems edges\n  D -> D1\n  D -> D2\n  D -> D3\n  D -> D4\n  \n  # EPSG edges\n  E -> E1\n  E -> E2\n  E -> E3\n  E -> E4\n  E -> E5\n  E -> E6\n  \n  # Why CRS Matters edges\n  F -> F1\n  F -> F2\n  F -> F3\n  F -> F4\n  F -> F5\n  \n  # Spatial Data edges\n  G -> G1\n  G -> G2\n  \n  G1 -> G1a\n  G1 -> G1b\n  G1 -> G1c\n  G1 -> G1d\n  \n  G2 -> G2a\n  G2 -> G2b\n  G2 -> G2c\n  G2 -> G2d\n  G2 -> G2e\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-491b7a491e80f83a3be4" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-491b7a491e80f83a3be4">{"x":{"diagram":"\ndigraph CRS {\n  graph [rankdir = LR]\n  \n  # Main node\n  A[label=\"Coordinate\nReference\nSystems\"]\n  \n  # Major branches\n  B[label=\"Shape of\nEarth\"]\n  C[label=\"CRS\nComponents\"]\n  D[label=\"Common\nSystems\"]\n  E[label=\"EPSG\nCodes\"]\n  F[label=\"Why CRS\nMatters\"]\n  G[label=\"Spatial\nData Types\"]\n  \n  # Shape of Earth children\n  B1[label=\"Sphere\n(not quite)\"]\n  B2[label=\"Ellipsoid\n(squished sphere)\"]\n  B3[label=\"Potato\n(real Earth)\"]\n  B4[label=\"Mathematical\nmodel needed\"]\n  \n  # CRS Components children\n  C1[label=\"Ellipsoid\n(shape)\"]\n  C2[label=\"Datum\n(position)\"]\n  C3[label=\"Projection\n(3D to 2D)\"]\n  C4[label=\"Units\n(degrees/meters)\"]\n  \n  # Ellipsoid details\n  C1a[label=\"WGS84\"]\n  C1b[label=\"GRS80\"]\n  \n  # Datum details\n  C2a[label=\"Where ellipsoid\ngoes in Earth\"]\n  C2b[label=\"Different fit\nfor regions\"]\n  \n  # Projection details\n  C3a[label=\"Mercator\"]\n  C3b[label=\"Lambert\"]\n  C3c[label=\"Albers\"]\n  C3d[label=\"Loss: angle,\narea, or distance\"]\n  \n  # Common Systems children\n  D1[label=\"WGS84\n(GPS, global)\"]\n  D2[label=\"NAD83\n(North America)\"]\n  D3[label=\"GDA94\n(Australia)\"]\n  D4[label=\"State Plane\n(US local)\"]\n  \n  # EPSG children\n  E1[label=\"European Petroleum\nSurvey Group\"]\n  E2[label=\"Secret codes\nfor each CRS\"]\n  E3[label=\"WGS84 = 4326\"]\n  E4[label=\"NAD83 = 4269\"]\n  E5[label=\"Continental US\nAlbers = 5070\"]\n  E6[label=\"Common mistake:\nESPG instead\"]\n  \n  # Why CRS Matters children\n  F1[label=\"Multiple datasets\nmust match\"]\n  F2[label=\"Same units\nrequired\"]\n  F3[label=\"Convert between\nsystems\"]\n  F4[label=\"GeoPandas handles\nconversion\"]\n  F5[label=\"3-4 feet difference\nWGS84 vs NAD83\"]\n  \n  # Spatial Data Types children\n  G1[label=\"Vector Data\"]\n  G2[label=\"Raster Data\"]\n  \n  # Vector details\n  G1a[label=\"Points\n(cities)\"]\n  G1b[label=\"Lines\n(roads, rivers)\"]\n  G1c[label=\"Polygons\n(boundaries)\"]\n  G1d[label=\"Formats: .shp,\n.geojson, .kml, .csv\"]\n  \n  # Raster details\n  G2a[label=\"Grid of cells\"]\n  G2b[label=\"Continuous values\n(elevation)\"]\n  G2c[label=\"Categorical values\n(land cover)\"]\n  G2d[label=\"Formats: .tif,\n.nc, .hdf\"]\n  G2e[label=\"High resolution =\nslow computation\"]\n  \n  # Create main edges\n  A -> B\n  A -> C\n  A -> D\n  A -> E\n  A -> F\n  A -> G\n  \n  # Shape of Earth edges\n  B -> B1\n  B -> B2\n  B -> B3\n  B -> B4\n  \n  # CRS Components edges\n  C -> C1\n  C -> C2\n  C -> C3\n  C -> C4\n  \n  C1 -> C1a\n  C1 -> C1b\n  \n  C2 -> C2a\n  C2 -> C2b\n  \n  C3 -> C3a\n  C3 -> C3b\n  C3 -> C3c\n  C3 -> C3d\n  \n  # Common Systems edges\n  D -> D1\n  D -> D2\n  D -> D3\n  D -> D4\n  \n  # EPSG edges\n  E -> E1\n  E -> E2\n  E -> E3\n  E -> E4\n  E -> E5\n  E -> E6\n  \n  # Why CRS Matters edges\n  F -> F1\n  F -> F2\n  F -> F3\n  F -> F4\n  F -> F5\n  \n  # Spatial Data edges\n  G -> G1\n  G -> G2\n  \n  G1 -> G1a\n  G1 -> G1b\n  G1 -> G1c\n  G1 -> G1d\n  \n  G2 -> G2a\n  G2 -> G2b\n  G2 -> G2c\n  G2 -> G2d\n  G2 -> G2e\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 
