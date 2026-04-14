@@ -1,0 +1,175 @@
+---
+title: "Loops & Iteration Mindmaps"
+format: html
+---
+
+## Lesson 11: across() Function
+
+```{r}
+#| echo: false
+#| message: false
+library(DiagrammeR)
+
+grViz("
+digraph Across {
+  graph [rankdir = LR]
+  
+  node [shape = ellipse]
+  
+  # Central node
+  main [label = 'across()', shape = box, style = filled, fillcolor = lightblue]
+  
+  # All other nodes
+  purpose [label = 'Modify multiple\\ncolumns at once']
+  by_name [label = '.cols: by name']
+  by_select [label = '.cols: select() helpers']
+  by_where [label = '.cols: where()']
+  by_everything [label = '.cols: everything()']
+  in_mutate [label = 'Use in: mutate()']
+  in_summarize [label = 'Use in: summarize()']
+  in_filter [label = 'Use in: filter()']
+  in_arrange [label = 'Use in: arrange()']
+  
+  # Edges
+  main -> purpose
+  main -> by_name
+  main -> by_select
+  main -> by_where
+  main -> by_everything
+  main -> in_mutate
+  main -> in_summarize
+  main -> in_filter
+  main -> in_arrange
+}
+")
+```
+
+---
+
+## Lesson 12: map() Functions
+
+```{r}
+#| echo: false
+#| message: false
+grViz("
+digraph MapFunctions {
+  graph [rankdir = LR]
+  
+  # Global node styles for better rendering
+  node [fontname = Helvetica, fontcolor = black]
+  
+  # Central node - Changed to a lighter color and explicit penwidth
+  mapfamily [label = 'map Family', shape = box, style = filled, fillcolor = '#d3f9d8', penwidth = 2]
+  
+  # All other nodes
+  concept [label = 'Apply function\nto each element', shape = ellipse]
+  anon [label = 'Anonymous:\nfunction(x)', shape = ellipse]
+  map_list [label = 'map(): returns list', shape = ellipse]
+  map_df [label = 'map_df(): returns df', shape = ellipse]
+  map_chr [label = 'map_chr(): returns char', shape = ellipse]
+  map_dbl [label = 'map_dbl(): returns numeric', shape = ellipse]
+  walk [label = 'walk(): side effects', shape = ellipse]
+  map1 [label = 'map(): 1 input', shape = ellipse]
+  map2 [label = 'map2(): 2 inputs', shape = ellipse]
+  pmap [label = 'pmap(): multiple inputs', shape = ellipse]
+  
+  # Edges
+  mapfamily -> concept
+  mapfamily -> anon
+  mapfamily -> map_list
+  mapfamily -> map_df
+  mapfamily -> map_chr
+  mapfamily -> map_dbl
+  mapfamily -> walk
+  mapfamily -> map1
+  mapfamily -> map2
+  mapfamily -> pmap
+}
+")
+```
+
+
+---
+
+## List Operations
+
+```{r}
+#| echo: false
+#| message: false
+
+grViz("
+digraph ListOps {
+  graph [rankdir = LR]
+  
+  node [shape = ellipse]
+  
+  # Central node
+  center [label = 'List Operations', shape = box, style = filled, fillcolor = wheat]
+  
+  # All other nodes
+  double [label = 'x[[i]]: get tibble']
+  single [label = 'x[i]: get list']
+  pluck [label = 'pluck(): extract nested']
+  keep [label = 'keep(): like filter()']
+  reduce [label = 'reduce(): like summarize()']
+  nest [label = 'nest(): DF with list-col']
+  split [label = 'split(): list of DFs']
+  
+  # Edges
+  center -> double
+  center -> single
+  center -> pluck
+  center -> keep
+  center -> reduce
+  center -> nest
+  center -> split
+}
+")
+```
+
+---
+
+## Helper Functions
+
+```{r}
+#| echo: false
+#| message: false
+
+grViz("
+digraph Helpers {
+  graph [rankdir = LR]
+  
+  node [shape = ellipse]
+  
+  # Central node
+  center [label = 'Helper Functions', shape = box, style = filled, fillcolor = lightcoral]
+  
+  # All other nodes
+  set_names [label = 'set_names():\\nname list elements']
+  list_files [label = 'list.files():\\nvector of file paths']
+  
+  # Edges
+  center -> set_names
+  center -> list_files
+}
+")
+```
+
+## Quick Reference
+
+| Concept | Function | Returns |
+|---------|----------|---------|
+| **Modify columns** | `across(.cols, .fns)` | Modified data frame |
+| **Map basics** | `map(x, f)` | List |
+| | `map_df(x, f)` | Data frame |
+| | `map_chr(x, f)` | Character vector |
+| | `map_dbl(x, f)` | Numeric vector |
+| **Side effects** | `walk(x, f)` | (none) |
+| **Multiple inputs** | `map2(x, y, f)` | List |
+| | `pmap(list, f)` | List |
+| **List subsetting** | `x[[i]]` | Element i |
+| | `x[i]` | List with element i |
+| **List operations** | `keep(x, .p)` | Filtered list |
+| | `reduce(x, f)` | Single value |
+| **Nesting** | `nest(.data, ...)` | DF with list-column |
+| | `split(x, f)` | Named list of DFs |

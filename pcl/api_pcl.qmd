@@ -1,0 +1,80 @@
+---
+title: "APIs, Web Scraping, and Databases Mindmaps"
+format: html
+---
+
+## APIs Checkpoint
+
+```{r}
+#| echo: false
+#| message: false
+library(DiagrammeR)
+
+grViz("
+digraph APIs {
+  graph [rankdir = TB, fontsize = 12]
+  
+  # Global node settings - Force black text and a clean font
+  node [fontname = Helvetica, fontcolor = black]
+  
+  # Main topic
+  main [label = 'APIs & URLs', shape = box, style = filled, fillcolor = '#ADD8E6', fontsize = 14]
+  
+  # Main branches
+  json_branch [label = 'JSON', shape = box, style = filled, fillcolor = '#90EE90']
+  url_branch [label = 'URL Structure', shape = box, style = filled, fillcolor = '#90EE90']
+  urltools_branch [label = 'urltools Functions', shape = box, style = filled, fillcolor = '#90EE90']
+  
+  main -> json_branch
+  main -> url_branch
+  main -> urltools_branch
+  
+  # JSON branch
+  json_def [label = 'Format for organizing\\ndata from APIs', shape = ellipse]
+  json_struct [label = 'JSON Structure', shape = box, style = filled, fillcolor = '#FFFFE0']
+  json_to_r [label = 'Convert to R', shape = box, style = filled, fillcolor = '#FFFFE0']
+  
+  json_branch -> json_def
+  json_branch -> json_struct
+  json_branch -> json_to_r
+  
+  # JSON structure
+  parent_elem [label = 'Parent elements:\\nkey-value pairs', shape = ellipse]
+  curly_braces [label = '{...} = one row\\nof data', shape = ellipse]
+  brackets [label = '[...] = array/list\\nof objects', shape = ellipse]
+  
+  json_struct -> parent_elem
+  json_struct -> curly_braces
+  json_struct -> brackets
+  
+  # JSON to R conversion
+  named_list [label = 'Named list with\\n2+ elements', shape = ellipse]
+  nested_df [label = 'Nested data frame\\n(list column)', shape = ellipse]
+  
+  json_to_r -> named_list
+  json_to_r -> nested_df
+  
+  # URL Structure branch
+  url_scheme [label = 'Scheme:\\nhttps://', shape = ellipse]
+  url_host [label = 'Host Address:\\nwww.example.com', shape = ellipse]
+  url_path [label = 'File Path:\\n/folder/file.htm', shape = ellipse]
+  url_fragment [label = 'Fragment:\\n#top', shape = ellipse]
+  url_query [label = 'Query:\\nsearchTerm=HTML', shape = ellipse]
+  
+  url_branch -> url_scheme
+  url_branch -> url_host
+  url_branch -> url_path
+  url_branch -> url_fragment
+  url_branch -> url_query
+  
+  # urltools functions
+  url_encode [label = 'url_encode():\\nstring to %encoded URL', shape = ellipse]
+  url_decode [label = 'url_decode():\\n%encoded URL to string', shape = ellipse]
+  param_set [label = 'param_set():\\nadd query to URL', shape = ellipse]
+  
+  urltools_branch -> url_encode
+  urltools_branch -> url_decode
+  urltools_branch -> param_set
+}
+")
+```

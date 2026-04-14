@@ -1,0 +1,83 @@
+---
+title: "web_scraping"
+format: html
+---
+
+## Web Scraping Checkpoint
+
+```{r}
+#| echo: false
+#| message: false
+
+grViz("
+digraph WebScraping {
+  graph [rankdir = TB, fontsize = 12]
+  
+  # Global settings to prevent black boxes
+  node [fontname = Helvetica, fontcolor = black]
+  
+  # Main topic
+  main [label = 'Web Scraping\\n(HTML & CSS)', shape = box, style = filled, fillcolor = '#ADD8E6', fontsize = 14]
+  
+  # Main branches - Fixed fillcolors and explicit fontcolor
+  html_branch [label = 'HTML Elements', shape = box, style = filled, fillcolor = '#90EE90']
+  css_branch [label = 'CSS Selectors', shape = box, style = filled, fillcolor = '#90EE90']
+  rvest_branch [label = 'rvest Functions', shape = box, style = filled, fillcolor = '#90EE90']
+  
+  main -> html_branch
+  main -> css_branch
+  main -> rvest_branch
+  
+  # HTML Elements
+  html_parts [label = 'Element Parts', shape = box, style = filled, fillcolor = '#FFFFE0']
+  html_example [label = 'Example:\\nText', shape = box, style = filled, fillcolor = '#F5DEB3']
+  
+  html_branch -> html_parts
+  html_branch -> html_example
+  
+  # HTML parts
+  start_tag [label = 'Start tag:\\n', shape = ellipse]
+  end_tag [label = 'End tag:\\n', shape = ellipse]
+  contents [label = 'Contents:\\nText', shape = ellipse]
+  attributes [label = 'Attributes:\\nid=first', shape = ellipse]
+  
+  html_parts -> start_tag
+  html_parts -> end_tag
+  html_parts -> contents
+  html_parts -> attributes
+  
+  # CSS Selectors
+  css_element [label = 'Element selector', shape = box, style = filled, fillcolor = '#FFFFE0']
+  css_class [label = 'Class selector', shape = box, style = filled, fillcolor = '#FFFFE0']
+  css_id [label = 'ID selector', shape = box, style = filled, fillcolor = '#FFFFE0']
+  
+  css_branch -> css_element
+  css_branch -> css_class
+  css_branch -> css_id
+  
+  # CSS details
+  elem_syntax [label = 'p\\nselects all tags', shape = ellipse]
+  elem_class [label = 'p.important\\nselects ', shape = ellipse]
+  
+  css_element -> elem_syntax
+  css_element -> elem_class
+  
+  class_syntax [label = '.title\\nselects class=title', shape = ellipse]
+  css_class -> class_syntax
+  
+  id_syntax [label = '#title\\nselects id=title', shape = ellipse]
+  css_id -> id_syntax
+  
+  # rvest Functions
+  read_fn [label = 'read_html():\\nread HTML document', shape = ellipse]
+  elements_fn [label = 'html_elements():\\nselect elements', shape = ellipse]
+  text_fn [label = 'html_text2():\\nextract contents', shape = ellipse]
+  attr_fn [label = 'html_attr():\\nextract attributes', shape = ellipse]
+  
+  rvest_branch -> read_fn
+  rvest_branch -> elements_fn
+  rvest_branch -> text_fn
+  rvest_branch -> attr_fn
+}
+")
+```
