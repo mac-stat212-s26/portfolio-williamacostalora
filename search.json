@@ -142,6 +142,17 @@
     ]
   },
   {
+    "objectID": "tt/hw08-tt.html#tracking-seabird-observations-across-time-and-space-near-new-zealand",
+    "href": "tt/hw08-tt.html#tracking-seabird-observations-across-time-and-space-near-new-zealand",
+    "title": "Homework 08",
+    "section": "Tracking seabird observations across time and space near New Zealand",
+    "text": "Tracking seabird observations across time and space near New Zealand\nTop species shown Point size reflects flock size Animation shows temporal patterns\n\nCode# Base plot\nplotly_plot &lt;- ggplot(data_filtered, aes(\n  x = longitude,\n  y = latitude,\n  size = count,\n  color = species_common_name,\n  frame = year,  \n  text = paste0(\n    \"&lt;b&gt;Species:&lt;/b&gt; \", species_common_name,\n    \"&lt;br&gt;&lt;b&gt;Count:&lt;/b&gt; \", count,\n    \"&lt;br&gt;&lt;b&gt;Year:&lt;/b&gt; \", year,\n    \"&lt;br&gt;&lt;b&gt;Activity:&lt;/b&gt; \", activity,\n    \"&lt;br&gt;&lt;b&gt;Feeding:&lt;/b&gt; \", feeding\n  )\n)) +\n  geom_point(alpha = 0.7) +\n  scale_size(range = c(1, 12)) +\n  labs(\n    title = \"Bird Sightings at Sea (1969–1990)\",\n    subtitle = \"Tracking seabird observations across time and space near New Zealand\\nTop species shown • Point size reflects flock size • Animation shows temporal patterns\",\n    caption = \"TidyTuesday 2026 Week 15 | Source: Te Papa Tongarewa (Museum of New Zealand)\\nEach point represents a 10-minute ship-based observation\"\n  ) +\n  theme_minimal() +\n  theme(\n    plot.title = element_text(face = \"bold\", size = 12),\n    plot.subtitle = element_text(size = 11)\n  )\n\n# Convert to plotly\nggplotly(plotly_plot, tooltip = \"text\") %&gt;%\n  animation_opts(frame = 1000, easing = \"cubic-in-out\") %&gt;%\n  animation_slider(currentvalue = list(prefix = \"Observation Year: \")) %&gt;%\n  layout(margin = list(b = 100))\n\n\n\n\n\nTidyTuesday 2026 Week 15 | Source: Te Papa Tongarewa (Museum of New Zealand) | Author: William Acosta Lora\nEach point represents a 10-minute ship-based observatio\nTrend: The visualization reveals a spike in sightings during the late 1980s, specifically concentrated around the 160 longitude mark. While early years (1970s) show sparse data, the period between 1986–1990 shows a high density of Wandering Albatross observations.",
+    "crumbs": [
+      "TidyTuesday",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Homework 08</span>"
+    ]
+  },
+  {
     "objectID": "pcl/pcl.html",
     "href": "pcl/pcl.html",
     "title": "Pre-Class Learning Summaries",

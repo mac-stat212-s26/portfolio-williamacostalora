@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="William Acosta Lora">
+<meta name="dcterms.date" content="2026-03-08">
+<title>NYC Airbnb: Demonstrating Key Data Science Concepts – COMP/STAT212 Portfolio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../extra/DataFest_EDA_Spatial_Machine_Learning_Shiny.html" rel="next">
+<link href="../extra/map.html" rel="prev">
+<script src="../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d0047e22b7e2e904683f97b5597ae072.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"implied",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"en"
+  });
+});
+</script><style>html{ scroll-behavior: smooth; }</style>
+<link rel="stylesheet" href="../style/custom.css">
+</head>
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../extra/extra-sample1.html">Extras</a></li><li class="breadcrumb-item"><a href="../extra/airbnb-analysis.html"><span class="chapter-title">NYC Airbnb: Demonstrating Key Data Science Concepts</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../assets/sidebar-logo.png" alt="Random negative space illustration" class="sidebar-logo light-content py-0 d-lg-inline d-none"><img src="../assets/sidebar-logo.png" alt="Random negative space illustration" class="sidebar-logo dark-content py-0 d-lg-inline d-none"></a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">William Acosta</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Prof Viz</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pv/pv-01.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Professional Viz</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">TidyTuesday</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tt/2025-07-08.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">TidyTuesday Sample 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tt/2025-07-15.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">TidyTuesday Sample 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tt/tt-01-27.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Brazilian Companies Capital Stock Analysis</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Pre-Class Learnings</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pcl/pcl.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Pre-Class Learning Summaries</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pcl/pcl02-04.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">pcl02-04</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pcl/pcl02-09.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Advanced Data Wrangling - R Concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pcl/pcl-wrangling2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Advanced Wrangling 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pcl/pcl-missing_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Missing Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pcl/pcl02-23.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pcl/base_r_pcl.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Base R Essentials</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">In-Class Activities</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/ica-sample1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ICA Sample 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/ica-sample2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ICA Sample 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/cleaning.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Cleaning SFO Weather Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/03-adv-ggplot-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">3 Adv Data Viz</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/04_adv_maps/code/04-adv-maps-1-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4 Adv Spatial Viz P1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/06-wrangling-1-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">6 Adv Data wrangling I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/07-wrangling-2-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">16 Databases and SQL</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/08-missing-data-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">8 Missing Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/09-functions-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">9 Functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/10-base-r-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">10 Base R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/11-iteration-1-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">11 Loops+Iter I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/12-iteration-2-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">12 Loops+Iter II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/14-apis-2-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">14 APIs II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/15-scraping-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">15 Web scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/16-databases-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">16 Databases and SQL</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ica/18-interactive-viz-notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">18 Interactive Viz</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Extras</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extra/extra-sample1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Extra Sample 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extra/extra-sample2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Extra Sample 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extra/map.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Uninsurance Rates in the Twin Cities –Interactive Map</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extra/airbnb-analysis.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">NYC Airbnb: Demonstrating Key Data Science Concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extra/DataFest_EDA_Spatial_Machine_Learning_Shiny.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">DataFest: Mental Health &amp; Transport Access Screening Tool</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Exam Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../exam/code/report1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Report 1</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li>
+<a href="#concept-1-missing-data" id="toc-concept-1-missing-data" class="nav-link" data-scroll-target="#concept-1-missing-data">Concept 1: Missing Data</a>
+  <ul class="collapse">
+<li><a href="#finding-explicit-missing-values" id="toc-finding-explicit-missing-values" class="nav-link" data-scroll-target="#finding-explicit-missing-values">Finding Explicit Missing Values</a></li>
+  <li><a href="#handling-missing-values" id="toc-handling-missing-values" class="nav-link" data-scroll-target="#handling-missing-values">Handling Missing Values</a></li>
+  <li><a href="#finding-implicit-missing-values" id="toc-finding-implicit-missing-values" class="nav-link" data-scroll-target="#finding-implicit-missing-values">Finding Implicit Missing Values</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#concept-2-custom-functions" id="toc-concept-2-custom-functions" class="nav-link" data-scroll-target="#concept-2-custom-functions">Concept 2: Custom Functions</a>
+  <ul class="collapse">
+<li><a href="#function-1-calculate-proportion" id="toc-function-1-calculate-proportion" class="nav-link" data-scroll-target="#function-1-calculate-proportion">Function 1: Calculate Proportion</a></li>
+  <li><a href="#function-2-price-summary-by-group" id="toc-function-2-price-summary-by-group" class="nav-link" data-scroll-target="#function-2-price-summary-by-group">Function 2: Price Summary by Group</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#concept-3-base-r-subsetting" id="toc-concept-3-base-r-subsetting" class="nav-link" data-scroll-target="#concept-3-base-r-subsetting">Concept 3: Base R Subsetting</a>
+  <ul class="collapse">
+<li><a href="#using-and" id="toc-using-and" class="nav-link" data-scroll-target="#using-and">Using <code>$</code>, <code>[[]]</code>, and <code>[]</code></a></li>
+  <li><a href="#using-split-and-lapply" id="toc-using-split-and-lapply" class="nav-link" data-scroll-target="#using-split-and-lapply">Using split() and lapply()</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#concept-4-iteration" id="toc-concept-4-iteration" class="nav-link" data-scroll-target="#concept-4-iteration">Concept 4: Iteration</a>
+  <ul class="collapse">
+<li><a href="#for-loop-with-pre-allocation" id="toc-for-loop-with-pre-allocation" class="nav-link" data-scroll-target="#for-loop-with-pre-allocation">For Loop with Pre-allocation</a></li>
+  <li><a href="#using-across" id="toc-using-across" class="nav-link" data-scroll-target="#using-across">Using across()</a></li>
+  <li><a href="#using-crossing-for-multiple-scenarios" id="toc-using-crossing-for-multiple-scenarios" class="nav-link" data-scroll-target="#using-crossing-for-multiple-scenarios">Using crossing() for Multiple Scenarios</a></li>
+  </ul>
+</li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../extra/extra-sample1.html">Extras</a></li><li class="breadcrumb-item"><a href="../extra/airbnb-analysis.html"><span class="chapter-title">NYC Airbnb: Demonstrating Key Data Science Concepts</span></a></li></ol></nav><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">NYC Airbnb: Demonstrating Key Data Science Concepts</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta column-body">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>William Acosta Lora </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 8, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header><section id="introduction" class="level2"><h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This project uses NYC Airbnb data to demonstrate four key concepts we have learned these past couple of weeks in class:</p>
+<ol type="1">
+<li>
+<strong>Missing Data</strong>: Finding and handling explicit/implicit missing values</li>
+<li>
+<strong>Custom Functions</strong>: Writing reusable functions with tidy evaluation</li>
+<li>
+<strong>Base R Subsetting</strong>: Using <code>$</code>, <code>[[]]</code>, and <code>[]</code>
+</li>
+<li>
+<strong>Iteration</strong>: For loops and across() for repeated tasks</li>
+</ol>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a>airbnb <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/raw/archive/AB_NYC_2019.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="fu">mutate</span>(<span class="at">last_review =</span> <span class="fu">mdy</span>(last_review))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<hr></section><section id="concept-1-missing-data" class="level2"><h2 class="anchored" data-anchor-id="concept-1-missing-data">Concept 1: Missing Data</h2>
+<section id="finding-explicit-missing-values" class="level3"><h3 class="anchored" data-anchor-id="finding-explicit-missing-values">Finding Explicit Missing Values</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Count missing values in each column</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>airbnb <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="at">name =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(name)),</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    <span class="at">host_name =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(host_name)),</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="at">last_review =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(last_review)),</span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="at">reviews_per_month =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(reviews_per_month))</span>
+<span id="cb2-8"><a href="#cb2-8"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb2-9"><a href="#cb2-9"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Count of Missing Values"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Count of Missing Values</caption>
+<thead><tr class="header">
+<th style="text-align: right;">name</th>
+<th style="text-align: right;">host_name</th>
+<th style="text-align: right;">last_review</th>
+<th style="text-align: right;">reviews_per_month</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">48895</td>
+<td style="text-align: right;">10052</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+<p><strong>Observation</strong>: <code>last_review</code> and <code>reviews_per_month</code> have 10,052 missing values - these are listings that haven’t been reviewed yet.</p>
+</section><section id="handling-missing-values" class="level3"><h3 class="anchored" data-anchor-id="handling-missing-values">Handling Missing Values</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Fill missing reviews_per_month with 0</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>airbnb_clean <span class="ot">&lt;-</span> airbnb <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="fu">mutate</span>(<span class="at">reviews_per_month =</span> <span class="fu">coalesce</span>(reviews_per_month, <span class="dv">0</span>))</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co"># Verify</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="fu">tibble</span>(</span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">before =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(airbnb<span class="sc">$</span>reviews_per_month)),</span>
+<span id="cb3-8"><a href="#cb3-8"></a>  <span class="at">after =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(airbnb_clean<span class="sc">$</span>reviews_per_month))</span>
+<span id="cb3-9"><a href="#cb3-9"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-10"><a href="#cb3-10"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Missing values before and after coalesce()"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Missing values before and after coalesce()</caption>
+<thead><tr class="header">
+<th style="text-align: right;">before</th>
+<th style="text-align: right;">after</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td style="text-align: right;">10052</td>
+<td style="text-align: right;">0</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+</section><section id="finding-implicit-missing-values" class="level3"><h3 class="anchored" data-anchor-id="finding-implicit-missing-values">Finding Implicit Missing Values</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Check if all borough-room_type combinations exist</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>all_combos <span class="ot">&lt;-</span> airbnb_clean <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">complete</span>(neighbourhood_group, room_type)</span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co"># Find missing combinations</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>missing_combos <span class="ot">&lt;-</span> all_combos <span class="sc">|&gt;</span> </span>
+<span id="cb4-7"><a href="#cb4-7"></a>  <span class="fu">anti_join</span>(airbnb_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"neighbourhood_group"</span>, <span class="st">"room_type"</span>))</span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="cf">if</span> (<span class="fu">nrow</span>(missing_combos) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb4-10"><a href="#cb4-10"></a>  missing_combos <span class="sc">|&gt;</span> <span class="fu">kable</span>()</span>
+<span id="cb4-11"><a href="#cb4-11"></a>} <span class="cf">else</span> {</span>
+<span id="cb4-12"><a href="#cb4-12"></a>  <span class="fu">cat</span>(<span class="st">" All borough-room type combinations have listings</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb4-13"><a href="#cb4-13"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code> All borough-room type combinations have listings</code></pre>
+</div>
+</div>
+<hr></section></section><section id="concept-2-custom-functions" class="level2"><h2 class="anchored" data-anchor-id="concept-2-custom-functions">Concept 2: Custom Functions</h2>
+<section id="function-1-calculate-proportion" class="level3"><h3 class="anchored" data-anchor-id="function-1-calculate-proportion">Function 1: Calculate Proportion</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Function to calculate what % of listings meet a condition</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>calc_proportion <span class="ot">&lt;-</span> <span class="cf">function</span>(data, condition) {</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  data <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb6-5"><a href="#cb6-5"></a>      <span class="at">n_total =</span> <span class="fu">n</span>(),</span>
+<span id="cb6-6"><a href="#cb6-6"></a>      <span class="at">n_meeting_condition =</span> <span class="fu">sum</span>({{ condition }}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-7"><a href="#cb6-7"></a>      <span class="at">proportion =</span> <span class="fu">mean</span>({{ condition }}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    )</span>
+<span id="cb6-9"><a href="#cb6-9"></a>}</span>
+<span id="cb6-10"><a href="#cb6-10"></a></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co"># Example: What % of listings are entire homes?</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="fu">calc_proportion</span>(airbnb_clean, room_type <span class="sc">==</span> <span class="st">"Entire home/apt"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-13"><a href="#cb6-13"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">"Proportion of Entire Homes"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Proportion of Entire Homes</caption>
+<thead><tr class="header">
+<th style="text-align: right;">n_total</th>
+<th style="text-align: right;">n_meeting_condition</th>
+<th style="text-align: right;">proportion</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td style="text-align: right;">48895</td>
+<td style="text-align: right;">25409</td>
+<td style="text-align: right;">0.52</td>
+</tr></tbody>
+</table>
+</div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Example: What % have 100+ reviews?</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">calc_proportion</span>(airbnb_clean, number_of_reviews <span class="sc">&gt;=</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">"Proportion with 100+ reviews"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Proportion with 100+ reviews</caption>
+<thead><tr class="header">
+<th style="text-align: right;">n_total</th>
+<th style="text-align: right;">n_meeting_condition</th>
+<th style="text-align: right;">proportion</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td style="text-align: right;">48895</td>
+<td style="text-align: right;">3044</td>
+<td style="text-align: right;">0.062</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+</section><section id="function-2-price-summary-by-group" class="level3"><h3 class="anchored" data-anchor-id="function-2-price-summary-by-group">Function 2: Price Summary by Group</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Function with embracing and optional grouping</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>price_summary <span class="ot">&lt;-</span> <span class="cf">function</span>(data, group_var) {</span>
+<span id="cb8-3"><a href="#cb8-3"></a>  data <span class="sc">|&gt;</span> </span>
+<span id="cb8-4"><a href="#cb8-4"></a>    <span class="fu">group_by</span>({{ group_var }}) <span class="sc">|&gt;</span> </span>
+<span id="cb8-5"><a href="#cb8-5"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb8-6"><a href="#cb8-6"></a>      <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb8-7"><a href="#cb8-7"></a>      <span class="at">min_price =</span> <span class="fu">min</span>(price),</span>
+<span id="cb8-8"><a href="#cb8-8"></a>      <span class="at">median_price =</span> <span class="fu">median</span>(price),</span>
+<span id="cb8-9"><a href="#cb8-9"></a>      <span class="at">max_price =</span> <span class="fu">max</span>(price),</span>
+<span id="cb8-10"><a href="#cb8-10"></a>      <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a>    )</span>
+<span id="cb8-12"><a href="#cb8-12"></a>}</span>
+<span id="cb8-13"><a href="#cb8-13"></a></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="co"># By borough</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="fu">price_summary</span>(airbnb_clean, neighbourhood_group) <span class="sc">|&gt;</span> </span>
+<span id="cb8-16"><a href="#cb8-16"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Price Summary by Borough"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Price Summary by Borough</caption>
+<thead><tr class="header">
+<th style="text-align: left;">neighbourhood_group</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">min_price</th>
+<th style="text-align: right;">median_price</th>
+<th style="text-align: right;">max_price</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Bronx</td>
+<td style="text-align: right;">1091</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">2500</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brooklyn</td>
+<td style="text-align: right;">20104</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manhattan</td>
+<td style="text-align: right;">21661</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Queens</td>
+<td style="text-align: right;">5666</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Staten Island</td>
+<td style="text-align: right;">373</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">5000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># By room type</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">price_summary</span>(airbnb_clean, room_type) <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Price Summary by Room Type"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Price Summary by Room Type</caption>
+<thead><tr class="header">
+<th style="text-align: left;">room_type</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">min_price</th>
+<th style="text-align: right;">median_price</th>
+<th style="text-align: right;">max_price</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Entire home/apt</td>
+<td style="text-align: right;">25409</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Private room</td>
+<td style="text-align: right;">22326</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Shared room</td>
+<td style="text-align: right;">1160</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">1800</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr></section></section><section id="concept-3-base-r-subsetting" class="level2"><h2 class="anchored" data-anchor-id="concept-3-base-r-subsetting">Concept 3: Base R Subsetting</h2>
+<section id="using-and" class="level3"><h3 class="anchored" data-anchor-id="using-and">Using <code>$</code>, <code>[[]]</code>, and <code>[]</code>
+</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Method 1: Extract column with $</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>brooklyn_prices_dollar <span class="ot">&lt;-</span> airbnb_clean<span class="sc">$</span>price[airbnb_clean<span class="sc">$</span>neighbourhood_group <span class="sc">==</span> <span class="st">"Brooklyn"</span>]</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="co"># Method 2: Extract column with [[]]</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a>brooklyn_data <span class="ot">&lt;-</span> airbnb_clean[airbnb_clean<span class="sc">$</span>neighbourhood_group <span class="sc">==</span> <span class="st">"Brooklyn"</span>, ]</span>
+<span id="cb10-6"><a href="#cb10-6"></a>brooklyn_prices_bracket <span class="ot">&lt;-</span> brooklyn_data[[<span class="st">"price"</span>]]</span>
+<span id="cb10-7"><a href="#cb10-7"></a></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="co"># Method 3: Tidyverse (for comparison)</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a>brooklyn_prices_tidy <span class="ot">&lt;-</span> airbnb_clean <span class="sc">|&gt;</span> </span>
+<span id="cb10-10"><a href="#cb10-10"></a>  <span class="fu">filter</span>(neighbourhood_group <span class="sc">==</span> <span class="st">"Brooklyn"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-11"><a href="#cb10-11"></a>  <span class="fu">pull</span>(price)</span>
+<span id="cb10-12"><a href="#cb10-12"></a></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="co"># Verify all three methods give same result</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="fu">tibble</span>(</span>
+<span id="cb10-15"><a href="#cb10-15"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"$ operator"</span>, <span class="st">"[[ ]] operator"</span>, <span class="st">"tidyverse"</span>),</span>
+<span id="cb10-16"><a href="#cb10-16"></a>  <span class="at">n_values =</span> <span class="fu">c</span>(<span class="fu">length</span>(brooklyn_prices_dollar), </span>
+<span id="cb10-17"><a href="#cb10-17"></a>               <span class="fu">length</span>(brooklyn_prices_bracket), </span>
+<span id="cb10-18"><a href="#cb10-18"></a>               <span class="fu">length</span>(brooklyn_prices_tidy)),</span>
+<span id="cb10-19"><a href="#cb10-19"></a>  <span class="at">mean_price =</span> <span class="fu">c</span>(<span class="fu">mean</span>(brooklyn_prices_dollar), </span>
+<span id="cb10-20"><a href="#cb10-20"></a>                 <span class="fu">mean</span>(brooklyn_prices_bracket), </span>
+<span id="cb10-21"><a href="#cb10-21"></a>                 <span class="fu">mean</span>(brooklyn_prices_tidy)),</span>
+<span id="cb10-22"><a href="#cb10-22"></a>  <span class="at">identical =</span> <span class="fu">c</span>(</span>
+<span id="cb10-23"><a href="#cb10-23"></a>    <span class="fu">identical</span>(brooklyn_prices_dollar, brooklyn_prices_bracket),</span>
+<span id="cb10-24"><a href="#cb10-24"></a>    <span class="fu">identical</span>(brooklyn_prices_bracket, brooklyn_prices_tidy),</span>
+<span id="cb10-25"><a href="#cb10-25"></a>    <span class="cn">TRUE</span></span>
+<span id="cb10-26"><a href="#cb10-26"></a>  )</span>
+<span id="cb10-27"><a href="#cb10-27"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-28"><a href="#cb10-28"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">"Comparison of Subsetting Methods"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Comparison of Subsetting Methods</caption>
+<thead><tr class="header">
+<th style="text-align: left;">method</th>
+<th style="text-align: right;">n_values</th>
+<th style="text-align: right;">mean_price</th>
+<th style="text-align: left;">identical</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">$ operator</td>
+<td style="text-align: right;">20104</td>
+<td style="text-align: right;">124.38</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">[[ ]] operator</td>
+<td style="text-align: right;">20104</td>
+<td style="text-align: right;">124.38</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tidyverse</td>
+<td style="text-align: right;">20104</td>
+<td style="text-align: right;">124.38</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section><section id="using-split-and-lapply" class="level3"><h3 class="anchored" data-anchor-id="using-split-and-lapply">Using split() and lapply()</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Split data by borough into a list</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>borough_list <span class="ot">&lt;-</span> <span class="fu">split</span>(airbnb_clean, airbnb_clean<span class="sc">$</span>neighbourhood_group)</span>
+<span id="cb11-3"><a href="#cb11-3"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="co"># Use lapply to calculate mean price for each borough</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>mean_prices <span class="ot">&lt;-</span> <span class="fu">lapply</span>(borough_list, <span class="cf">function</span>(df) {</span>
+<span id="cb11-6"><a href="#cb11-6"></a>  <span class="fu">mean</span>(df<span class="sc">$</span>price)</span>
+<span id="cb11-7"><a href="#cb11-7"></a>})</span>
+<span id="cb11-8"><a href="#cb11-8"></a></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="co"># Convert to data frame</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="fu">data.frame</span>(</span>
+<span id="cb11-11"><a href="#cb11-11"></a>  <span class="at">borough =</span> <span class="fu">names</span>(mean_prices),</span>
+<span id="cb11-12"><a href="#cb11-12"></a>  <span class="at">avg_price =</span> <span class="fu">unlist</span>(mean_prices)</span>
+<span id="cb11-13"><a href="#cb11-13"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-14"><a href="#cb11-14"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_price)) <span class="sc">|&gt;</span> </span>
+<span id="cb11-15"><a href="#cb11-15"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">"Average Price by Borough (using split + lapply)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Average Price by Borough (using split + lapply)</caption>
+<thead><tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">borough</th>
+<th style="text-align: right;">avg_price</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Manhattan</td>
+<td style="text-align: left;">Manhattan</td>
+<td style="text-align: right;">196.88</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brooklyn</td>
+<td style="text-align: left;">Brooklyn</td>
+<td style="text-align: right;">124.38</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Staten Island</td>
+<td style="text-align: left;">Staten Island</td>
+<td style="text-align: right;">114.81</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Queens</td>
+<td style="text-align: left;">Queens</td>
+<td style="text-align: right;">99.52</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bronx</td>
+<td style="text-align: left;">Bronx</td>
+<td style="text-align: right;">87.50</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr></section></section><section id="concept-4-iteration" class="level2"><h2 class="anchored" data-anchor-id="concept-4-iteration">Concept 4: Iteration</h2>
+<section id="for-loop-with-pre-allocation" class="level3"><h3 class="anchored" data-anchor-id="for-loop-with-pre-allocation">For Loop with Pre-allocation</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Goal: Calculate median price for each borough</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="co"># Get unique boroughs</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a>boroughs <span class="ot">&lt;-</span> <span class="fu">unique</span>(airbnb_clean<span class="sc">$</span>neighbourhood_group)</span>
+<span id="cb12-5"><a href="#cb12-5"></a></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="co"># Pre-allocate storage</span></span>
+<span id="cb12-7"><a href="#cb12-7"></a>median_prices <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"numeric"</span>, <span class="at">length =</span> <span class="fu">length</span>(boroughs))</span>
+<span id="cb12-8"><a href="#cb12-8"></a><span class="fu">names</span>(median_prices) <span class="ot">&lt;-</span> boroughs</span>
+<span id="cb12-9"><a href="#cb12-9"></a></span>
+<span id="cb12-10"><a href="#cb12-10"></a><span class="co"># For loop with seq_along</span></span>
+<span id="cb12-11"><a href="#cb12-11"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(boroughs)) {</span>
+<span id="cb12-12"><a href="#cb12-12"></a>  borough_name <span class="ot">&lt;-</span> boroughs[i]</span>
+<span id="cb12-13"><a href="#cb12-13"></a>  </span>
+<span id="cb12-14"><a href="#cb12-14"></a>  <span class="co"># Subset data</span></span>
+<span id="cb12-15"><a href="#cb12-15"></a>  borough_data <span class="ot">&lt;-</span> airbnb_clean <span class="sc">|&gt;</span> </span>
+<span id="cb12-16"><a href="#cb12-16"></a>    <span class="fu">filter</span>(neighbourhood_group <span class="sc">==</span> borough_name)</span>
+<span id="cb12-17"><a href="#cb12-17"></a>  </span>
+<span id="cb12-18"><a href="#cb12-18"></a>  <span class="co"># Calculate and store</span></span>
+<span id="cb12-19"><a href="#cb12-19"></a>  median_prices[i] <span class="ot">&lt;-</span> <span class="fu">median</span>(borough_data<span class="sc">$</span>price)</span>
+<span id="cb12-20"><a href="#cb12-20"></a>}</span>
+<span id="cb12-21"><a href="#cb12-21"></a></span>
+<span id="cb12-22"><a href="#cb12-22"></a><span class="co"># Display results</span></span>
+<span id="cb12-23"><a href="#cb12-23"></a><span class="fu">data.frame</span>(</span>
+<span id="cb12-24"><a href="#cb12-24"></a>  <span class="at">borough =</span> <span class="fu">names</span>(median_prices),</span>
+<span id="cb12-25"><a href="#cb12-25"></a>  <span class="at">median_price =</span> median_prices</span>
+<span id="cb12-26"><a href="#cb12-26"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-27"><a href="#cb12-27"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(median_price)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-28"><a href="#cb12-28"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Median Price by Borough (for loop)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Median Price by Borough (for loop)</caption>
+<thead><tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">borough</th>
+<th style="text-align: right;">median_price</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Manhattan</td>
+<td style="text-align: left;">Manhattan</td>
+<td style="text-align: right;">150</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brooklyn</td>
+<td style="text-align: left;">Brooklyn</td>
+<td style="text-align: right;">90</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Queens</td>
+<td style="text-align: left;">Queens</td>
+<td style="text-align: right;">75</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Staten Island</td>
+<td style="text-align: left;">Staten Island</td>
+<td style="text-align: right;">75</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bronx</td>
+<td style="text-align: left;">Bronx</td>
+<td style="text-align: right;">65</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section><section id="using-across" class="level3"><h3 class="anchored" data-anchor-id="using-across">Using across()</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Calculate mean and median for multiple numeric variables at once</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>airbnb_clean <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3"></a>  <span class="fu">group_by</span>(room_type) <span class="sc">|&gt;</span> </span>
+<span id="cb13-4"><a href="#cb13-4"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb13-5"><a href="#cb13-5"></a>    <span class="fu">across</span>(</span>
+<span id="cb13-6"><a href="#cb13-6"></a>      <span class="at">.cols =</span> <span class="fu">c</span>(price, minimum_nights, availability_365),</span>
+<span id="cb13-7"><a href="#cb13-7"></a>      <span class="at">.fns =</span> <span class="fu">list</span>(<span class="at">mean =</span> mean, <span class="at">median =</span> median),</span>
+<span id="cb13-8"><a href="#cb13-8"></a>      <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a>    ),</span>
+<span id="cb13-10"><a href="#cb13-10"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb13-11"><a href="#cb13-11"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb13-12"><a href="#cb13-12"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb13-13"><a href="#cb13-13"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, <span class="at">caption =</span> <span class="st">"Summary Statistics by Room Type (using across)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Summary Statistics by Room Type (using across)</caption>
+<colgroup>
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 17%">
+<col style="width: 4%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;">room_type</th>
+<th style="text-align: right;">price_mean</th>
+<th style="text-align: right;">price_median</th>
+<th style="text-align: right;">minimum_nights_mean</th>
+<th style="text-align: right;">minimum_nights_median</th>
+<th style="text-align: right;">availability_365_mean</th>
+<th style="text-align: right;">availability_365_median</th>
+<th style="text-align: right;">n</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Entire home/apt</td>
+<td style="text-align: right;">211.8</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">8.5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">111.9</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">25409</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Private room</td>
+<td style="text-align: right;">89.8</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">111.2</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">22326</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Shared room</td>
+<td style="text-align: right;">70.1</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">6.5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">162.0</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">1160</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section><section id="using-crossing-for-multiple-scenarios" class="level3"><h3 class="anchored" data-anchor-id="using-crossing-for-multiple-scenarios">Using crossing() for Multiple Scenarios</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Create multiple analysis scenarios</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>scenarios <span class="ot">&lt;-</span> <span class="fu">crossing</span>(</span>
+<span id="cb14-3"><a href="#cb14-3"></a>  <span class="at">borough =</span> <span class="fu">c</span>(<span class="st">"Manhattan"</span>, <span class="st">"Brooklyn"</span>),</span>
+<span id="cb14-4"><a href="#cb14-4"></a>  <span class="at">expensive =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>)  <span class="co"># expensive = price &gt; $150</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6"></a></span>
+<span id="cb14-7"><a href="#cb14-7"></a>scenarios <span class="sc">|&gt;</span> </span>
+<span id="cb14-8"><a href="#cb14-8"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Analysis Scenarios"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Analysis Scenarios</caption>
+<thead><tr class="header">
+<th style="text-align: left;">borough</th>
+<th style="text-align: left;">expensive</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Brooklyn</td>
+<td style="text-align: left;">FALSE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brooklyn</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manhattan</td>
+<td style="text-align: left;">FALSE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Manhattan</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Function to analyze one scenario</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>analyze_scenario <span class="ot">&lt;-</span> <span class="cf">function</span>(data, borough, expensive) {</span>
+<span id="cb15-3"><a href="#cb15-3"></a>  filtered <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
+<span id="cb15-4"><a href="#cb15-4"></a>    <span class="fu">filter</span>(neighbourhood_group <span class="sc">==</span> borough)</span>
+<span id="cb15-5"><a href="#cb15-5"></a>  </span>
+<span id="cb15-6"><a href="#cb15-6"></a>  <span class="cf">if</span> (expensive) {</span>
+<span id="cb15-7"><a href="#cb15-7"></a>    filtered <span class="ot">&lt;-</span> filtered <span class="sc">|&gt;</span> <span class="fu">filter</span>(price <span class="sc">&gt;</span> <span class="dv">150</span>)</span>
+<span id="cb15-8"><a href="#cb15-8"></a>  }</span>
+<span id="cb15-9"><a href="#cb15-9"></a>  </span>
+<span id="cb15-10"><a href="#cb15-10"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb15-11"><a href="#cb15-11"></a>    <span class="at">n_listings =</span> <span class="fu">nrow</span>(filtered),</span>
+<span id="cb15-12"><a href="#cb15-12"></a>    <span class="at">avg_price =</span> <span class="fu">mean</span>(filtered<span class="sc">$</span>price)</span>
+<span id="cb15-13"><a href="#cb15-13"></a>  )</span>
+<span id="cb15-14"><a href="#cb15-14"></a>}</span>
+<span id="cb15-15"><a href="#cb15-15"></a></span>
+<span id="cb15-16"><a href="#cb15-16"></a><span class="co"># Run all scenarios with for loop</span></span>
+<span id="cb15-17"><a href="#cb15-17"></a>results <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, <span class="at">length =</span> <span class="fu">nrow</span>(scenarios))</span>
+<span id="cb15-18"><a href="#cb15-18"></a></span>
+<span id="cb15-19"><a href="#cb15-19"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(scenarios))) {</span>
+<span id="cb15-20"><a href="#cb15-20"></a>  results[[i]] <span class="ot">&lt;-</span> <span class="fu">analyze_scenario</span>(</span>
+<span id="cb15-21"><a href="#cb15-21"></a>    <span class="at">data =</span> airbnb_clean,</span>
+<span id="cb15-22"><a href="#cb15-22"></a>    <span class="at">borough =</span> scenarios<span class="sc">$</span>borough[i],</span>
+<span id="cb15-23"><a href="#cb15-23"></a>    <span class="at">expensive =</span> scenarios<span class="sc">$</span>expensive[i]</span>
+<span id="cb15-24"><a href="#cb15-24"></a>  )</span>
+<span id="cb15-25"><a href="#cb15-25"></a>}</span>
+<span id="cb15-26"><a href="#cb15-26"></a></span>
+<span id="cb15-27"><a href="#cb15-27"></a><span class="co"># Combine results</span></span>
+<span id="cb15-28"><a href="#cb15-28"></a><span class="fu">bind_cols</span>(scenarios, <span class="fu">bind_rows</span>(results)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-29"><a href="#cb15-29"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">"Results for All Scenarios"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Results for All Scenarios</caption>
+<thead><tr class="header">
+<th style="text-align: left;">borough</th>
+<th style="text-align: left;">expensive</th>
+<th style="text-align: right;">n_listings</th>
+<th style="text-align: right;">avg_price</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Brooklyn</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">20104</td>
+<td style="text-align: right;">124.38</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brooklyn</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">4275</td>
+<td style="text-align: right;">280.49</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manhattan</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">21661</td>
+<td style="text-align: right;">196.88</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Manhattan</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">9849</td>
+<td style="text-align: right;">315.22</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr></section></section><section id="summary" class="level2"><h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>This project demonstrated four key concepts:</p>
+<p><strong>Missing Data</strong> - Found 10,052 explicit missing values in <code>reviews_per_month</code> - Used <code>coalesce()</code> to fill with 0 - Used <code>complete()</code> and <code>anti_join()</code> to find implicit missing values</p>
+<p><strong>Custom Functions</strong> - Wrote <code>calc_proportion()</code> using <code><a href="https://rdrr.io/r/base/Paren.html">{ }</a></code> for tidy evaluation - Wrote <code>price_summary()</code> with grouped summaries - Both functions work with different variables</p>
+<p><strong>Base R Subsetting</strong> - Used <code>$</code>, <code>[[]]</code>, and <code>[]</code> for extraction - Used <code><a href="https://rdrr.io/r/base/split.html">split()</a></code> and <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> for list operations - Verified all methods produce identical results</p>
+<p><strong>Iteration</strong> - Used for loop with <code><a href="https://rdrr.io/r/base/seq.html">seq_along()</a></code> and pre-allocated storage - Used <code>across()</code> to summarize multiple variables - Used <code>crossing()</code> to create analysis scenarios</p>
+<p><strong>Dataset</strong>: NYC Airbnb Open Data (2019) - 48,895 listings</p>
+
+
+<!-- -->
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><nav class="page-navigation column-body"><div class="nav-page nav-page-previous">
+      <a href="../extra/map.html" class="pagination-link" aria-label="Uninsurance Rates in the Twin Cities --Interactive Map">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Uninsurance Rates in the Twin Cities –Interactive Map</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../extra/DataFest_EDA_Spatial_Machine_Learning_Shiny.html" class="pagination-link" aria-label="DataFest: Mental Health &amp; Transport Access Screening Tool">
+        <span class="nav-page-text"><span class="chapter-title">DataFest: Mental Health &amp; Transport Access Screening Tool</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">---</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="an">title:</span><span class="co"> "NYC Airbnb: Demonstrating Key Data Science Concepts"</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="an">author:</span><span class="co"> "William Acosta Lora"</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="an">date:</span><span class="co"> "2026-03-08"</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="co">  html:</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="co">    toc: true</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="co">    code-fold: show</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="co">    theme: cosmo</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="an">execute:</span></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="co">  warning: false</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="co">  message: false</span></span>
+<span id="cb16-13"><a href="#cb16-13"></a><span class="co">---</span></span>
+<span id="cb16-14"><a href="#cb16-14"></a></span>
+<span id="cb16-15"><a href="#cb16-15"></a><span class="fu">## Introduction</span></span>
+<span id="cb16-16"><a href="#cb16-16"></a></span>
+<span id="cb16-17"><a href="#cb16-17"></a>This project uses NYC Airbnb data to demonstrate four key concepts we have learned these past couple of weeks in class:</span>
+<span id="cb16-18"><a href="#cb16-18"></a></span>
+<span id="cb16-19"><a href="#cb16-19"></a><span class="ss">1. </span>**Missing Data**: Finding and handling explicit/implicit missing values</span>
+<span id="cb16-20"><a href="#cb16-20"></a><span class="ss">2. </span>**Custom Functions**: Writing reusable functions with tidy evaluation</span>
+<span id="cb16-21"><a href="#cb16-21"></a><span class="ss">3. </span>**Base R Subsetting**: Using <span class="in">`$`</span>, <span class="in">`[[]]`</span>, and <span class="in">`[]`</span></span>
+<span id="cb16-22"><a href="#cb16-22"></a><span class="ss">4. </span>**Iteration**: For loops and across() for repeated tasks</span>
+<span id="cb16-23"><a href="#cb16-23"></a><span class="in">```{r setup}</span></span>
+<span id="cb16-24"><a href="#cb16-24"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb16-25"><a href="#cb16-25"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb16-26"><a href="#cb16-26"></a></span>
+<span id="cb16-27"><a href="#cb16-27"></a>airbnb <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/raw/archive/AB_NYC_2019.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-28"><a href="#cb16-28"></a>  <span class="fu">mutate</span>(<span class="at">last_review =</span> <span class="fu">mdy</span>(last_review))</span>
+<span id="cb16-29"><a href="#cb16-29"></a><span class="in">```</span></span>
+<span id="cb16-30"><a href="#cb16-30"></a></span>
+<span id="cb16-31"><a href="#cb16-31"></a>---</span>
+<span id="cb16-32"><a href="#cb16-32"></a></span>
+<span id="cb16-33"><a href="#cb16-33"></a><span class="fu">## Concept 1: Missing Data</span></span>
+<span id="cb16-34"><a href="#cb16-34"></a></span>
+<span id="cb16-35"><a href="#cb16-35"></a><span class="fu">### Finding Explicit Missing Values</span></span>
+<span id="cb16-36"><a href="#cb16-36"></a><span class="in">```{r missing-explicit}</span></span>
+<span id="cb16-37"><a href="#cb16-37"></a><span class="co"># Count missing values in each column</span></span>
+<span id="cb16-38"><a href="#cb16-38"></a>airbnb <span class="sc">|&gt;</span> </span>
+<span id="cb16-39"><a href="#cb16-39"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb16-40"><a href="#cb16-40"></a>    <span class="at">name =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(name)),</span>
+<span id="cb16-41"><a href="#cb16-41"></a>    <span class="at">host_name =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(host_name)),</span>
+<span id="cb16-42"><a href="#cb16-42"></a>    <span class="at">last_review =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(last_review)),</span>
+<span id="cb16-43"><a href="#cb16-43"></a>    <span class="at">reviews_per_month =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(reviews_per_month))</span>
+<span id="cb16-44"><a href="#cb16-44"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb16-45"><a href="#cb16-45"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Count of Missing Values"</span>)</span>
+<span id="cb16-46"><a href="#cb16-46"></a><span class="in">```</span></span>
+<span id="cb16-47"><a href="#cb16-47"></a></span>
+<span id="cb16-48"><a href="#cb16-48"></a>**Observation**: <span class="in">`last_review`</span> and <span class="in">`reviews_per_month`</span> have 10,052 missing values - these are listings that haven't been reviewed yet.</span>
+<span id="cb16-49"><a href="#cb16-49"></a></span>
+<span id="cb16-50"><a href="#cb16-50"></a><span class="fu">### Handling Missing Values</span></span>
+<span id="cb16-51"><a href="#cb16-51"></a><span class="in">```{r missing-handle}</span></span>
+<span id="cb16-52"><a href="#cb16-52"></a><span class="co"># Fill missing reviews_per_month with 0</span></span>
+<span id="cb16-53"><a href="#cb16-53"></a>airbnb_clean <span class="ot">&lt;-</span> airbnb <span class="sc">|&gt;</span> </span>
+<span id="cb16-54"><a href="#cb16-54"></a>  <span class="fu">mutate</span>(<span class="at">reviews_per_month =</span> <span class="fu">coalesce</span>(reviews_per_month, <span class="dv">0</span>))</span>
+<span id="cb16-55"><a href="#cb16-55"></a></span>
+<span id="cb16-56"><a href="#cb16-56"></a><span class="co"># Verify</span></span>
+<span id="cb16-57"><a href="#cb16-57"></a><span class="fu">tibble</span>(</span>
+<span id="cb16-58"><a href="#cb16-58"></a>  <span class="at">before =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(airbnb<span class="sc">$</span>reviews_per_month)),</span>
+<span id="cb16-59"><a href="#cb16-59"></a>  <span class="at">after =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(airbnb_clean<span class="sc">$</span>reviews_per_month))</span>
+<span id="cb16-60"><a href="#cb16-60"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-61"><a href="#cb16-61"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Missing values before and after coalesce()"</span>)</span>
+<span id="cb16-62"><a href="#cb16-62"></a><span class="in">```</span></span>
+<span id="cb16-63"><a href="#cb16-63"></a></span>
+<span id="cb16-64"><a href="#cb16-64"></a><span class="fu">### Finding Implicit Missing Values</span></span>
+<span id="cb16-65"><a href="#cb16-65"></a><span class="in">```{r missing-implicit}</span></span>
+<span id="cb16-66"><a href="#cb16-66"></a><span class="co"># Check if all borough-room_type combinations exist</span></span>
+<span id="cb16-67"><a href="#cb16-67"></a>all_combos <span class="ot">&lt;-</span> airbnb_clean <span class="sc">|&gt;</span> </span>
+<span id="cb16-68"><a href="#cb16-68"></a>  <span class="fu">complete</span>(neighbourhood_group, room_type)</span>
+<span id="cb16-69"><a href="#cb16-69"></a></span>
+<span id="cb16-70"><a href="#cb16-70"></a><span class="co"># Find missing combinations</span></span>
+<span id="cb16-71"><a href="#cb16-71"></a>missing_combos <span class="ot">&lt;-</span> all_combos <span class="sc">|&gt;</span> </span>
+<span id="cb16-72"><a href="#cb16-72"></a>  <span class="fu">anti_join</span>(airbnb_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"neighbourhood_group"</span>, <span class="st">"room_type"</span>))</span>
+<span id="cb16-73"><a href="#cb16-73"></a></span>
+<span id="cb16-74"><a href="#cb16-74"></a><span class="cf">if</span> (<span class="fu">nrow</span>(missing_combos) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb16-75"><a href="#cb16-75"></a>  missing_combos <span class="sc">|&gt;</span> <span class="fu">kable</span>()</span>
+<span id="cb16-76"><a href="#cb16-76"></a>} <span class="cf">else</span> {</span>
+<span id="cb16-77"><a href="#cb16-77"></a>  <span class="fu">cat</span>(<span class="st">" All borough-room type combinations have listings</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb16-78"><a href="#cb16-78"></a>}</span>
+<span id="cb16-79"><a href="#cb16-79"></a><span class="in">```</span></span>
+<span id="cb16-80"><a href="#cb16-80"></a></span>
+<span id="cb16-81"><a href="#cb16-81"></a>---</span>
+<span id="cb16-82"><a href="#cb16-82"></a></span>
+<span id="cb16-83"><a href="#cb16-83"></a><span class="fu">## Concept 2: Custom Functions</span></span>
+<span id="cb16-84"><a href="#cb16-84"></a></span>
+<span id="cb16-85"><a href="#cb16-85"></a><span class="fu">### Function 1: Calculate Proportion</span></span>
+<span id="cb16-86"><a href="#cb16-86"></a><span class="in">```{r function-proportion}</span></span>
+<span id="cb16-87"><a href="#cb16-87"></a><span class="co"># Function to calculate what % of listings meet a condition</span></span>
+<span id="cb16-88"><a href="#cb16-88"></a>calc_proportion <span class="ot">&lt;-</span> <span class="cf">function</span>(data, condition) {</span>
+<span id="cb16-89"><a href="#cb16-89"></a>  data <span class="sc">|&gt;</span> </span>
+<span id="cb16-90"><a href="#cb16-90"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb16-91"><a href="#cb16-91"></a>      <span class="at">n_total =</span> <span class="fu">n</span>(),</span>
+<span id="cb16-92"><a href="#cb16-92"></a>      <span class="at">n_meeting_condition =</span> <span class="fu">sum</span>({{ condition }}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb16-93"><a href="#cb16-93"></a>      <span class="at">proportion =</span> <span class="fu">mean</span>({{ condition }}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-94"><a href="#cb16-94"></a>    )</span>
+<span id="cb16-95"><a href="#cb16-95"></a>}</span>
+<span id="cb16-96"><a href="#cb16-96"></a></span>
+<span id="cb16-97"><a href="#cb16-97"></a><span class="co"># Example: What % of listings are entire homes?</span></span>
+<span id="cb16-98"><a href="#cb16-98"></a><span class="fu">calc_proportion</span>(airbnb_clean, room_type <span class="sc">==</span> <span class="st">"Entire home/apt"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-99"><a href="#cb16-99"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">"Proportion of Entire Homes"</span>)</span>
+<span id="cb16-100"><a href="#cb16-100"></a></span>
+<span id="cb16-101"><a href="#cb16-101"></a><span class="co"># Example: What % have 100+ reviews?</span></span>
+<span id="cb16-102"><a href="#cb16-102"></a><span class="fu">calc_proportion</span>(airbnb_clean, number_of_reviews <span class="sc">&gt;=</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-103"><a href="#cb16-103"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">"Proportion with 100+ reviews"</span>)</span>
+<span id="cb16-104"><a href="#cb16-104"></a><span class="in">```</span></span>
+<span id="cb16-105"><a href="#cb16-105"></a></span>
+<span id="cb16-106"><a href="#cb16-106"></a><span class="fu">### Function 2: Price Summary by Group</span></span>
+<span id="cb16-107"><a href="#cb16-107"></a><span class="in">```{r function-price-summary}</span></span>
+<span id="cb16-108"><a href="#cb16-108"></a><span class="co"># Function with embracing and optional grouping</span></span>
+<span id="cb16-109"><a href="#cb16-109"></a>price_summary <span class="ot">&lt;-</span> <span class="cf">function</span>(data, group_var) {</span>
+<span id="cb16-110"><a href="#cb16-110"></a>  data <span class="sc">|&gt;</span> </span>
+<span id="cb16-111"><a href="#cb16-111"></a>    <span class="fu">group_by</span>({{ group_var }}) <span class="sc">|&gt;</span> </span>
+<span id="cb16-112"><a href="#cb16-112"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb16-113"><a href="#cb16-113"></a>      <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb16-114"><a href="#cb16-114"></a>      <span class="at">min_price =</span> <span class="fu">min</span>(price),</span>
+<span id="cb16-115"><a href="#cb16-115"></a>      <span class="at">median_price =</span> <span class="fu">median</span>(price),</span>
+<span id="cb16-116"><a href="#cb16-116"></a>      <span class="at">max_price =</span> <span class="fu">max</span>(price),</span>
+<span id="cb16-117"><a href="#cb16-117"></a>      <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb16-118"><a href="#cb16-118"></a>    )</span>
+<span id="cb16-119"><a href="#cb16-119"></a>}</span>
+<span id="cb16-120"><a href="#cb16-120"></a></span>
+<span id="cb16-121"><a href="#cb16-121"></a><span class="co"># By borough</span></span>
+<span id="cb16-122"><a href="#cb16-122"></a><span class="fu">price_summary</span>(airbnb_clean, neighbourhood_group) <span class="sc">|&gt;</span> </span>
+<span id="cb16-123"><a href="#cb16-123"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Price Summary by Borough"</span>)</span>
+<span id="cb16-124"><a href="#cb16-124"></a></span>
+<span id="cb16-125"><a href="#cb16-125"></a><span class="co"># By room type</span></span>
+<span id="cb16-126"><a href="#cb16-126"></a><span class="fu">price_summary</span>(airbnb_clean, room_type) <span class="sc">|&gt;</span> </span>
+<span id="cb16-127"><a href="#cb16-127"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Price Summary by Room Type"</span>)</span>
+<span id="cb16-128"><a href="#cb16-128"></a><span class="in">```</span></span>
+<span id="cb16-129"><a href="#cb16-129"></a></span>
+<span id="cb16-130"><a href="#cb16-130"></a>---</span>
+<span id="cb16-131"><a href="#cb16-131"></a></span>
+<span id="cb16-132"><a href="#cb16-132"></a><span class="fu">## Concept 3: Base R Subsetting</span></span>
+<span id="cb16-133"><a href="#cb16-133"></a></span>
+<span id="cb16-134"><a href="#cb16-134"></a><span class="fu">### Using `$`, `[[]]`, and `[]`</span></span>
+<span id="cb16-135"><a href="#cb16-135"></a><span class="in">```{r base-r-subset}</span></span>
+<span id="cb16-136"><a href="#cb16-136"></a><span class="co"># Method 1: Extract column with $</span></span>
+<span id="cb16-137"><a href="#cb16-137"></a>brooklyn_prices_dollar <span class="ot">&lt;-</span> airbnb_clean<span class="sc">$</span>price[airbnb_clean<span class="sc">$</span>neighbourhood_group <span class="sc">==</span> <span class="st">"Brooklyn"</span>]</span>
+<span id="cb16-138"><a href="#cb16-138"></a></span>
+<span id="cb16-139"><a href="#cb16-139"></a><span class="co"># Method 2: Extract column with [[]]</span></span>
+<span id="cb16-140"><a href="#cb16-140"></a>brooklyn_data <span class="ot">&lt;-</span> airbnb_clean[airbnb_clean<span class="sc">$</span>neighbourhood_group <span class="sc">==</span> <span class="st">"Brooklyn"</span>, ]</span>
+<span id="cb16-141"><a href="#cb16-141"></a>brooklyn_prices_bracket <span class="ot">&lt;-</span> brooklyn_data[[<span class="st">"price"</span>]]</span>
+<span id="cb16-142"><a href="#cb16-142"></a></span>
+<span id="cb16-143"><a href="#cb16-143"></a><span class="co"># Method 3: Tidyverse (for comparison)</span></span>
+<span id="cb16-144"><a href="#cb16-144"></a>brooklyn_prices_tidy <span class="ot">&lt;-</span> airbnb_clean <span class="sc">|&gt;</span> </span>
+<span id="cb16-145"><a href="#cb16-145"></a>  <span class="fu">filter</span>(neighbourhood_group <span class="sc">==</span> <span class="st">"Brooklyn"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-146"><a href="#cb16-146"></a>  <span class="fu">pull</span>(price)</span>
+<span id="cb16-147"><a href="#cb16-147"></a></span>
+<span id="cb16-148"><a href="#cb16-148"></a><span class="co"># Verify all three methods give same result</span></span>
+<span id="cb16-149"><a href="#cb16-149"></a><span class="fu">tibble</span>(</span>
+<span id="cb16-150"><a href="#cb16-150"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"$ operator"</span>, <span class="st">"[[ ]] operator"</span>, <span class="st">"tidyverse"</span>),</span>
+<span id="cb16-151"><a href="#cb16-151"></a>  <span class="at">n_values =</span> <span class="fu">c</span>(<span class="fu">length</span>(brooklyn_prices_dollar), </span>
+<span id="cb16-152"><a href="#cb16-152"></a>               <span class="fu">length</span>(brooklyn_prices_bracket), </span>
+<span id="cb16-153"><a href="#cb16-153"></a>               <span class="fu">length</span>(brooklyn_prices_tidy)),</span>
+<span id="cb16-154"><a href="#cb16-154"></a>  <span class="at">mean_price =</span> <span class="fu">c</span>(<span class="fu">mean</span>(brooklyn_prices_dollar), </span>
+<span id="cb16-155"><a href="#cb16-155"></a>                 <span class="fu">mean</span>(brooklyn_prices_bracket), </span>
+<span id="cb16-156"><a href="#cb16-156"></a>                 <span class="fu">mean</span>(brooklyn_prices_tidy)),</span>
+<span id="cb16-157"><a href="#cb16-157"></a>  <span class="at">identical =</span> <span class="fu">c</span>(</span>
+<span id="cb16-158"><a href="#cb16-158"></a>    <span class="fu">identical</span>(brooklyn_prices_dollar, brooklyn_prices_bracket),</span>
+<span id="cb16-159"><a href="#cb16-159"></a>    <span class="fu">identical</span>(brooklyn_prices_bracket, brooklyn_prices_tidy),</span>
+<span id="cb16-160"><a href="#cb16-160"></a>    <span class="cn">TRUE</span></span>
+<span id="cb16-161"><a href="#cb16-161"></a>  )</span>
+<span id="cb16-162"><a href="#cb16-162"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-163"><a href="#cb16-163"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">"Comparison of Subsetting Methods"</span>)</span>
+<span id="cb16-164"><a href="#cb16-164"></a><span class="in">```</span></span>
+<span id="cb16-165"><a href="#cb16-165"></a></span>
+<span id="cb16-166"><a href="#cb16-166"></a><span class="fu">### Using split() and lapply()</span></span>
+<span id="cb16-167"><a href="#cb16-167"></a><span class="in">```{r base-r-lists}</span></span>
+<span id="cb16-168"><a href="#cb16-168"></a><span class="co"># Split data by borough into a list</span></span>
+<span id="cb16-169"><a href="#cb16-169"></a>borough_list <span class="ot">&lt;-</span> <span class="fu">split</span>(airbnb_clean, airbnb_clean<span class="sc">$</span>neighbourhood_group)</span>
+<span id="cb16-170"><a href="#cb16-170"></a></span>
+<span id="cb16-171"><a href="#cb16-171"></a><span class="co"># Use lapply to calculate mean price for each borough</span></span>
+<span id="cb16-172"><a href="#cb16-172"></a>mean_prices <span class="ot">&lt;-</span> <span class="fu">lapply</span>(borough_list, <span class="cf">function</span>(df) {</span>
+<span id="cb16-173"><a href="#cb16-173"></a>  <span class="fu">mean</span>(df<span class="sc">$</span>price)</span>
+<span id="cb16-174"><a href="#cb16-174"></a>})</span>
+<span id="cb16-175"><a href="#cb16-175"></a></span>
+<span id="cb16-176"><a href="#cb16-176"></a><span class="co"># Convert to data frame</span></span>
+<span id="cb16-177"><a href="#cb16-177"></a><span class="fu">data.frame</span>(</span>
+<span id="cb16-178"><a href="#cb16-178"></a>  <span class="at">borough =</span> <span class="fu">names</span>(mean_prices),</span>
+<span id="cb16-179"><a href="#cb16-179"></a>  <span class="at">avg_price =</span> <span class="fu">unlist</span>(mean_prices)</span>
+<span id="cb16-180"><a href="#cb16-180"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-181"><a href="#cb16-181"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_price)) <span class="sc">|&gt;</span> </span>
+<span id="cb16-182"><a href="#cb16-182"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">"Average Price by Borough (using split + lapply)"</span>)</span>
+<span id="cb16-183"><a href="#cb16-183"></a><span class="in">```</span></span>
+<span id="cb16-184"><a href="#cb16-184"></a></span>
+<span id="cb16-185"><a href="#cb16-185"></a>---</span>
+<span id="cb16-186"><a href="#cb16-186"></a></span>
+<span id="cb16-187"><a href="#cb16-187"></a><span class="fu">## Concept 4: Iteration</span></span>
+<span id="cb16-188"><a href="#cb16-188"></a></span>
+<span id="cb16-189"><a href="#cb16-189"></a><span class="fu">### For Loop with Pre-allocation</span></span>
+<span id="cb16-190"><a href="#cb16-190"></a><span class="in">```{r iteration-for-loop}</span></span>
+<span id="cb16-191"><a href="#cb16-191"></a><span class="co"># Goal: Calculate median price for each borough</span></span>
+<span id="cb16-192"><a href="#cb16-192"></a></span>
+<span id="cb16-193"><a href="#cb16-193"></a><span class="co"># Get unique boroughs</span></span>
+<span id="cb16-194"><a href="#cb16-194"></a>boroughs <span class="ot">&lt;-</span> <span class="fu">unique</span>(airbnb_clean<span class="sc">$</span>neighbourhood_group)</span>
+<span id="cb16-195"><a href="#cb16-195"></a></span>
+<span id="cb16-196"><a href="#cb16-196"></a><span class="co"># Pre-allocate storage</span></span>
+<span id="cb16-197"><a href="#cb16-197"></a>median_prices <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"numeric"</span>, <span class="at">length =</span> <span class="fu">length</span>(boroughs))</span>
+<span id="cb16-198"><a href="#cb16-198"></a><span class="fu">names</span>(median_prices) <span class="ot">&lt;-</span> boroughs</span>
+<span id="cb16-199"><a href="#cb16-199"></a></span>
+<span id="cb16-200"><a href="#cb16-200"></a><span class="co"># For loop with seq_along</span></span>
+<span id="cb16-201"><a href="#cb16-201"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(boroughs)) {</span>
+<span id="cb16-202"><a href="#cb16-202"></a>  borough_name <span class="ot">&lt;-</span> boroughs[i]</span>
+<span id="cb16-203"><a href="#cb16-203"></a>  </span>
+<span id="cb16-204"><a href="#cb16-204"></a>  <span class="co"># Subset data</span></span>
+<span id="cb16-205"><a href="#cb16-205"></a>  borough_data <span class="ot">&lt;-</span> airbnb_clean <span class="sc">|&gt;</span> </span>
+<span id="cb16-206"><a href="#cb16-206"></a>    <span class="fu">filter</span>(neighbourhood_group <span class="sc">==</span> borough_name)</span>
+<span id="cb16-207"><a href="#cb16-207"></a>  </span>
+<span id="cb16-208"><a href="#cb16-208"></a>  <span class="co"># Calculate and store</span></span>
+<span id="cb16-209"><a href="#cb16-209"></a>  median_prices[i] <span class="ot">&lt;-</span> <span class="fu">median</span>(borough_data<span class="sc">$</span>price)</span>
+<span id="cb16-210"><a href="#cb16-210"></a>}</span>
+<span id="cb16-211"><a href="#cb16-211"></a></span>
+<span id="cb16-212"><a href="#cb16-212"></a><span class="co"># Display results</span></span>
+<span id="cb16-213"><a href="#cb16-213"></a><span class="fu">data.frame</span>(</span>
+<span id="cb16-214"><a href="#cb16-214"></a>  <span class="at">borough =</span> <span class="fu">names</span>(median_prices),</span>
+<span id="cb16-215"><a href="#cb16-215"></a>  <span class="at">median_price =</span> median_prices</span>
+<span id="cb16-216"><a href="#cb16-216"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-217"><a href="#cb16-217"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(median_price)) <span class="sc">|&gt;</span> </span>
+<span id="cb16-218"><a href="#cb16-218"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Median Price by Borough (for loop)"</span>)</span>
+<span id="cb16-219"><a href="#cb16-219"></a><span class="in">```</span></span>
+<span id="cb16-220"><a href="#cb16-220"></a></span>
+<span id="cb16-221"><a href="#cb16-221"></a><span class="fu">### Using across()</span></span>
+<span id="cb16-222"><a href="#cb16-222"></a><span class="in">```{r iteration-across}</span></span>
+<span id="cb16-223"><a href="#cb16-223"></a><span class="co"># Calculate mean and median for multiple numeric variables at once</span></span>
+<span id="cb16-224"><a href="#cb16-224"></a>airbnb_clean <span class="sc">|&gt;</span> </span>
+<span id="cb16-225"><a href="#cb16-225"></a>  <span class="fu">group_by</span>(room_type) <span class="sc">|&gt;</span> </span>
+<span id="cb16-226"><a href="#cb16-226"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb16-227"><a href="#cb16-227"></a>    <span class="fu">across</span>(</span>
+<span id="cb16-228"><a href="#cb16-228"></a>      <span class="at">.cols =</span> <span class="fu">c</span>(price, minimum_nights, availability_365),</span>
+<span id="cb16-229"><a href="#cb16-229"></a>      <span class="at">.fns =</span> <span class="fu">list</span>(<span class="at">mean =</span> mean, <span class="at">median =</span> median),</span>
+<span id="cb16-230"><a href="#cb16-230"></a>      <span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span></span>
+<span id="cb16-231"><a href="#cb16-231"></a>    ),</span>
+<span id="cb16-232"><a href="#cb16-232"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb16-233"><a href="#cb16-233"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb16-234"><a href="#cb16-234"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb16-235"><a href="#cb16-235"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>, <span class="at">caption =</span> <span class="st">"Summary Statistics by Room Type (using across)"</span>)</span>
+<span id="cb16-236"><a href="#cb16-236"></a><span class="in">```</span></span>
+<span id="cb16-237"><a href="#cb16-237"></a></span>
+<span id="cb16-238"><a href="#cb16-238"></a><span class="fu">### Using crossing() for Multiple Scenarios</span></span>
+<span id="cb16-239"><a href="#cb16-239"></a></span>
+<span id="cb16-242"><a href="#cb16-242"></a><span class="in">```{r}</span></span>
+<span id="cb16-243"><a href="#cb16-243"></a><span class="co"># Create multiple analysis scenarios</span></span>
+<span id="cb16-244"><a href="#cb16-244"></a>scenarios <span class="ot">&lt;-</span> <span class="fu">crossing</span>(</span>
+<span id="cb16-245"><a href="#cb16-245"></a>  <span class="at">borough =</span> <span class="fu">c</span>(<span class="st">"Manhattan"</span>, <span class="st">"Brooklyn"</span>),</span>
+<span id="cb16-246"><a href="#cb16-246"></a>  <span class="at">expensive =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>)  <span class="co"># expensive = price &gt; $150</span></span>
+<span id="cb16-247"><a href="#cb16-247"></a>)</span>
+<span id="cb16-248"><a href="#cb16-248"></a></span>
+<span id="cb16-249"><a href="#cb16-249"></a>scenarios <span class="sc">|&gt;</span> </span>
+<span id="cb16-250"><a href="#cb16-250"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Analysis Scenarios"</span>)</span>
+<span id="cb16-251"><a href="#cb16-251"></a></span>
+<span id="cb16-252"><a href="#cb16-252"></a><span class="co"># Function to analyze one scenario</span></span>
+<span id="cb16-253"><a href="#cb16-253"></a>analyze_scenario <span class="ot">&lt;-</span> <span class="cf">function</span>(data, borough, expensive) {</span>
+<span id="cb16-254"><a href="#cb16-254"></a>  filtered <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
+<span id="cb16-255"><a href="#cb16-255"></a>    <span class="fu">filter</span>(neighbourhood_group <span class="sc">==</span> borough)</span>
+<span id="cb16-256"><a href="#cb16-256"></a>  </span>
+<span id="cb16-257"><a href="#cb16-257"></a>  <span class="cf">if</span> (expensive) {</span>
+<span id="cb16-258"><a href="#cb16-258"></a>    filtered <span class="ot">&lt;-</span> filtered <span class="sc">|&gt;</span> <span class="fu">filter</span>(price <span class="sc">&gt;</span> <span class="dv">150</span>)</span>
+<span id="cb16-259"><a href="#cb16-259"></a>  }</span>
+<span id="cb16-260"><a href="#cb16-260"></a>  </span>
+<span id="cb16-261"><a href="#cb16-261"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb16-262"><a href="#cb16-262"></a>    <span class="at">n_listings =</span> <span class="fu">nrow</span>(filtered),</span>
+<span id="cb16-263"><a href="#cb16-263"></a>    <span class="at">avg_price =</span> <span class="fu">mean</span>(filtered<span class="sc">$</span>price)</span>
+<span id="cb16-264"><a href="#cb16-264"></a>  )</span>
+<span id="cb16-265"><a href="#cb16-265"></a>}</span>
+<span id="cb16-266"><a href="#cb16-266"></a></span>
+<span id="cb16-267"><a href="#cb16-267"></a><span class="co"># Run all scenarios with for loop</span></span>
+<span id="cb16-268"><a href="#cb16-268"></a>results <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, <span class="at">length =</span> <span class="fu">nrow</span>(scenarios))</span>
+<span id="cb16-269"><a href="#cb16-269"></a></span>
+<span id="cb16-270"><a href="#cb16-270"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(scenarios))) {</span>
+<span id="cb16-271"><a href="#cb16-271"></a>  results[[i]] <span class="ot">&lt;-</span> <span class="fu">analyze_scenario</span>(</span>
+<span id="cb16-272"><a href="#cb16-272"></a>    <span class="at">data =</span> airbnb_clean,</span>
+<span id="cb16-273"><a href="#cb16-273"></a>    <span class="at">borough =</span> scenarios<span class="sc">$</span>borough[i],</span>
+<span id="cb16-274"><a href="#cb16-274"></a>    <span class="at">expensive =</span> scenarios<span class="sc">$</span>expensive[i]</span>
+<span id="cb16-275"><a href="#cb16-275"></a>  )</span>
+<span id="cb16-276"><a href="#cb16-276"></a>}</span>
+<span id="cb16-277"><a href="#cb16-277"></a></span>
+<span id="cb16-278"><a href="#cb16-278"></a><span class="co"># Combine results</span></span>
+<span id="cb16-279"><a href="#cb16-279"></a><span class="fu">bind_cols</span>(scenarios, <span class="fu">bind_rows</span>(results)) <span class="sc">|&gt;</span> </span>
+<span id="cb16-280"><a href="#cb16-280"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">"Results for All Scenarios"</span>)</span>
+<span id="cb16-281"><a href="#cb16-281"></a><span class="in">```</span></span>
+<span id="cb16-282"><a href="#cb16-282"></a></span>
+<span id="cb16-283"><a href="#cb16-283"></a></span>
+<span id="cb16-284"><a href="#cb16-284"></a>---</span>
+<span id="cb16-285"><a href="#cb16-285"></a></span>
+<span id="cb16-286"><a href="#cb16-286"></a><span class="fu">## Summary</span></span>
+<span id="cb16-287"><a href="#cb16-287"></a></span>
+<span id="cb16-288"><a href="#cb16-288"></a>This project demonstrated four key concepts:</span>
+<span id="cb16-289"><a href="#cb16-289"></a></span>
+<span id="cb16-290"><a href="#cb16-290"></a>**Missing Data**</span>
+<span id="cb16-291"><a href="#cb16-291"></a><span class="ss">- </span>Found 10,052 explicit missing values in <span class="in">`reviews_per_month`</span></span>
+<span id="cb16-292"><a href="#cb16-292"></a><span class="ss">- </span>Used <span class="in">`coalesce()`</span> to fill with 0</span>
+<span id="cb16-293"><a href="#cb16-293"></a><span class="ss">- </span>Used <span class="in">`complete()`</span> and <span class="in">`anti_join()`</span> to find implicit missing values</span>
+<span id="cb16-294"><a href="#cb16-294"></a></span>
+<span id="cb16-295"><a href="#cb16-295"></a>**Custom Functions**</span>
+<span id="cb16-296"><a href="#cb16-296"></a><span class="ss">- </span>Wrote <span class="in">`calc_proportion()`</span> using <span class="in">`{ }`</span> for tidy evaluation</span>
+<span id="cb16-297"><a href="#cb16-297"></a><span class="ss">- </span>Wrote <span class="in">`price_summary()`</span> with grouped summaries</span>
+<span id="cb16-298"><a href="#cb16-298"></a><span class="ss">- </span>Both functions work with different variables</span>
+<span id="cb16-299"><a href="#cb16-299"></a></span>
+<span id="cb16-300"><a href="#cb16-300"></a>**Base R Subsetting**</span>
+<span id="cb16-301"><a href="#cb16-301"></a><span class="ss">- </span>Used <span class="in">`$`</span>, <span class="in">`[[]]`</span>, and <span class="in">`[]`</span> for extraction</span>
+<span id="cb16-302"><a href="#cb16-302"></a><span class="ss">- </span>Used <span class="in">`split()`</span> and <span class="in">`lapply()`</span> for list operations</span>
+<span id="cb16-303"><a href="#cb16-303"></a><span class="ss">- </span>Verified all methods produce identical results</span>
+<span id="cb16-304"><a href="#cb16-304"></a></span>
+<span id="cb16-305"><a href="#cb16-305"></a>**Iteration**</span>
+<span id="cb16-306"><a href="#cb16-306"></a><span class="ss">- </span>Used for loop with <span class="in">`seq_along()`</span> and pre-allocated storage</span>
+<span id="cb16-307"><a href="#cb16-307"></a><span class="ss">- </span>Used <span class="in">`across()`</span> to summarize multiple variables</span>
+<span id="cb16-308"><a href="#cb16-308"></a><span class="ss">- </span>Used <span class="in">`crossing()`</span> to create analysis scenarios</span>
+<span id="cb16-309"><a href="#cb16-309"></a></span>
+<span id="cb16-310"><a href="#cb16-310"></a>**Dataset**: NYC Airbnb Open Data (2019) - 48,895 listings</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+
+<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
