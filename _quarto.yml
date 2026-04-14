@@ -82,7 +82,7 @@ book:
       - pcl/pcl02-23.qmd
       - pcl/base_r_pcl.qmd
       - pcl/loops_iteration_pcl.qmd
-      - pcl/webs_scraping.qmd
+      - pcl/web_scraping.qmd
       - pcl/api_pcl.qmd
       - pcl/databases_pcl.qmd
 
