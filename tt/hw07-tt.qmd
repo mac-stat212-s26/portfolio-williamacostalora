@@ -1,0 +1,161 @@
+---
+title: "The Repair Manifesto: Data-Driven Sustainability"
+subtitle: "A multi-variable analysis of fixability and failure in global Repair Cafes"
+author: "William Acosta Lora"
+format: 
+  html:
+    embed-resources: true
+    theme: lux
+    toc: true
+---
+
+## The Big Picture
+By merging the repair records with the detailed text descriptions, we can see a clear pattern: the "Circular Economy" is being throttled by design. We are looking at four variables: **Product Category**, **Repairability Rating**, **Success Status**, and **Specific Defect Descriptions**.
+
+[**Explore the Data Source & Methodology**](https://github.com/rfordatascience/tidytuesday/blob/main/data/2026/2026-04-07/readme.md)
+[**Explore the Article**](https://dashboard.repairmonitor.org/?language=en)
+
+```{r setup, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(scales)
+library(patchwork)
+library(ggrepel)
+
+# Load both datasets
+repairs <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-04-07/repairs.csv')
+repairs_text <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-04-07/repairs_text.csv')
+
+# Join on repair_id to combine categorical data with text descriptions
+full_data <- repairs %>%
+  left_join(repairs_text, by = "repair_id") %>%
+  mutate(
+    repaired = tolower(str_trim(repaired)),
+    repairability = as.numeric(repairability)
+  ) %>%
+  filter(
+    repaired %in% c("yes", "no", "half"),
+    !is.na(category),
+    !is.na(repairability)
+  )
+
+# Aggregate for a high-level view
+category_analysis <- full_data %>%
+  group_by(category) %>%
+  summarise(
+    avg_ease = mean(repairability, na.rm = TRUE),
+    success_rate = sum(repaired == "yes") / n(),
+    total_volume = n(),
+    .groups = "drop"
+  ) %>%
+  filter(total_volume > 150)
+```
+
+# 1. The Success vs. Ease Landscape
+This visualization maps three variables: Ease of Repair (X), Actual Success (Y), and Observation Volume (Size). It identifies which items are "easy wins" and which are "frustrating traps."
+
+```{r fig.width= 10, fig.height=7}
+ggplot(category_analysis, aes(x = avg_ease, y = success_rate)) +
+  geom_point(aes(size = total_volume, color = success_rate), alpha = 0.7) +
+  geom_text_repel(aes(label = category), size = 3.5, fontface = "bold") +
+  scale_y_continuous(labels = label_percent()) +
+  scale_color_gradient(low = "#e76f51", high = "#2a9d8f") +
+  labs(
+    title = "Ease vs. Outcome: Identifying 'The Fixable'",
+    subtitle = "Size indicates popularity of the item at Repair Cafes",
+        caption = "Source: Repair Monitor | Author: William Acosta Lora",
+    x = "Average Repairability Rating (1 = Hard, 10 = Easy)",
+    y = "Percentage Fully Repaired",
+    size = "Total Sightings",
+    color = "Success %"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "right", plot.title = element_text(face = "bold"))
+```
+# 2. Why do they fail? (Text-Data Insights)
+ Using the repairs_text dataset, we can visualize the fourth variable: the specific reasons for failure across different categories.
+
+```{r}
+# Extract failure reasons for the most 'unfixable' category (Electronics)
+failures <- full_data %>%
+  filter(repaired == "no") %>%
+  separate_rows(failure_reasons, sep = ";") %>%
+  mutate(failure_reasons = str_trim(failure_reasons)) %>%
+  count(failure_reasons, sort = TRUE) %>%
+  filter(!is.na(failure_reasons), n > 50) %>%
+  slice_head(n = 6)
+
+ggplot(failures, aes(x = reorder(failure_reasons, n), y = n, fill = n)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_gradient(low = "#f4a261", high = "#e76f51") +
+  labs(
+    title = "The Wall of Waste",
+    subtitle = "Aggregated reasons from volunteer notes on why items were not saved",
+    x = NULL, y = "Frequency of Reason",
+    caption = "Source: Repair Monitor | Author: William Acosta Lora"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none", plot.title = element_text(face = "bold"))
+```
+
+**Key Takeaways **
+- The "Design for Repair" Gap: The bubble chart shows a massive cluster of electronics (computers, phones, sound equipment) in the bottom-left. They have the lowest ease-of-repair ratings and the lowest success rates.
+
+- The Spare Parts Crisis: At the "Wall of Waste" bar chart, we see the reason for that cluster. Two of the top five failure reasons are related to spare parts availability. This suggests that electronics aren't necessarily "unfixable" because they are complex, but because the supply chain for parts is closed.
+
+- The "Sealed" Barrier: "No way to open the product" appearing in the bar chart explains why items like electric household appliances have such low "ease" ratings. If we can’t get past the casing, the repair never even starts.
+
+
+# Interactive Dashboard Combining the Two Visualizations
+
+```{r}
+library(plotly)
+library(crosstalk)
+
+# 1. Prepare Joined Data 
+shared_repairs <- SharedData$new(category_analysis, key = ~category)
+
+# Interactive Bubble Chart
+p1 <- shared_repairs %>%
+  plot_ly(
+    x = ~avg_ease, 
+    y = ~success_rate, 
+    size = ~total_volume, 
+    color = ~success_rate,
+    text = ~paste("Category:", category, "<br>Total Cases:", total_volume),
+    type = 'scatter', 
+    mode = 'markers',
+    marker = list(sizemode = 'diameter', opacity = 0.7)
+  ) %>%
+  layout(
+    title = "Ease vs. Success Rate",
+    xaxis = list(title = "Average Repairability (1-10)"),
+    yaxis = list(title = "Success Rate", tickformat = "%")
+  )
+
+# Interactive Bar Chart (Linked to selection)
+p2 <- shared_repairs %>%
+  plot_ly(
+    x = ~total_volume, 
+    y = ~reorder(category, total_volume), 
+    type = 'bar', 
+    orientation = 'h',
+    marker = list(color = "#e76f51")
+  ) %>%
+  layout(
+    title = "Volume by Category",
+    xaxis = list(title = "Number of Repair Attempts"),
+    yaxis = list(title = "")
+  )
+
+# 4. Combine into a Dashboard Layout
+bscols(
+  list(
+    filter_checkbox("cat", "Select Categories", shared_repairs, ~category),
+    filter_slider("ease", "Ease Rating", shared_repairs, ~avg_ease)
+  ),
+  p1, p2,
+  widths = c(3, 9, 12)
+)
+```
+
