@@ -1,0 +1,114 @@
+---
+title: "Homework 08"
+format: 
+  html: 
+    embed-resources: true
+    self-contained: true
+---
+
+##  Bird Sightings at Sea
+
+
+# Data Cleaning
+
+```{r}
+library(tidyverse)
+library(plotly)
+library(lubridate)
+
+# Load data
+birds <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-04-14/birds.csv')
+ships <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-04-14/ships.csv')
+
+# Join + clean
+data <- birds %>%
+  left_join(ships, by = "record_id") %>%
+  filter(!is.na(latitude), !is.na(longitude), !is.na(species_common_name)) %>%
+  mutate(
+    year = year(date),
+    count = ifelse(count == 99999, 100000, count)
+  )
+
+# Top species for clarity
+top_species <- data %>%
+  count(species_common_name, sort = TRUE) %>%
+  slice_head(n = 8) %>%
+  pull(species_common_name)
+
+data_filtered <- data %>%
+  filter(species_common_name %in% top_species)
+
+```
+
+```{r fig.width=10}
+# Base plot
+original_plot <- ggplot(data_filtered, aes(
+  x = longitude,
+  y = latitude,
+  size = count,
+  color = species_common_name,
+  frame = year,  
+  text = paste0(
+    "<b>Species:</b> ", species_common_name,
+    "<br><b>Count:</b> ", count,
+    "<br><b>Year:</b> ", year,
+    "<br><b>Activity:</b> ", activity,
+    "<br><b>Feeding:</b> ", feeding
+  )
+)) +
+  geom_point(alpha = 0.7) +
+  scale_size(range = c(1, 12)) +
+  labs(
+    title = "Bird Sightings at Sea (1969–1990)",
+    subtitle = "Tracking seabird observations across time and space near New Zealand\nTop species shown • Point size reflects flock size • Animation shows temporal patterns",
+    caption = "TidyTuesday 2026 Week 15 | Source: Te Papa Tongarewa (Museum of New Zealand)\nEach point represents a 10-minute ship-based observation"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 12),
+    plot.subtitle = element_text(size = 11)
+  )
+
+original_plot
+
+```
+
+```{r}
+# Base plot
+plotly_plot <- ggplot(data_filtered, aes(
+  x = longitude,
+  y = latitude,
+  size = count,
+  color = species_common_name,
+  frame = year,  
+  text = paste0(
+    "<b>Species:</b> ", species_common_name,
+    "<br><b>Count:</b> ", count,
+    "<br><b>Year:</b> ", year,
+    "<br><b>Activity:</b> ", activity,
+    "<br><b>Feeding:</b> ", feeding
+  )
+)) +
+  geom_point(alpha = 0.7) +
+  scale_size(range = c(1, 12)) +
+  labs(
+    title = "Bird Sightings at Sea (1969–1990)\n Source: Te Papa Tongarewa (Museum of New Zealand) \n Author: William Acosta Lora ",
+    subtitle = "Tracking seabird observations across time and space near New Zealand\nTop species shown • Point size reflects flock size • Animation shows temporal patterns",
+    caption = "TidyTuesday 2026 Week 15 | Source: Te Papa Tongarewa (Museum of New Zealand)\nEach point represents a 10-minute ship-based observation"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 12),
+    plot.subtitle = element_text(size = 11)
+  )
+
+plotly_plot
+```
+
+```{r}
+# Make the original plot interactive using plotly
+ggplotly(original_plot, tooltip = "text") %>%
+  animation_opts(frame = 800, easing = "linear", redraw = FALSE) %>%
+  animation_slider(currentvalue = list(prefix = "Year: "))
+```
+ **Trend: The visualization reveals a spike in sightings during the late 1980s, specifically concentrated around the $160^\circ$ longitude mark. While early years (1970s) show sparse data, the period between 1986–1990 shows a high density of Wandering Albatross observations.**
