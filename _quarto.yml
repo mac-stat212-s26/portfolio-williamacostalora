@@ -69,6 +69,7 @@ book:
       - tt/2025-07-08.qmd
       - tt/2025-07-15.qmd
       - tt/tt-01-27.qmd
+      - tt/hw07-tt.qmd
       - tt/hw08-tt.qmd
 
     - part: "Pre-Class Learnings"
