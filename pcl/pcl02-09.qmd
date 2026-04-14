@@ -1,0 +1,176 @@
+---
+title: "Advanced Data Wrangling - R Concepts"
+format: html
+---
+```{r}
+#| echo: false
+#| message: false
+library(DiagrammeR)
+
+grViz("
+digraph DataWrangling {
+  graph [rankdir = LR]
+  
+  # Main node
+  A[label='Advanced\nData Wrangling']
+  
+  # Major branches
+  B[label='Numerical\nPrecision']
+  C[label='Logical\nOperations']
+  D[label='Conditional\nTransforms']
+  E[label='Parsing']
+  F[label='Recycling']
+  G[label='Rounding']
+  H[label='Factor\nFunctions']
+  I[label='Date-Time']
+  
+  # Numerical Precision children
+  B1[label='Floating point\nerrors']
+  B2[label='sqrt(2)^2 == 2\nis FALSE']
+  B3[label='Computer stores\nlimited decimals']
+  
+  # Logical Operations children
+  C1[label='With NA']
+  C2[label='To Numeric']
+  
+  C1a[label='TRUE & NA = NA']
+  C1b[label='TRUE | NA = TRUE']
+  C1c[label='FALSE & NA = FALSE']
+  
+  C2a[label='sum(TRUE, FALSE)\ncounts TRUEs']
+  C2b[label='TRUE = 1\nFALSE = 0']
+  
+  # Conditional Transforms children
+  D1[label='if_else()']
+  
+  D1a[label='Transform vector\nfor one condition']
+  D1b[label='if_else(condition,\ntrue, false)']
+  
+  # Parsing children
+  E1[label='parse_number()']
+  
+  E1a[label='Remove non-numeric\nsymbols']
+  E1b[label='$, %, commas → numeric']
+  
+  # Recycling children
+  F1[label='Vector operations']
+  F2[label='Short vector repeats']
+  F3[label='Different length\nvectors']
+  
+  # Rounding children
+  G1[label='round(x, -2)']
+  G2[label='%/% integer division']
+  G3[label='%% modulo']
+  
+  G1a[label='round(530.3, -2)\n= 500']
+  G2a[label='(530.3 %/% 100) * 100\n= 500']
+  G3a[label='Gets remainder']
+  
+  # Factor Functions children
+  H1[label='fct_relevel()']
+  H2[label='fct_recode()']
+  H3[label='fct_reorder()']
+  H4[label='fct_infreq()']
+  
+  H1a[label='Manual reordering']
+  H1b[label='Move levels to\nbeginning']
+  
+  H2a[label='Change labels']
+  H2b[label='Rename levels']
+  
+  H3a[label='Reorder by\nnumeric variable']
+  H3b[label='fct_reorder(factor,\nnumeric_var)']
+  
+  H4a[label='Reorder by\nfrequency']
+  H4b[label='Most common first']
+  
+  # Date-Time children
+  I1[label='ISO8601\nStandard']
+  I2[label='Conversion']
+  
+  I1a[label='yyyy-mm-dd hh:mm']
+  I1b[label='Largest to smallest\nunit']
+  
+  I2a[label='Convert character\nto date-time class']
+  I2b[label='Enables date\narithmetic']
+  
+  # Create main edges
+  A -> B
+  A -> C
+  A -> D
+  A -> E
+  A -> F
+  A -> G
+  A -> H
+  A -> I
+  
+  # Numerical Precision edges
+  B -> B1
+  B -> B2
+  B -> B3
+  
+  # Logical Operations edges
+  C -> C1
+  C -> C2
+  
+  C1 -> C1a
+  C1 -> C1b
+  C1 -> C1c
+  
+  C2 -> C2a
+  C2 -> C2b
+  
+  # Conditional edges
+  D -> D1
+  D1 -> D1a
+  D1 -> D1b
+  
+  # Parsing edges
+  E -> E1
+  E1 -> E1a
+  E1 -> E1b
+  
+  # Recycling edges
+  F -> F1
+  F -> F2
+  F -> F3
+  
+  # Rounding edges
+  G -> G1
+  G -> G2
+  G -> G3
+  
+  G1 -> G1a
+  G2 -> G2a
+  G3 -> G3a
+  
+  # Factor edges
+  H -> H1
+  H -> H2
+  H -> H3
+  H -> H4
+  
+  H1 -> H1a
+  H1 -> H1b
+  
+  H2 -> H2a
+  H2 -> H2b
+  
+  H3 -> H3a
+  H3 -> H3b
+  
+  H4 -> H4a
+  H4 -> H4b
+  
+  # Date-Time edges
+  I -> I1
+  I -> I2
+  
+  I1 -> I1a
+  I1 -> I1b
+  
+  I2 -> I2a
+  I2 -> I2b
+}
+")
+```

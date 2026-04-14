@@ -22,7 +22,7 @@ number-depth: 2
 
 book:
   title: "COMP/STAT212 Portfolio"
-  author: "Your Name Here"
+  author: "William Acosta"
   date: today  # use today to update date published based on last time project was edited
   date-format: full
   # favicon: path/to/favorite-logo.png
@@ -45,7 +45,7 @@ book:
       # footer text
 
   sidebar:
-    title: "Your Name Here"
+    title: "William Acosta"
     logo: assets/sidebar-logo.png
     logo-alt: "Random negative space illustration"
     collapse-level: 2
@@ -68,20 +68,57 @@ book:
       chapters:
       - tt/2025-07-08.qmd
       - tt/2025-07-15.qmd
+      - tt/tt-01-27.qmd
+      - tt/hw07-tt.qmd
+      - tt/hw08-tt.qmd
 
     - part: "Pre-Class Learnings"
       chapters:
       - pcl/pcl.qmd
+      - pcl/pcl02-04.qmd
+      - pcl/pcl02-09.qmd
+      - pcl/pcl-wrangling2.qmd
+      - pcl/pcl-missing_data.qmd
+      - pcl/pcl02-23.qmd
+      - pcl/base_r_pcl.qmd
+      - pcl/loops_iteration_pcl.qmd
+      - pcl/web_scraping.qmd
+      - pcl/api_pcl.qmd
+      - pcl/databases_pcl.qmd
+
 
     - part: "In-Class Activities"
       chapters:
       - ica/ica-sample1.qmd
       - ica/ica-sample2.qmd
+      - ica/cleaning.qmd
+      - ica/03-adv-ggplot-notes.qmd
+      - ica/04_adv_maps/code/04-adv-maps-1-notes.qmd
+      - ica/06-wrangling-1-notes.qmd
+      - ica/07-wrangling-2-notes.qmd
+      - ica/08-missing-data-notes.qmd
+      - ica/09-functions-notes.qmd
+      - ica/10-base-r-notes.qmd
+      - ica/11-iteration-1-notes.qmd
+      - ica/12-iteration-2-notes.qmd
+      - ica/14-apis-2-notes.qmd
+      - ica/15-scraping-notes.qmd
+      - ica/16-databases-notes.qmd
+      - ica/18-interactive-viz-notes.qmd
+
+
 
     - part: "Extras"
       chapters:
       - extra/extra-sample1.qmd
       - extra/extra-sample2.qmd
+      - extra/map.qmd
+      - extra/airbnb-analysis.qmd
+      - extra/DataFest_EDA_Spatial_Machine_Learning_Shiny.qmd
+
+    - part: "Exam Reports"
+      chapters:
+      - exam/code/report1.qmd
 
 
 
@@ -124,7 +161,7 @@ execute:
   warning: false
   error: false
   cache: false
-#   freeze: auto # remove when using GitHub action to execute code
+  freeze: auto # remove when using GitHub action to execute code
 
 
 

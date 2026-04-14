@@ -1,0 +1,156 @@
+---
+title: "Missing Data"
+format: html
+---
+```{r}
+#| echo: false
+#| message: false
+library(DiagrammeR)
+
+grViz("
+digraph MissingData {
+  graph [rankdir = LR]
+  
+  # Main node
+  A[label='Missing\nData']
+  
+  # Major branches
+  B[label='Explicit\nMissing']
+  C[label='Implicit\nMissing']
+  D[label='Factors &\nEmpty Groups']
+  
+  # Explicit Missing children
+  B1[label='Last Observation\nCarried Forward']
+  B2[label='Fixed\nValues']
+  B3[label='NaN']
+  
+  B1a[label='fill()']
+  B1b[label='Fills down\nby default']
+  B1c[label='.direction\nargument']
+  
+  B2a[label='coalesce()']
+  B2b[label='Replace NA\nwith value']
+  B2c[label='na_if()']
+  B2d[label='Convert value\nto NA']
+  
+  B3a[label='Not a Number']
+  B3b[label='0 / 0']
+  B3c[label='Inf - Inf']
+  B3d[label='is.nan()']
+  
+  # Implicit Missing children
+  C1[label='Definition']
+  C2[label='Making\nExplicit']
+  C3[label='Joins']
+  
+  C1a[label='Presence of\nabsence = explicit']
+  C1b[label='Absence of\npresence = implicit']
+  C1c[label='Entire row\nmissing']
+  
+  C2a[label='pivot_wider()']
+  C2b[label='complete()']
+  C2c[label='full_seq()']
+  
+  C2a1[label='Makes implicit\nexplicit']
+  C2a2[label='All combinations\nmust have value']
+  
+  C2b1[label='Generate all\ncombinations']
+  C2b2[label='complete(year, qtr)']
+  
+  C2c1[label='Generate sequence\nfrom min to max']
+  
+  C3a[label='anti_join()']
+  C3b[label='Reveals missing\nobservations']
+  C3c[label='Compare datasets']
+  
+  # Factors & Empty Groups children
+  D1[label='Empty\nGroups']
+  D2[label='Solutions']
+  D3[label='Summary\nBehavior']
+  
+  D1a[label='Factor levels\nwith no data']
+  D1b[label='count() drops\nby default']
+  D1c[label='ggplot2 drops\nlevels']
+  
+  D2a[label='.drop = FALSE']
+  D2b[label='count(.drop = FALSE)']
+  D2c[label='group_by(.drop = FALSE)']
+  D2d[label='scale_x_discrete(\ndrop = FALSE)']
+  
+  D3a[label='Zero-length\nvectors']
+  D3b[label='mean() = NaN']
+  D3c[label='min() = Inf']
+  D3d[label='max() = -Inf']
+  D3e[label='Alternative:\ncomplete()']
+  
+  # Create main edges
+  A -> B
+  A -> C
+  A -> D
+  
+  # Explicit Missing edges
+  B -> B1
+  B -> B2
+  B -> B3
+  
+  B1 -> B1a
+  B1 -> B1b
+  B1 -> B1c
+  
+  B2 -> B2a
+  B2 -> B2b
+  B2 -> B2c
+  B2 -> B2d
+  
+  B3 -> B3a
+  B3 -> B3b
+  B3 -> B3c
+  B3 -> B3d
+  
+  # Implicit Missing edges
+  C -> C1
+  C -> C2
+  C -> C3
+  
+  C1 -> C1a
+  C1 -> C1b
+  C1 -> C1c
+  
+  C2 -> C2a
+  C2 -> C2b
+  C2 -> C2c
+  
+  C2a -> C2a1
+  C2a -> C2a2
+  
+  C2b -> C2b1
+  C2b -> C2b2
+  
+  C2c -> C2c1
+  
+  C3 -> C3a
+  C3 -> C3b
+  C3 -> C3c
+  
+  # Factors edges
+  D -> D1
+  D -> D2
+  D -> D3
+  
+  D1 -> D1a
+  D1 -> D1b
+  D1 -> D1c
+  
+  D2 -> D2a
+  D2 -> D2b
+  D2 -> D2c
+  D2 -> D2d
+  
+  D3 -> D3a
+  D3 -> D3b
+  D3 -> D3c
+  D3 -> D3d
+  D3 -> D3e
+}
+")
+```

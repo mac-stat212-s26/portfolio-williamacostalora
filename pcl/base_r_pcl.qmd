@@ -1,0 +1,163 @@
+---
+title: "Base R Essentials"
+format: html
+---
+```{r}
+#| echo: false
+#| message: false
+library(DiagrammeR)
+
+grViz("
+digraph BaseR {
+  graph [rankdir = TB]
+  
+  A[label='Base R\\nEssentials']
+  
+  B[label='Subsetting']
+  C[label='Data\\nStructures']
+  D[label='Iteration']
+  
+  B1[label='Vectors']
+  B2[label='Lists']
+  B3[label='Data\\nFrames']
+  
+  B1a[label='x[1:3]']
+  B1b[label='Returns vector']
+  B1c[label='Subset by\\nposition']
+  
+  B2a[label='Single\\nBracket']
+  B2b[label='Double\\nBracket']
+  
+  B2a1[label='x[1]']
+  B2a2[label='Returns list']
+  B2a3[label='Keeps structure']
+  
+  B2b1[label='x[[1]]']
+  B2b2[label='Returns element']
+  B2b3[label='Extracts content']
+  
+  B3a[label='Rows']
+  B3b[label='Columns']
+  B3c[label='Elements']
+  
+  B3a1[label='x[1:3,]']
+  B3a2[label='First 3 rows']
+  
+  B3b1[label='Dollar sign']
+  B3b2[label='Double bracket\\nby name']
+  B3b3[label='Double bracket\\nby position']
+  
+  B3c1[label='x$column']
+  B3c2[label='x[[name]]']
+  B3c3[label='x[[1]]']
+  
+  C1[label='Data\\nFrames']
+  C2[label='Lists']
+  C3[label='Equivalents']
+  
+  C1a[label='Special named\\nlist']
+  C1b[label='All elements\\nsame length']
+  C1c[label='Columns can be\\ndifferent types']
+  
+  C2a[label='Can hold\\nany type']
+  C2b[label='Elements can be\\ndifferent lengths']
+  C2c[label='Nested lists\\nallowed']
+  
+  C3a[label='tb$x']
+  C3b[label='tb %>% pull(x)']
+  C3c[label='tb[[x]]']
+  C3d[label='tb[[1]]']
+  C3e[label='All extract\\ncolumn']
+  
+  D1[label='For Output']
+  D2[label='For Side\\nEffects']
+  D3[label='Base R\\nFunctions']
+  
+  D1a[label='map()']
+  D1b[label='Returns results']
+  D1c[label='Transform data']
+  
+  D2a[label='walk()']
+  D2b[label='No return value']
+  D2c[label='Print, save,\\nplot']
+  
+  D3a[label='lapply()']
+  D3b[label='sapply()']
+  D3c[label='Similar to\\nmap()']
+  D3d[label='Less consistent\\noutput']
+  
+  A -> B
+  A -> C
+  A -> D
+  
+  B -> B1
+  B -> B2
+  B -> B3
+  
+  B1 -> B1a
+  B1 -> B1b
+  B1 -> B1c
+  
+  B2 -> B2a
+  B2 -> B2b
+  
+  B2a -> B2a1
+  B2a -> B2a2
+  B2a -> B2a3
+  
+  B2b -> B2b1
+  B2b -> B2b2
+  B2b -> B2b3
+  
+  B3 -> B3a
+  B3 -> B3b
+  B3 -> B3c
+  
+  B3a -> B3a1
+  B3a -> B3a2
+  
+  B3b -> B3b1
+  B3b -> B3b2
+  B3b -> B3b3
+  
+  B3c -> B3c1
+  B3c -> B3c2
+  B3c -> B3c3
+  
+  C -> C1
+  C -> C2
+  C -> C3
+  
+  C1 -> C1a
+  C1 -> C1b
+  C1 -> C1c
+  
+  C2 -> C2a
+  C2 -> C2b
+  C2 -> C2c
+  
+  C3 -> C3a
+  C3 -> C3b
+  C3 -> C3c
+  C3 -> C3d
+  C3 -> C3e
+  
+  D -> D1
+  D -> D2
+  D -> D3
+  
+  D1 -> D1a
+  D1 -> D1b
+  D1 -> D1c
+  
+  D2 -> D2a
+  D2 -> D2b
+  D2 -> D2c
+  
+  D3 -> D3a
+  D3 -> D3b
+  D3 -> D3c
+  D3 -> D3d
+}
+")
+```

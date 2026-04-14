@@ -1,0 +1,253 @@
+---
+title: "Functions"
+format: html
+---
+```{r}
+#| echo: false
+#| message: false
+library(DiagrammeR)
+
+grViz("
+digraph Functions {
+  graph [rankdir = TB]
+  
+  A[label='Functions']
+  
+  B[label='Why Write\\nFunctions']
+  C[label='Vector\\nFunctions']
+  D[label='Data Frame\\nFunctions']
+  E[label='Plot\\nFunctions']
+  F[label='Style']
+  
+  # Why Write Functions
+  B1[label='Evocative\\nnames']
+  B2[label='Update in\\none place']
+  B3[label='Avoid\\nmistakes']
+  B4[label='Reuse\\ncode']
+  B5[label='Rule of thumb:\\n3+ copies']
+  
+  # Vector Functions
+  C1[label='Function\\nStructure']
+  C2[label='Mutate\\nFunctions']
+  C3[label='Summary\\nFunctions']
+  
+  # Function Structure
+  C1a[label='Name']
+  C1b[label='Arguments']
+  C1c[label='Body']
+  C1d[label='Template:\\nname <- function(args)\\n{body}']
+  
+  # Mutate Functions
+  C2a[label='rescale01()']
+  C2b[label='z_score()']
+  C2c[label='clamp()']
+  C2d[label='first_upper()']
+  C2e[label='clean_number()']
+  
+  C2a1[label='Rescale to\\n0-1 range']
+  C2b1[label='Mean 0,\\nSD 1']
+  C2c1[label='Min/max\\nbounds']
+  
+  # Summary Functions
+  C3a[label='Return single\\nvalue']
+  C3b[label='Use with\\nsummarize()']
+  C3c[label='commas()']
+  C3d[label='cv()']
+  C3e[label='n_missing()']
+  C3f[label='mape()']
+  
+  # Data Frame Functions
+  D1[label='Indirection\\nProblem']
+  D2[label='Embracing']
+  D3[label='When to\\nEmbrace']
+  D4[label='Common\\nUse Cases']
+  D5[label='Data-masking\\nvs Tidy-selection']
+  
+  # Indirection Problem
+  D1a[label='Tidy evaluation']
+  D1b[label='Variables not\\nfound']
+  D1c[label='Need to look\\ninside arguments']
+  
+  # Embracing
+  D2a[label='{{ }} syntax']
+  D2b[label='Wrap arguments']
+  D2c[label='Look down\\nthe tunnel']
+  D2d[label='Makes dplyr\\nlook inside']
+  
+  # When to Embrace
+  D3a[label='Data-masking']
+  D3b[label='Tidy-selection']
+  
+  D3a1[label='arrange()']
+  D3a2[label='filter()']
+  D3a3[label='summarize()']
+  
+  D3b1[label='select()']
+  D3b2[label='relocate()']
+  D3b3[label='rename()']
+  
+  # Common Use Cases
+  D4a[label='summary6()']
+  D4b[label='count_prop()']
+  D4c[label='unique_where()']
+  D4d[label='count_missing()']
+  
+  # Data-masking vs Tidy-selection
+  D5a[label='pick()']
+  D5b[label='Use tidy-selection\\ninside data-masking']
+  D5c[label='count_wide()']
+  
+  # Plot Functions
+  E1[label='aes() is\\nData-masking']
+  E2[label='Embrace\\nVariables']
+  E3[label='Examples']
+  E4[label='Labeling']
+  
+  # Examples
+  E3a[label='histogram()']
+  E3b[label='linearity_check()']
+  E3c[label='hex_plot()']
+  E3d[label='sorted_bars()']
+  E3e[label='conditional_bars()']
+  
+  # Labeling
+  E4a[label='rlang::englue()']
+  E4b[label='Like str_glue()']
+  E4c[label='Understands {{ }}']
+  E4d[label='Auto-insert\\nvariable names']
+  
+  # Style
+  F1[label='Naming']
+  F2[label='White Space']
+  F3[label='Best\\nPractices']
+  
+  # Naming
+  F1a[label='Verbs for\\nfunctions']
+  F1b[label='Nouns for\\narguments']
+  F1c[label='Clear over\\nshort']
+  F1d[label='Use autocomplete']
+  
+  # White Space
+  F2a[label='function() followed\\nby {}']
+  F2b[label='Indent contents\\n2 spaces']
+  F2c[label='Extra spaces\\ninside {{ }}']
+  
+  # Best Practices
+  F3a[label='F2 to find\\ndefinition']
+  F3b[label='Ctrl+. for\\nfuzzy finder']
+  F3c[label='Test with\\nsimple inputs']
+  
+  # Main edges
+  A -> B
+  A -> C
+  A -> D
+  A -> E
+  A -> F
+  
+  # Why Write Functions edges
+  B -> B1
+  B -> B2
+  B -> B3
+  B -> B4
+  B -> B5
+  
+  # Vector Functions edges
+  C -> C1
+  C -> C2
+  C -> C3
+  
+  C1 -> C1a
+  C1 -> C1b
+  C1 -> C1c
+  C1 -> C1d
+  
+  C2 -> C2a
+  C2 -> C2b
+  C2 -> C2c
+  C2 -> C2d
+  C2 -> C2e
+  
+  C2a -> C2a1
+  C2b -> C2b1
+  C2c -> C2c1
+  
+  C3 -> C3a
+  C3 -> C3b
+  C3 -> C3c
+  C3 -> C3d
+  C3 -> C3e
+  C3 -> C3f
+  
+  # Data Frame Functions edges
+  D -> D1
+  D -> D2
+  D -> D3
+  D -> D4
+  D -> D5
+  
+  D1 -> D1a
+  D1 -> D1b
+  D1 -> D1c
+  
+  D2 -> D2a
+  D2 -> D2b
+  D2 -> D2c
+  D2 -> D2d
+  
+  D3 -> D3a
+  D3 -> D3b
+  
+  D3a -> D3a1
+  D3a -> D3a2
+  D3a -> D3a3
+  
+  D3b -> D3b1
+  D3b -> D3b2
+  D3b -> D3b3
+  
+  D4 -> D4a
+  D4 -> D4b
+  D4 -> D4c
+  D4 -> D4d
+  
+  D5 -> D5a
+  D5 -> D5b
+  D5 -> D5c
+  
+  # Plot Functions edges
+  E -> E1
+  E -> E2
+  E -> E3
+  E -> E4
+  
+  E3 -> E3a
+  E3 -> E3b
+  E3 -> E3c
+  E3 -> E3d
+  E3 -> E3e
+  
+  E4 -> E4a
+  E4 -> E4b
+  E4 -> E4c
+  E4 -> E4d
+  
+  # Style edges
+  F -> F1
+  F -> F2
+  F -> F3
+  
+  F1 -> F1a
+  F1 -> F1b
+  F1 -> F1c
+  F1 -> F1d
+  
+  F2 -> F2a
+  F2 -> F2b
+  F2 -> F2c
+  
+  F3 -> F3a
+  F3 -> F3b
+  F3 -> F3c
+}
+")
+```

@@ -1,0 +1,157 @@
+---
+title: "pcl02-04"
+format: html
+---
+```{r}
+#| echo: false
+#| message: false
+library(DiagrammeR)
+
+grViz("
+digraph CRS {
+  graph [rankdir = LR]
+  
+  # Main node
+  A[label='Coordinate\nReference\nSystems']
+  
+  # Major branches
+  B[label='Shape of\nEarth']
+  C[label='CRS\nComponents']
+  D[label='Common\nSystems']
+  E[label='EPSG\nCodes']
+  F[label='Why CRS\nMatters']
+  G[label='Spatial\nData Types']
+  
+  # Shape of Earth children
+  B1[label='Sphere\n(not quite)']
+  B2[label='Ellipsoid\n(squished sphere)']
+  B3[label='Potato\n(real Earth)']
+  B4[label='Mathematical\nmodel needed']
+  
+  # CRS Components children
+  C1[label='Ellipsoid\n(shape)']
+  C2[label='Datum\n(position)']
+  C3[label='Projection\n(3D to 2D)']
+  C4[label='Units\n(degrees/meters)']
+  
+  # Ellipsoid details
+  C1a[label='WGS84']
+  C1b[label='GRS80']
+  
+  # Datum details
+  C2a[label='Where ellipsoid\ngoes in Earth']
+  C2b[label='Different fit\nfor regions']
+  
+  # Projection details
+  C3a[label='Mercator']
+  C3b[label='Lambert']
+  C3c[label='Albers']
+  C3d[label='Loss: angle,\narea, or distance']
+  
+  # Common Systems children
+  D1[label='WGS84\n(GPS, global)']
+  D2[label='NAD83\n(North America)']
+  D3[label='GDA94\n(Australia)']
+  D4[label='State Plane\n(US local)']
+  
+  # EPSG children
+  E1[label='European Petroleum\nSurvey Group']
+  E2[label='Secret codes\nfor each CRS']
+  E3[label='WGS84 = 4326']
+  E4[label='NAD83 = 4269']
+  E5[label='Continental US\nAlbers = 5070']
+  E6[label='Common mistake:\nESPG instead']
+  
+  # Why CRS Matters children
+  F1[label='Multiple datasets\nmust match']
+  F2[label='Same units\nrequired']
+  F3[label='Convert between\nsystems']
+  F4[label='GeoPandas handles\nconversion']
+  F5[label='3-4 feet difference\nWGS84 vs NAD83']
+  
+  # Spatial Data Types children
+  G1[label='Vector Data']
+  G2[label='Raster Data']
+  
+  # Vector details
+  G1a[label='Points\n(cities)']
+  G1b[label='Lines\n(roads, rivers)']
+  G1c[label='Polygons\n(boundaries)']
+  G1d[label='Formats: .shp,\n.geojson, .kml, .csv']
+  
+  # Raster details
+  G2a[label='Grid of cells']
+  G2b[label='Continuous values\n(elevation)']
+  G2c[label='Categorical values\n(land cover)']
+  G2d[label='Formats: .tif,\n.nc, .hdf']
+  G2e[label='High resolution =\nslow computation']
+  
+  # Create main edges
+  A -> B
+  A -> C
+  A -> D
+  A -> E
+  A -> F
+  A -> G
+  
+  # Shape of Earth edges
+  B -> B1
+  B -> B2
+  B -> B3
+  B -> B4
+  
+  # CRS Components edges
+  C -> C1
+  C -> C2
+  C -> C3
+  C -> C4
+  
+  C1 -> C1a
+  C1 -> C1b
+  
+  C2 -> C2a
+  C2 -> C2b
+  
+  C3 -> C3a
+  C3 -> C3b
+  C3 -> C3c
+  C3 -> C3d
+  
+  # Common Systems edges
+  D -> D1
+  D -> D2
+  D -> D3
+  D -> D4
+  
+  # EPSG edges
+  E -> E1
+  E -> E2
+  E -> E3
+  E -> E4
+  E -> E5
+  E -> E6
+  
+  # Why CRS Matters edges
+  F -> F1
+  F -> F2
+  F -> F3
+  F -> F4
+  F -> F5
+  
+  # Spatial Data edges
+  G -> G1
+  G -> G2
+  
+  G1 -> G1a
+  G1 -> G1b
+  G1 -> G1c
+  G1 -> G1d
+  
+  G2 -> G2a
+  G2 -> G2b
+  G2 -> G2c
+  G2 -> G2d
+  G2 -> G2e
+}
+")
+```

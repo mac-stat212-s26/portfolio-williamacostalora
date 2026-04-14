@@ -1,0 +1,51 @@
+#| echo: false
+#| message: false
+library(DiagrammeR)
+
+grViz("
+digraph Databases {
+  graph [rankdir = TB, fontsize = 12]
+  
+  # Global node settings
+  node [fontname = Helvetica, fontcolor = black]
+  
+  # Main topic
+  main [label = 'Databases & SQL', shape = box, style = filled, fillcolor = '#ADD8E6', fontsize = 14]
+  
+  # Core Concepts
+  purpose [label = 'Purpose: Pull subsets\\nof data for local use', shape = ellipse]
+  db_structure [label = 'Structure: Collection\\nof Data Frames', shape = ellipse]
+  storage [label = 'Storage: Mostly by rows\\n(like JSON)', shape = ellipse]
+  
+  main -> purpose
+  main -> db_structure
+  main -> storage
+  
+  # The Interface Trio
+  dbms [label = 'DBMS\\n(Software: DuckDB, MySQL)', shape = box, style = filled, fillcolor = '#90EE90']
+  dbi [label = 'DBI\\n(Functions: dbConnect)', shape = box, style = filled, fillcolor = '#90EE90']
+  dbplyr [label = 'dbplyr\\n(dplyr to SQL translation)', shape = box, style = filled, fillcolor = '#90EE90']
+  
+  main -> dbms
+  main -> dbi
+  main -> dbplyr
+  
+  # DBI Workflow
+  connect [label = '1. dbConnect():\\nEstablish connection', shape = box, style = filled, fillcolor = '#FFFFE0']
+  tbl_ref [label = '2. tbl():\\nAccess table lazily', shape = box, style = filled, fillcolor = '#FFFFE0']
+  collect [label = '3. collect():\\nPull into local R memory', shape = box, style = filled, fillcolor = '#FFFFE0']
+  
+  dbi -> connect
+  dbi -> tbl_ref
+  dbi -> collect
+  
+  # SQL Logic
+  sql_dialects [label = 'Multiple versions exist\\n(vary by DBMS)', shape = ellipse]
+  sql_verbs [label = 'Key Verbs:\\nSELECT, FROM, WHERE', shape = ellipse]
+  show_query [label = 'show_query():\\nSee generated SQL', shape = ellipse]
+  
+  dbplyr -> sql_dialects
+  dbplyr -> sql_verbs
+  dbplyr -> show_query
+}
+")

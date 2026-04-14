@@ -1,0 +1,308 @@
+---
+title: "NYC Airbnb: Demonstrating Key Data Science Concepts"
+author: "William Acosta Lora"
+date: "2026-03-08"
+format: 
+  html:
+    toc: true
+    code-fold: show
+    theme: cosmo
+execute:
+  warning: false
+  message: false
+---
+
+## Introduction
+
+This project uses NYC Airbnb data to demonstrate four key concepts we have learned these past couple of weeks in class:
+
+1. **Missing Data**: Finding and handling explicit/implicit missing values
+2. **Custom Functions**: Writing reusable functions with tidy evaluation
+3. **Base R Subsetting**: Using `$`, `[[]]`, and `[]`
+4. **Iteration**: For loops and across() for repeated tasks
+```{r setup}
+library(tidyverse)
+library(knitr)
+
+airbnb <- read_csv("data/raw/archive/AB_NYC_2019.csv") |> 
+  mutate(last_review = mdy(last_review))
+```
+
+---
+
+## Concept 1: Missing Data
+
+### Finding Explicit Missing Values
+```{r missing-explicit}
+# Count missing values in each column
+airbnb |> 
+  summarize(
+    name = sum(is.na(name)),
+    host_name = sum(is.na(host_name)),
+    last_review = sum(is.na(last_review)),
+    reviews_per_month = sum(is.na(reviews_per_month))
+  ) |> 
+  kable(caption = "Count of Missing Values")
+```
+
+**Observation**: `last_review` and `reviews_per_month` have 10,052 missing values - these are listings that haven't been reviewed yet.
+
+### Handling Missing Values
+```{r missing-handle}
+# Fill missing reviews_per_month with 0
+airbnb_clean <- airbnb |> 
+  mutate(reviews_per_month = coalesce(reviews_per_month, 0))
+
+# Verify
+tibble(
+  before = sum(is.na(airbnb$reviews_per_month)),
+  after = sum(is.na(airbnb_clean$reviews_per_month))
+) |> 
+  kable(caption = "Missing values before and after coalesce()")
+```
+
+### Finding Implicit Missing Values
+```{r missing-implicit}
+# Check if all borough-room_type combinations exist
+all_combos <- airbnb_clean |> 
+  complete(neighbourhood_group, room_type)
+
+# Find missing combinations
+missing_combos <- all_combos |> 
+  anti_join(airbnb_clean, by = c("neighbourhood_group", "room_type"))
+
+if (nrow(missing_combos) > 0) {
+  missing_combos |> kable()
+} else {
+  cat(" All borough-room type combinations have listings\n")
+}
+```
+
+---
+
+## Concept 2: Custom Functions
+
+### Function 1: Calculate Proportion
+```{r function-proportion}
+# Function to calculate what % of listings meet a condition
+calc_proportion <- function(data, condition) {
+  data |> 
+    summarize(
+      n_total = n(),
+      n_meeting_condition = sum({{ condition }}, na.rm = TRUE),
+      proportion = mean({{ condition }}, na.rm = TRUE)
+    )
+}
+
+# Example: What % of listings are entire homes?
+calc_proportion(airbnb_clean, room_type == "Entire home/apt") |> 
+  kable(digits = 3, caption = "Proportion of Entire Homes")
+
+# Example: What % have 100+ reviews?
+calc_proportion(airbnb_clean, number_of_reviews >= 100) |> 
+  kable(digits = 3, caption = "Proportion with 100+ reviews")
+```
+
+### Function 2: Price Summary by Group
+```{r function-price-summary}
+# Function with embracing and optional grouping
+price_summary <- function(data, group_var) {
+  data |> 
+    group_by({{ group_var }}) |> 
+    summarize(
+      n = n(),
+      min_price = min(price),
+      median_price = median(price),
+      max_price = max(price),
+      .groups = "drop"
+    )
+}
+
+# By borough
+price_summary(airbnb_clean, neighbourhood_group) |> 
+  kable(caption = "Price Summary by Borough")
+
+# By room type
+price_summary(airbnb_clean, room_type) |> 
+  kable(caption = "Price Summary by Room Type")
+```
+
+---
+
+## Concept 3: Base R Subsetting
+
+### Using `$`, `[[]]`, and `[]`
+```{r base-r-subset}
+# Method 1: Extract column with $
+brooklyn_prices_dollar <- airbnb_clean$price[airbnb_clean$neighbourhood_group == "Brooklyn"]
+
+# Method 2: Extract column with [[]]
+brooklyn_data <- airbnb_clean[airbnb_clean$neighbourhood_group == "Brooklyn", ]
+brooklyn_prices_bracket <- brooklyn_data[["price"]]
+
+# Method 3: Tidyverse (for comparison)
+brooklyn_prices_tidy <- airbnb_clean |> 
+  filter(neighbourhood_group == "Brooklyn") |> 
+  pull(price)
+
+# Verify all three methods give same result
+tibble(
+  method = c("$ operator", "[[ ]] operator", "tidyverse"),
+  n_values = c(length(brooklyn_prices_dollar), 
+               length(brooklyn_prices_bracket), 
+               length(brooklyn_prices_tidy)),
+  mean_price = c(mean(brooklyn_prices_dollar), 
+                 mean(brooklyn_prices_bracket), 
+                 mean(brooklyn_prices_tidy)),
+  identical = c(
+    identical(brooklyn_prices_dollar, brooklyn_prices_bracket),
+    identical(brooklyn_prices_bracket, brooklyn_prices_tidy),
+    TRUE
+  )
+) |> 
+  kable(digits = 2, caption = "Comparison of Subsetting Methods")
+```
+
+### Using split() and lapply()
+```{r base-r-lists}
+# Split data by borough into a list
+borough_list <- split(airbnb_clean, airbnb_clean$neighbourhood_group)
+
+# Use lapply to calculate mean price for each borough
+mean_prices <- lapply(borough_list, function(df) {
+  mean(df$price)
+})
+
+# Convert to data frame
+data.frame(
+  borough = names(mean_prices),
+  avg_price = unlist(mean_prices)
+) |> 
+  arrange(desc(avg_price)) |> 
+  kable(digits = 2, caption = "Average Price by Borough (using split + lapply)")
+```
+
+---
+
+## Concept 4: Iteration
+
+### For Loop with Pre-allocation
+```{r iteration-for-loop}
+# Goal: Calculate median price for each borough
+
+# Get unique boroughs
+boroughs <- unique(airbnb_clean$neighbourhood_group)
+
+# Pre-allocate storage
+median_prices <- vector("numeric", length = length(boroughs))
+names(median_prices) <- boroughs
+
+# For loop with seq_along
+for (i in seq_along(boroughs)) {
+  borough_name <- boroughs[i]
+  
+  # Subset data
+  borough_data <- airbnb_clean |> 
+    filter(neighbourhood_group == borough_name)
+  
+  # Calculate and store
+  median_prices[i] <- median(borough_data$price)
+}
+
+# Display results
+data.frame(
+  borough = names(median_prices),
+  median_price = median_prices
+) |> 
+  arrange(desc(median_price)) |> 
+  kable(caption = "Median Price by Borough (for loop)")
+```
+
+### Using across()
+```{r iteration-across}
+# Calculate mean and median for multiple numeric variables at once
+airbnb_clean |> 
+  group_by(room_type) |> 
+  summarize(
+    across(
+      .cols = c(price, minimum_nights, availability_365),
+      .fns = list(mean = mean, median = median),
+      .names = "{.col}_{.fn}"
+    ),
+    n = n(),
+    .groups = "drop"
+  ) |> 
+  kable(digits = 1, caption = "Summary Statistics by Room Type (using across)")
+```
+
+### Using crossing() for Multiple Scenarios
+
+```{r}
+# Create multiple analysis scenarios
+scenarios <- crossing(
+  borough = c("Manhattan", "Brooklyn"),
+  expensive = c(TRUE, FALSE)  # expensive = price > $150
+)
+
+scenarios |> 
+  kable(caption = "Analysis Scenarios")
+
+# Function to analyze one scenario
+analyze_scenario <- function(data, borough, expensive) {
+  filtered <- data |> 
+    filter(neighbourhood_group == borough)
+  
+  if (expensive) {
+    filtered <- filtered |> filter(price > 150)
+  }
+  
+  tibble(
+    n_listings = nrow(filtered),
+    avg_price = mean(filtered$price)
+  )
+}
+
+# Run all scenarios with for loop
+results <- vector("list", length = nrow(scenarios))
+
+for (i in seq_len(nrow(scenarios))) {
+  results[[i]] <- analyze_scenario(
+    data = airbnb_clean,
+    borough = scenarios$borough[i],
+    expensive = scenarios$expensive[i]
+  )
+}
+
+# Combine results
+bind_cols(scenarios, bind_rows(results)) |> 
+  kable(digits = 2, caption = "Results for All Scenarios")
+```
+
+
+---
+
+## Summary
+
+This project demonstrated four key concepts:
+
+**Missing Data**
+- Found 10,052 explicit missing values in `reviews_per_month`
+- Used `coalesce()` to fill with 0
+- Used `complete()` and `anti_join()` to find implicit missing values
+
+**Custom Functions**
+- Wrote `calc_proportion()` using `{{ }}` for tidy evaluation
+- Wrote `price_summary()` with grouped summaries
+- Both functions work with different variables
+
+**Base R Subsetting**
+- Used `$`, `[[]]`, and `[]` for extraction
+- Used `split()` and `lapply()` for list operations
+- Verified all methods produce identical results
+
+**Iteration**
+- Used for loop with `seq_along()` and pre-allocated storage
+- Used `across()` to summarize multiple variables
+- Used `crossing()` to create analysis scenarios
+
+**Dataset**: NYC Airbnb Open Data (2019) - 48,895 listings
